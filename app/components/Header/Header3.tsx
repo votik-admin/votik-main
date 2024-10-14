@@ -4,7 +4,7 @@ import useOutsideAlerter from "@/app/hooks/useOutsideAlerter";
 import HeroSearchForm, {
   SearchTab,
 } from "@/app/components/HeroSearchForm2/HeroSearchForm";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
 import SwitchDarkMode from "@/app/shared/SwitchDarkMode/SwitchDarkMode";
 import NotifyDropdown from "./NotifyDropdown";
 import AvatarDropdown from "./AvatarDropdown";
@@ -16,7 +16,7 @@ interface Header3Props {
   className?: string;
 }
 
-let WIN_PREV_POSITION = window.pageYOffset;
+let WIN_PREV_POSITION = 0;
 
 const Header3: FC<Header3Props> = ({ className = "" }) => {
   const headerInnerRef = useRef<HTMLDivElement>(null);
@@ -31,13 +31,6 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
     setShowHeroSearch(null);
     setCurrentTab("Stays");
   });
-
-  let location = useLocation();
-  //
-
-  useEffect(() => {
-    setShowHeroSearch(null);
-  }, [location]);
 
   // HIDDEN WHEN SCROLL EVENT
   useEffect(() => {
@@ -56,7 +49,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
       return;
     }
     //
-    let currentScrollPos = window.pageYOffset;
+    const currentScrollPos = window.pageYOffset;
     if (
       WIN_PREV_POSITION - currentScrollPos > 100 ||
       WIN_PREV_POSITION - currentScrollPos < -100
@@ -184,7 +177,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
             <div className="hidden md:flex relative z-10 flex-1 items-center justify-end text-neutral-700 dark:text-neutral-100">
               <div className="items-center flex space-x-1">
                 <Link
-                  to="/add-listing-1"
+                  href="/add-listing-1"
                   className="
                 hidden xl:inline-flex text-opacity-90
                 group px-4 py-2 border border-neutral-300 hover:border-neutral-400 dark:border-neutral-700 rounded-full items-center text-sm text-gray-700 dark:text-neutral-300 font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"

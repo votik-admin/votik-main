@@ -132,7 +132,7 @@ const PropertyCardH: FC<PropertyCardHProps> = ({
       className={`nc-PropertyCardH group relative bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 rounded-3xl overflow-hidden hover:shadow-xl transition-shadow ${className}`}
       data-nc-id="PropertyCardH"
     >
-      <Link to={href} className="absolute inset-0"></Link>
+      <Link href={href} className="absolute inset-0"></Link>
       <div className="h-full w-full flex flex-col sm:flex-row sm:items-center">
         {renderSliderGallery()}
         {renderContent()}

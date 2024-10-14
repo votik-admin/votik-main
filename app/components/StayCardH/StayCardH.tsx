@@ -136,7 +136,7 @@ const StayCardH: FC<StayCardHProps> = ({
       className={`nc-StayCardH group relative bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 rounded-2xl overflow-hidden hover:shadow-xl transition-shadow will-change-transform ${className}`}
       data-nc-id="StayCardH"
     >
-      <Link to={href} className="absolute inset-0"></Link>
+      <Link href={href} className="absolute inset-0"></Link>
       <div className="grid grid-cols-1 md:flex md:flex-row ">
         {renderSliderGallery()}
         {renderContent()}

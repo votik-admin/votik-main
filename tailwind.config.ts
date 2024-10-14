@@ -1,8 +1,18 @@
-const defaultTheme = require("tailwindcss/defaultTheme");
+import defaultTheme from "tailwindcss/defaultTheme";
+
+import tailwindTypography from "@tailwindcss/typography";
+import tailwindForms from "@tailwindcss/forms";
+import tailwindAspectRatio from "@tailwindcss/aspect-ratio";
 
 // Custom color with css variable color in __theme_color.scss
-function customColors(cssVar) {
-  return ({ opacityVariable, opacityValue }) => {
+function customColors(cssVar: string) {
+  return ({
+    opacityVariable,
+    opacityValue,
+  }: {
+    opacityVariable?: string;
+    opacityValue?: number;
+  }) => {
     if (opacityValue !== undefined) {
       return `rgba(var(${cssVar}), ${opacityValue})`;
     }
@@ -73,10 +83,5 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [
-    require("@tailwindcss/typography"),
-    require("@tailwindcss/forms"),
-    require("@tailwindcss/line-clamp"),
-    require("@tailwindcss/aspect-ratio"),
-  ],
+  plugins: [tailwindTypography, tailwindForms, tailwindAspectRatio],
 };

@@ -5,6 +5,7 @@ import { FocusedInputShape } from "react-dates";
 import StayDatesRangeInput from "./StayDatesRangeInput";
 import moment from "moment";
 import { FC } from "react";
+import "react-dates/initialize";
 
 export interface DateRage {
   startDate: moment.Moment | null;

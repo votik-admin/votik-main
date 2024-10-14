@@ -95,7 +95,7 @@ const CarCard: FC<CarCardProps> = ({
       className={`nc-CarCard group relative border border-neutral-200 dark:border-neutral-700 rounded-3xl overflow-hidden hover:shadow-xl transition-shadow bg-white dark:bg-neutral-900 will-change-transform ${className}`}
       data-nc-id="CarCard"
     >
-      <Link to={href} className="flex flex-col">
+      <Link href={href} className="flex flex-col">
         {renderSliderGallery()}
         {renderContent()}
       </Link>

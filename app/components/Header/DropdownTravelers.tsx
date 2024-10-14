@@ -97,7 +97,7 @@ export default function DropdownTravelers() {
                   {/* FOOTER */}
                   <div className="p-4 bg-neutral-50 dark:bg-neutral-700">
                     <Link
-                      to="##"
+                      href="##"
                       className="flow-root px-2 py-2 space-y-0.5 transition duration-150 ease-in-out rounded-md focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                     >
                       <span className="flex items-center">

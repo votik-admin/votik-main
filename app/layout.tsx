@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 
-import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
 import "rc-slider/assets/index.css";
 // STYLE
 import "./styles/index.scss";
 import "./globals.css";
 import "./fonts/line-awesome-1.3.0/css/line-awesome.css";
+import "react-dates/initialize";
+
+import SiteHeader from "@/app/containers/SiteHeader";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -35,7 +37,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
+          <SiteHeader />
+          {children}
+        </div>
       </body>
     </html>
   );

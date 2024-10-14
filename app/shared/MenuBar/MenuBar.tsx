@@ -1,7 +1,7 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { Transition, Dialog } from "@headlessui/react";
 import NavMobile from "@/app/shared/Navigation/NavMobile";
-import { useLocation } from "react-router-dom";
+import { usePathname } from "next/navigation";
 
 export interface MenuBarProps {
   className?: string;
@@ -12,8 +12,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
   iconClassName = "h-7 w-7",
 }) => {
   const [isVisable, setIsVisable] = useState(false);
-
-  const location = useLocation();
+  const location = usePathname();
 
   useEffect(() => {
     setIsVisable(false);
@@ -39,7 +38,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-neutral-900 bg-opacity-50" />
+            <Dialog.Panel className="fixed inset-0 bg-neutral-900 bg-opacity-50" />
           </Transition.Child>
           <div className="fixed inset-0">
             <div className="flex justify-end min-h-full ">
