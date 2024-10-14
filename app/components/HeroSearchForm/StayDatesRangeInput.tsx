@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "react-dates/initialize";
 import {
   AnchorDirectionShape,
   DateRangePicker,

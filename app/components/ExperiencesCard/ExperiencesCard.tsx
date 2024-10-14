@@ -116,7 +116,7 @@ const ExperiencesCard: FC<ExperiencesCardProps> = ({
       data-nc-id="ExperiencesCard"
     >
       {renderSliderGallery()}
-      <Link href={href}>{renderContent()}</Link>
+      <Link to={href}>{renderContent()}</Link>
     </div>
   );
 };

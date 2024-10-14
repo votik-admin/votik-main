@@ -20,19 +20,19 @@ export interface SectionHowItWorkProps {
 const DEMO_DATA: SectionHowItWorkProps["@/app/data"] = [
   {
     id: 1,
-    img: HIW1img,
+    img: HIW1img.src,
     title: "Book & relax",
     desc: "Let each trip be an inspirational journey, each room a peaceful space",
   },
   {
     id: 2,
-    img: HIW2img,
+    img: HIW2img.src,
     title: "Smart checklist",
     desc: "Let each trip be an inspirational journey, each room a peaceful space",
   },
   {
     id: 3,
-    img: HIW3img,
+    img: HIW3img.src,
     title: "Save more",
     desc: "Let each trip be an inspirational journey, each room a peaceful space",
   },

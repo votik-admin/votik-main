@@ -22,7 +22,8 @@
     "rc-slider": "^11.1.7",
     "react": "^18",
     "react-dates": "^21.8.0",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "sass": "^1.79.5"
   },
   "devDependencies": {
     "@types/glidejs__glide": "^3.6.5",

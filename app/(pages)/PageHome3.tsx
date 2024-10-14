@@ -1,5 +1,10 @@
-import React, { useEffect } from "react";
+"use client";
+
+import SectionHero from "@/app/components/SectionHero/SectionHero";
+import SectionSliderNewCategories from "@/app/components/SectionSliderNewCategories/SectionSliderNewCategories";
+import React from "react";
 import SectionSubscribe2 from "@/app/components/SectionSubscribe2/SectionSubscribe2";
+import SectionOurFeatures from "@/app/components/SectionOurFeatures/SectionOurFeatures";
 import SectionGridFeaturePlaces from "./SectionGridFeaturePlaces";
 import SectionHowItWork from "@/app/components/SectionHowItWork/SectionHowItWork";
 import BackgroundSection from "@/app/components/BackgroundSection/BackgroundSection";
@@ -7,8 +12,66 @@ import BgGlassmorphism from "@/app/components/BgGlassmorphism/BgGlassmorphism";
 import { TaxonomyType } from "@/app/data/types";
 import SectionGridAuthorBox from "@/app/components/SectionGridAuthorBox/SectionGridAuthorBox";
 import SectionGridCategoryBox from "@/app/components/SectionGridCategoryBox/SectionGridCategoryBox";
-import SectionHero3 from "@/app/components/SectionHero/SectionHero3";
-import CardCategory6 from "@/app/components/CardCategory6/CardCategory6";
+import SectionBecomeAnAuthor from "@/app/components/SectionBecomeAnAuthor/SectionBecomeAnAuthor";
+import SectionVideos from "./SectionVideos";
+import SectionClientSay from "@/app/components/SectionClientSay/SectionClientSay";
+
+const DEMO_CATS: TaxonomyType[] = [
+  {
+    id: "1",
+    href: "/listing-stay",
+    name: "New Yourk",
+    taxonomy: "category",
+    count: 188288,
+    thumbnail:
+      "https://images.pexels.com/photos/64271/queen-of-liberty-statue-of-liberty-new-york-liberty-statue-64271.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+  },
+  {
+    id: "2",
+    href: "/listing-stay",
+    name: "Singapore",
+    taxonomy: "category",
+    count: 188288,
+    thumbnail:
+      "https://images.pexels.com/photos/7740160/pexels-photo-7740160.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+  },
+  {
+    id: "2",
+    href: "/listing-stay",
+    name: "Paris",
+    taxonomy: "category",
+    count: 188288,
+    thumbnail:
+      "https://images.pexels.com/photos/739407/pexels-photo-739407.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+  },
+  {
+    id: "2",
+    href: "/listing-stay",
+    name: "London",
+    taxonomy: "category",
+    count: 188288,
+    thumbnail:
+      "https://images.pexels.com/photos/460672/pexels-photo-460672.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+  },
+  {
+    id: "2",
+    href: "/listing-stay",
+    name: "Tokyo",
+    taxonomy: "category",
+    count: 188288,
+    thumbnail:
+      "https://images.pexels.com/photos/4151484/pexels-photo-4151484.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+  },
+  {
+    id: "2",
+    href: "/listing-stay",
+    name: "Maldives",
+    taxonomy: "category",
+    count: 188288,
+    thumbnail:
+      "https://images.pexels.com/photos/3250613/pexels-photo-3250613.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+  },
+];
 
 const DEMO_CATS_2: TaxonomyType[] = [
   {
@@ -58,53 +121,24 @@ const DEMO_CATS_2: TaxonomyType[] = [
   },
 ];
 
-function PageHome3() {
-  // CUSTOM THEME STYLE
-  useEffect(() => {
-    const $body = document.querySelector("body");
-    if (!$body) return;
-    $body.classList.add("theme-purple-blueGrey");
-    return () => {
-      $body.classList.remove("theme-purple-blueGrey");
-    };
-  }, []);
-
+function PageHome() {
   return (
-    <div className="nc-PageHome3 relative overflow-hidden">
+    <div className="nc-PageHome relative overflow-hidden">
       {/* GLASSMOPHIN */}
       <BgGlassmorphism />
 
-      {/* SECTION HERO */}
-      <div className="container px-1 sm:px-4 mb-24 ">
-        <SectionHero3 className="" />
-      </div>
+      <div className="container relative space-y-24 mb-24 lg:space-y-28 lg:mb-28">
+        {/* SECTION HERO */}
+        <SectionHero className="pt-10 lg:pt-16 lg:pb-16" />
 
-      <div className="container relative space-y-24 mb-24 ">
         {/* SECTION 1 */}
-        <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-12 sm:col-span-6 lg:col-span-4 flex">
-            <CardCategory6 taxonomy={DEMO_CATS_2[0]} />
-          </div>
-          <div className="col-span-12 sm:col-span-6 lg:col-span-4 grid grid-rows-2 gap-6">
-            <CardCategory6 taxonomy={DEMO_CATS_2[3]} />
-            <CardCategory6 taxonomy={DEMO_CATS_2[1]} />
-          </div>
-          <div className="col-span-12 sm:col-span-6 lg:col-span-4 flex">
-            <CardCategory6 taxonomy={DEMO_CATS_2[4]} />
-          </div>
-        </div>
+        <SectionSliderNewCategories
+          categories={DEMO_CATS}
+          uniqueClassName="PageHome_s1"
+        />
 
-        {/* SECTION */}
-        <SectionGridCategoryBox />
-
-        {/* SECTION */}
-        <div className="relative py-16">
-          <BackgroundSection />
-          <SectionGridAuthorBox boxCard="box2" />
-        </div>
-
-        {/* SECTION */}
-        <SectionHowItWork />
+        {/* SECTION2 */}
+        <SectionOurFeatures />
 
         {/* SECTION */}
         <div className="relative py-16">
@@ -113,10 +147,60 @@ function PageHome3() {
         </div>
 
         {/* SECTION */}
+        <SectionHowItWork />
+
+        {/* SECTION 1 */}
+        <div className="relative py-16">
+          <BackgroundSection className="bg-orange-50 dark:bg-black dark:bg-opacity-20 " />
+          <SectionSliderNewCategories
+            categories={DEMO_CATS_2}
+            categoryCardType="card4"
+            itemPerRow={4}
+            heading="Suggestions for discovery"
+            subHeading="Popular places to stay that Chisfis recommends for you"
+            sliderStyle="style2"
+            uniqueClassName="PageHome_s2"
+          />
+        </div>
+
+        {/* SECTION */}
         <SectionSubscribe2 />
+
+        {/* SECTION */}
+        <div className="relative py-16">
+          <BackgroundSection className="bg-orange-50 dark:bg-black dark:bg-opacity-20 " />
+          <SectionGridAuthorBox />
+        </div>
+
+        {/* SECTION */}
+        <SectionGridCategoryBox />
+
+        {/* SECTION */}
+        <div className="relative py-16">
+          <BackgroundSection />
+          <SectionBecomeAnAuthor />
+        </div>
+
+        {/* SECTION 1 */}
+        <SectionSliderNewCategories
+          heading="Explore by types of stays"
+          subHeading="Explore houses based on 10 types of stays"
+          categoryCardType="card5"
+          itemPerRow={5}
+          uniqueClassName="PageHome_s3"
+        />
+
+        {/* SECTION */}
+        <SectionVideos />
+
+        {/* SECTION */}
+        <div className="relative py-16">
+          <BackgroundSection />
+          <SectionClientSay uniqueClassName="PageHome_" />
+        </div>
       </div>
     </div>
   );
 }
 
-export default PageHome3;
+export default PageHome;

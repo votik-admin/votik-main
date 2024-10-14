@@ -38,12 +38,11 @@ const Avatar: FC<AvatarProps> = ({
       {url && (
         <img
           className={`absolute inset-0 w-full h-full object-cover ${radius}`}
-          src={url}
+          src={url.src}
           alt={name}
         />
       )}
       <span className="wil-avatar__name">{name[0]}</span>
-
       {hasChecked && (
         <span
           className={` bg-teal-500 rounded-full text-white text-xs flex items-center justify-center absolute  ${hasCheckedClass}`}
