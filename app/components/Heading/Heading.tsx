@@ -6,6 +6,7 @@ export interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
   desc?: ReactNode;
   hasNextPrev?: boolean;
   isCenter?: boolean;
+  disableDark?: boolean;
 }
 
 const Heading: React.FC<HeadingProps> = ({
@@ -14,6 +15,7 @@ const Heading: React.FC<HeadingProps> = ({
   className = "mb-12 lg:mb-16 text-neutral-900 dark:text-neutral-50",
   isCenter = false,
   hasNextPrev = false,
+  disableDark,
   ...args
 }) => {
   return (
@@ -25,7 +27,12 @@ const Heading: React.FC<HeadingProps> = ({
           isCenter ? "text-center w-full max-w-2xl mx-auto" : "max-w-2xl"
         }
       >
-        <h2 className={`text-3xl md:text-4xl font-semibold`} {...args}>
+        <h2
+          className={`text-3xl md:text-4xl font-semibold ${
+            disableDark ? "text-white" : ""
+          }`}
+          {...args}
+        >
           {children || `Section Heading`}
         </h2>
         {desc && (

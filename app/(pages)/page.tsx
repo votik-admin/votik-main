@@ -76,10 +76,10 @@ function PageHome3() {
       {/* GLASSMOPHIN */}
       <BgGlassmorphism />
 
+      <SectionHero3 className="" />
+
       {/* SECTION HERO */}
-      <div className="container px-1 sm:px-4 mb-24 ">
-        <SectionHero3 className="" />
-      </div>
+      <div className="container px-1 sm:px-4 mb-24 "></div>
 
       <div className="container relative space-y-24 mb-24 ">
         {/* SECTION 1 */}

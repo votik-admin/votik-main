@@ -1,9 +1,11 @@
+"use client";
+
 import SectionHero from "@/app/components/SectionHero/SectionHero";
 import SectionSliderNewCategories from "@/app/components/SectionSliderNewCategories/SectionSliderNewCategories";
 import React from "react";
 import SectionSubscribe2 from "@/app/components/SectionSubscribe2/SectionSubscribe2";
 import SectionOurFeatures from "@/app/components/SectionOurFeatures/SectionOurFeatures";
-import SectionGridFeaturePlaces from "./SectionGridFeaturePlaces";
+import SectionGridFeaturePlaces from "../SectionGridFeaturePlaces";
 import SectionHowItWork from "@/app/components/SectionHowItWork/SectionHowItWork";
 import BackgroundSection from "@/app/components/BackgroundSection/BackgroundSection";
 import BgGlassmorphism from "@/app/components/BgGlassmorphism/BgGlassmorphism";
@@ -11,7 +13,7 @@ import { TaxonomyType } from "@/app/data/types";
 import SectionGridAuthorBox from "@/app/components/SectionGridAuthorBox/SectionGridAuthorBox";
 import SectionGridCategoryBox from "@/app/components/SectionGridCategoryBox/SectionGridCategoryBox";
 import SectionBecomeAnAuthor from "@/app/components/SectionBecomeAnAuthor/SectionBecomeAnAuthor";
-import SectionVideos from "./SectionVideos";
+import SectionVideos from "../SectionVideos";
 import SectionClientSay from "@/app/components/SectionClientSay/SectionClientSay";
 
 const DEMO_CATS: TaxonomyType[] = [

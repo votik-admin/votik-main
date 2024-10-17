@@ -4,11 +4,13 @@ import React, { FC, useEffect, useMemo } from "react";
 import Heading from "@/app/components/Heading/Heading";
 import Glide from "@glidejs/glide";
 import { TaxonomyType } from "@/app/data/types";
-import CardCategory3 from "@/app/components/CardCategory3/CardCategory3";
-import CardCategory4 from "@/app/components/CardCategory4/CardCategory4";
+import CardCategoryCustom from "@/app/components/CardCategoryCustom/CardCategoryCustom";
 import NextPrev from "@/app/shared/NextPrev/NextPrev";
-import CardCategory5 from "@/app/components/CardCategory5/CardCategory5";
 import useNcId from "@/app/hooks/useNcId";
+import useSWR from "swr";
+import { getAllEvents } from "@/app/queries";
+import { Tables } from "@/app/types/database.types";
+import CardCategoryCustomSkeleton from "@/app/components/CardCategoryCustom/CardCategoryCustomSkeleton";
 
 export interface SectionSliderNewCategoriesProps {
   className?: string;
@@ -20,75 +22,18 @@ export interface SectionSliderNewCategoriesProps {
   itemPerRow?: 4 | 5;
   sliderStyle?: "style1" | "style2";
   uniqueClassName: string;
+  disableDark?: boolean;
 }
-
-const DEMO_CATS: TaxonomyType[] = [
-  {
-    id: "1",
-    href: "/listing-stay",
-    name: "Nature House",
-    taxonomy: "category",
-    count: 17288,
-    thumbnail:
-      "https://images.pexels.com/photos/2581922/pexels-photo-2581922.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
-  },
-  {
-    id: "2",
-    href: "/listing-stay",
-    name: "Wooden house",
-    taxonomy: "category",
-    count: 2118,
-    thumbnail:
-      "https://images.pexels.com/photos/2351649/pexels-photo-2351649.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  },
-  {
-    id: "3",
-    href: "/listing-stay",
-    name: "Houseboat",
-    taxonomy: "category",
-    count: 36612,
-    thumbnail:
-      "https://images.pexels.com/photos/962464/pexels-photo-962464.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  },
-  {
-    id: "4",
-    href: "/listing-stay",
-    name: "Farm House",
-    taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/248837/pexels-photo-248837.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  },
-  {
-    id: "5",
-    href: "/listing-stay",
-    name: "Dome House",
-    taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/3613236/pexels-photo-3613236.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  },
-  {
-    id: "6",
-    href: "/listing-stay",
-    name: "Dome House",
-    taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/3613236/pexels-photo-3613236.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  },
-];
 
 const SectionSliderNewCategories: FC<SectionSliderNewCategoriesProps> = ({
   heading = "Heading of sections",
   subHeading = "Descriptions for sections",
   className = "",
   itemClassName = "",
-  categories = DEMO_CATS,
   itemPerRow = 5,
-  categoryCardType = "card3",
   sliderStyle = "style1",
   uniqueClassName,
+  disableDark,
 }) => {
   const UNIQUE_CLASS =
     "SectionSliderNewCategories__" + uniqueClassName + useNcId();
@@ -128,18 +73,11 @@ const SectionSliderNewCategories: FC<SectionSliderNewCategoriesProps> = ({
     }, 100);
   }, [MY_GLIDEJS, UNIQUE_CLASS]);
 
-  const renderCard = (item: TaxonomyType, index: number) => {
-    switch (categoryCardType) {
-      case "card3":
-        return <CardCategory3 taxonomy={item} />;
-      case "card4":
-        return <CardCategory4 taxonomy={item} />;
-      case "card5":
-        return <CardCategory5 taxonomy={item} />;
-      default:
-        return <CardCategory3 taxonomy={item} />;
-    }
-  };
+  const { data, error, isLoading } = useSWR("getAllEvents", async () => {
+    const { data, error } = await getAllEvents();
+    if (error) throw error.message;
+    return data;
+  });
 
   return (
     <div className={`nc-SectionSliderNewCategories ${className}`}>
@@ -148,21 +86,39 @@ const SectionSliderNewCategories: FC<SectionSliderNewCategoriesProps> = ({
           desc={subHeading}
           hasNextPrev={sliderStyle === "style1"}
           isCenter={sliderStyle === "style2"}
+          disableDark={disableDark}
         >
           {heading}
         </Heading>
-        <div className="glide__track" data-glide-el="track">
-          <ul className="glide__slides">
-            {categories.map((item, index) => (
-              <li key={index} className={`glide__slide ${itemClassName}`}>
-                {renderCard(item, index)}
-              </li>
-            ))}
-          </ul>
-        </div>
+        {isLoading && (
+          <div className="glide__track" data-glide-el="track">
+            <ul className="glide__slides">
+              {Array.from({ length: 10 }).map((item, index) => (
+                <li key={index} className={`glide__slide ${itemClassName}`}>
+                  <CardCategoryCustomSkeleton />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {!isLoading && data && (
+          <div className="glide__track" data-glide-el="track">
+            <ul className="glide__slides">
+              {data?.map((item, index) => (
+                <li key={index} className={`glide__slide ${itemClassName}`}>
+                  <CardCategoryCustom taxonomy={item} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {sliderStyle === "style2" && (
-          <NextPrev className="justify-center mt-16" />
+          <NextPrev
+            className="justify-center mt-16"
+            disableDark={disableDark}
+          />
         )}
       </div>
     </div>

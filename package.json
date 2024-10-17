@@ -13,6 +13,7 @@
     "@glidejs/glide": "^3.6.2",
     "@headlessui/react": "^2.1.10",
     "@heroicons/react": "^2.1.5",
+    "@supabase/supabase-js": "^2.45.4",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.9",
     "@tailwindcss/line-clamp": "^0.4.4",
@@ -25,7 +26,9 @@
     "react-dates": "^21.8.0",
     "react-dom": "^18",
     "react-use": "^17.5.1",
-    "sass": "^1.79.5"
+    "sass": "^1.79.5",
+    "supabase": "^1.204.3",
+    "swr": "^2.2.5"
   },
   "devDependencies": {
     "@types/glidejs__glide": "^3.6.5",
@@ -37,7 +40,6 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.15",
     "postcss": "^8",
-    "supabase": ">=1.8.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

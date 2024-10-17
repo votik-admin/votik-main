@@ -10,6 +10,7 @@ export interface NextPrevProps {
   onClickPrev?: () => void;
   onlyNext?: boolean;
   onlyPrev?: boolean;
+  disableDark?: boolean;
 }
 
 const NextPrev: FC<NextPrevProps> = ({
@@ -19,6 +20,7 @@ const NextPrev: FC<NextPrevProps> = ({
   btnClassName = "w-10 h-10",
   onlyNext = false,
   onlyPrev = false,
+  disableDark,
 }) => {
   return (
     <div

@@ -1,6 +1,8 @@
 import React, { FC } from "react";
 import ButtonPrimary from "@/app/shared/Button/ButtonPrimary";
-import imagePng from "@/app/images/travelhero2.png";
+import imagePng from "@/app/images/stadium.png";
+import Input from "@/app/shared/Input/Input";
+import SectionSliderNewCategories from "@/app/components/SectionSliderNewCategories/SectionSliderNewCategories";
 
 export interface SectionHero3Props {
   className?: string;
@@ -12,19 +14,19 @@ const SectionHero3: FC<SectionHero3Props> = ({ className = "" }) => {
       className={`nc-SectionHero3 relative ${className}`}
       data-nc-id="SectionHero3"
     >
-      <div className="absolute z-10 inset-x-0 top-[10%] sm:top-[15%] text-center flex flex-col items-center max-w-2xl mx-auto space-y-4 lg:space-y-5 xl:space-y-8">
-        <span className="sm:text-lg md:text-xl font-semibold text-neutral-900">
-          Booking tax-free from Chis. platform
-        </span>
-        <h2 className="font-bold text-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl !leading-[115%] ">
-          New generation <br /> of booking
+      <div className="absolute z-10 inset-x-0 top-[10%] m:top-[15%] text-center flex flex-col items-center max-w-6xl mx-auto space-y-4 lg:space-y-5 xl:space-y-8">
+        <h2 className="font-bold text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl !leading-[115%] ">
+          Your Gateway to Unforgettable Live Experiences
         </h2>
-        <ButtonPrimary
-          sizeClass="px-6 py-3 lg:px-8 lg:py-4 rounded-xl"
-          fontSize="text-sm sm:text-base lg:text-lg font-medium"
-        >
-          Keep calm & travel on
-        </ButtonPrimary>
+        <span className="text-white sm:text-lg md:text-xl font-medium">
+          Discover Events. Connect with People. Create Memories.
+        </span>
+        {/* <Input
+          type="text"
+          placeholder="Enter your email"
+          className="w-full md:w-auto"
+        /> */}
+        <ButtonPrimary>Start your search</ButtonPrimary>
       </div>
       <div className="relative aspect-w-1 aspect-h-1 sm:aspect-w-4 sm:aspect-h-3 lg:aspect-w-16 lg:aspect-h-9 xl:aspect-h-8 ">
         <img
@@ -32,6 +34,18 @@ const SectionHero3: FC<SectionHero3Props> = ({ className = "" }) => {
           src={imagePng.src}
           alt="hero"
         />
+      </div>
+      <div className="bg-gradient-to-t from-black to-transparent via-black text-white 2xl:-translate-y-1/2 pb-1 mb-">
+        <div className="container relative space-y-24 mb-24 lg:space-y-28 lg:mb-28">
+          <SectionSliderNewCategories
+            heading="Mumbai’s Teanding Events!"
+            subHeading=""
+            categoryCardType="card5"
+            itemPerRow={4}
+            uniqueClassName="PageHome_s3"
+            disableDark={true}
+          />
+        </div>
       </div>
     </div>
   );

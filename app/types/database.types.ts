@@ -17,8 +17,12 @@ export type Database = {
           description: string
           expected_footfall: number
           id: string
+          location: string
           name: string
           organizer_id: string
+          primary_img: string
+          secondary_imgs: string[] | null
+          start_time: string
         }
         Insert: {
           category: Database["public"]["Enums"]["EventCategory"]
@@ -27,8 +31,12 @@ export type Database = {
           description: string
           expected_footfall: number
           id?: string
+          location: string
           name: string
           organizer_id?: string
+          primary_img: string
+          secondary_imgs?: string[] | null
+          start_time: string
         }
         Update: {
           category?: Database["public"]["Enums"]["EventCategory"]
@@ -37,8 +45,12 @@ export type Database = {
           description?: string
           expected_footfall?: number
           id?: string
+          location?: string
           name?: string
           organizer_id?: string
+          primary_img?: string
+          secondary_imgs?: string[] | null
+          start_time?: string
         }
         Relationships: [
           {
