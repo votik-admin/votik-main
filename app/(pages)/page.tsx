@@ -62,14 +62,14 @@ const DEMO_CATS_2: TaxonomyType[] = [
 
 function PageHome3() {
   // CUSTOM THEME STYLE
-  useEffect(() => {
-    const $body = document.querySelector("body");
-    if (!$body) return;
-    $body.classList.add("theme-purple-blueGrey");
-    return () => {
-      $body.classList.remove("theme-purple-blueGrey");
-    };
-  }, []);
+  // useEffect(() => {
+  //   const $body = document.querySelector("body");
+  //   if (!$body) return;
+  //   $body.classList.add("theme-purple-blueGrey");
+  //   return () => {
+  //     $body.classList.remove("theme-purple-blueGrey");
+  //   };
+  // }, []);
 
   return (
     <div className="nc-PageHome3 relative overflow-hidden">
