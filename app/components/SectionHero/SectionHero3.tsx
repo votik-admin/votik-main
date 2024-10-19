@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import ButtonPrimary from "@/app/shared/Button/ButtonPrimary";
 import imagePng from "@/app/images/stadium.png";
 import Input from "@/app/shared/Input/Input";
-import SectionSliderNewCategories from "@/app/components/SectionSliderNewCategories/SectionSliderNewCategories";
+import SectionSliderNewCategories from "@/app/components/SectionSliderNewCategoriesCustom/SectionSliderNewCategoriesCustom";
 
 export interface SectionHero3Props {
   className?: string;
@@ -23,19 +23,19 @@ const SectionHero3: FC<SectionHero3Props> = ({ className = "" }) => {
         </span>
         {/* <Input
           type="text"
-          placeholder="Enter your email"
-          className="w-full md:w-auto"
+          placeholder="What do you want to see live?"
+          className="w-[16rem] md:w-[24rem]"
         /> */}
         <ButtonPrimary>Start your search</ButtonPrimary>
       </div>
       <div className="relative aspect-w-1 aspect-h-1 sm:aspect-w-4 sm:aspect-h-3 lg:aspect-w-16 lg:aspect-h-9 xl:aspect-h-8 ">
         <img
-          className="absolute inset-0 object-cover rounded-xl"
+          className="absolute inset-0 object-cover"
           src={imagePng.src}
           alt="hero"
         />
       </div>
-      <div className="bg-gradient-to-t from-black to-transparent via-black text-white 2xl:-translate-y-1/2 pb-1 mb-">
+      <div className="bg-gradient-to-t from-black to-black 2xl:to-transparent via-black text-white 2xl:-translate-y-1/2 2xl:-mb-[22rem] pb-1">
         <div className="container relative space-y-24 mb-24 lg:space-y-28 lg:mb-28">
           <SectionSliderNewCategories
             heading="Mumbai’s Teanding Events!"

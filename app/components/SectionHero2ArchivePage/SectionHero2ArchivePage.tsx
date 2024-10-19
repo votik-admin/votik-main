@@ -19,7 +19,7 @@ const SectionHero2ArchivePage: FC<SectionHero2ArchivePageProps> = ({
       <div className="absolute inset-y-0 w-5/6 xl:w-3/4 right-0 flex-grow">
         <img
           className="absolute inset-0 object-cover w-full h-full"
-          src={imagePng}
+          src={imagePng.src}
           alt="hero"
         />
       </div>

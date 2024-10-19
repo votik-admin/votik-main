@@ -89,7 +89,7 @@ const ModalSelectDate: FC<ModalSelectDateProps> = ({
                         <div className="flex-1 flex flex-col transition-opacity animate-[myblur_0.4s_ease-in-out] overflow-auto">
                           <div className="p-5 ">
                             <span className="block font-semibold text-xl sm:text-2xl">
-                              When's your trip?
+                              When&apos;s your trip?
                             </span>
                           </div>
                           <div

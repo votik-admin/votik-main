@@ -11,7 +11,7 @@ import { CheckIcon } from "@heroicons/react/24/solid";
 import { TimeRage } from "./RentalCarSearchForm";
 import useWindowSize from "@/app/hooks/useWindowResize";
 import ButtonSubmit from "./ButtonSubmit";
-import { PathName } from "routers/types";
+import { PathName } from "@/app/routers/types";
 import useNcId from "@/app/hooks/useNcId";
 
 type Fields = "pickUp" | "dropOff";

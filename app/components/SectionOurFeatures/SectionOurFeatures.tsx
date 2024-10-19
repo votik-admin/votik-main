@@ -11,7 +11,7 @@ export interface SectionOurFeaturesProps {
 
 const SectionOurFeatures: FC<SectionOurFeaturesProps> = ({
   className = "lg:py-14",
-  rightImg = rightImgPng,
+  rightImg = rightImgPng.src,
   type = "type1",
 }) => {
   return (

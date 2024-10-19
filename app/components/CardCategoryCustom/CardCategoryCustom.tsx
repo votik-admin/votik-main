@@ -38,11 +38,13 @@ const CardCategoryCustom: FC<CardCategoryCustomProps> = ({
       </Link>
 
       <div className="truncate bg-white p-4">
-        <h2
-          className={`text-base sm:text-lg text-neutral-900 font-semibold truncate line-clamp-2 text-wrap`}
-        >
-          {name}
-        </h2>
+        <Link href={href}>
+          <h2
+            className={`text-base sm:text-lg text-neutral-900 font-semibold truncate line-clamp-2 text-wrap hover:underline decoration-dashed decoration-slate-400 underline-offset-4`}
+          >
+            {name}
+          </h2>
+        </Link>
         <span className={`block mt-2 text-sm text-neutral-6000`}>
           {formatDate(start_time)}
         </span>
@@ -56,7 +58,7 @@ const CardCategoryCustom: FC<CardCategoryCustomProps> = ({
             Rs. 999 Onwards
           </h2>
           <Link href={href}>
-            <button className="ml-auto bg-[#430D7F] text-[#C3FD07] font-semibold px-4 py-2 rounded-lg">
+            <button className="ml-auto bg-[#430D7F] text-[#C3FD07] font-semibold px-4 py-2 rounded-lg hover:shadow">
               BOOK NOW
             </button>
           </Link>

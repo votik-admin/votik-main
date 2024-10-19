@@ -17,7 +17,7 @@ const SectionHeroArchivePage: FC<SectionHeroArchivePageProps> = ({
   listingType,
   currentPage,
   currentTab,
-  rightImage = imagePng,
+  rightImage = imagePng.src,
 }) => {
   return (
     <div

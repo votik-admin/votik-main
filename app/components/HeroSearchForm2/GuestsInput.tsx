@@ -4,7 +4,7 @@ import { FC } from "react";
 import ClearDataButton from "./ClearDataButton";
 import ButtonSubmit from "./ButtonSubmit";
 import useOutsideAlerter from "@/app/hooks/useOutsideAlerter";
-import { PathName } from "routers/types";
+import { PathName } from "@/app/routers/types";
 import { GuestsObject } from "@/app/components/HeroSearchForm2Mobile/GuestsInput";
 
 export interface GuestsInputProps {

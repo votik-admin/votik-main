@@ -4,8 +4,9 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import React, { useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { PathName } from "routers/types";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { PathName } from "@/app/routers/types";
 import MenuBar from "@/app/shared/MenuBar/MenuBar";
 import isInViewport from "@/app/utils/isInViewport";
 
@@ -43,7 +44,7 @@ const FooterNav = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   //
 
-  const location = useLocation();
+  const location = usePathname();
 
   useEffect(() => {
     window.addEventListener("scroll", handleEvent);
@@ -89,7 +90,7 @@ const FooterNav = () => {
       <div className="w-full max-w-lg flex justify-around mx-auto text-sm text-center ">
         {/* MENU */}
         {NAV.map((item, index) => {
-          const active = location.pathname === item.link;
+          const active = location === item.link;
           return item.link ? (
             <Link
               key={index}

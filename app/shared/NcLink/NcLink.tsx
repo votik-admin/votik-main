@@ -1,9 +1,10 @@
 import React, { FC } from "react";
-import { Link, LinkProps } from "react-router-dom";
+import Link, { LinkProps } from "next/link";
 
 export interface NcLinkProps extends LinkProps {
   className?: string;
   colorClass?: string;
+  children?: React.ReactNode;
 }
 
 const NcLink: FC<NcLinkProps> = ({

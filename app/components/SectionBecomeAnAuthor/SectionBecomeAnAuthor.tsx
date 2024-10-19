@@ -11,7 +11,7 @@ export interface SectionBecomeAnAuthorProps {
 
 const SectionBecomeAnAuthor: FC<SectionBecomeAnAuthorProps> = ({
   className = "",
-  rightImg = rightImgDemo,
+  rightImg = rightImgDemo.src,
 }) => {
   return (
     <div

@@ -11,66 +11,50 @@ import SectionGridAuthorBox from "@/app/components/SectionGridAuthorBox/SectionG
 import SectionGridCategoryBox from "@/app/components/SectionGridCategoryBox/SectionGridCategoryBox";
 import SectionHero3 from "@/app/components/SectionHero/SectionHero3";
 import CardCategory6 from "@/app/components/CardCategory6/CardCategory6";
+import Heading from "../components/Heading/Heading";
+
+import imageMusic from "@/app/images/home/music.jpg";
+import imageComedy from "@/app/images/home/comedy.png";
+import imageWorkshops from "@/app/images/home/workshops.png";
+import imageNightlife from "@/app/images/home/nightlife.jpg";
+import SectionSliderNewCategories from "@/app/components/SectionSliderNewCategories/SectionSliderNewCategories";
 
 const DEMO_CATS_2: TaxonomyType[] = [
   {
     id: "1",
-    href: "/listing-stay",
-    name: "Enjoy the great cold",
+    href: "/category/music",
+    name: "Music Concerts",
     taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/5764100/pexels-photo-5764100.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+    count: 188,
+    thumbnail: imageMusic.src,
   },
   {
-    id: "222",
-    href: "/listing-stay",
-    name: "Sleep in a floating way",
+    id: "2",
+    href: "/category/comedy",
+    name: "Comedy",
     taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/2869499/pexels-photo-2869499.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    count: 288,
+    thumbnail: imageComedy.src,
   },
   {
     id: "3",
-    href: "/listing-stay",
-    name: "In the billionaire's house",
+    href: "/category/workshops",
+    name: "Workshops",
     taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/7031413/pexels-photo-7031413.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    count: 82,
+    thumbnail: imageWorkshops.src,
   },
   {
     id: "4",
-    href: "/listing-stay",
-    name: "Cool in the deep forest",
+    href: "/category/nightlife",
+    name: "Nightlife",
     taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/247532/pexels-photo-247532.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  },
-  {
-    id: "5",
-    href: "/listing-stay",
-    name: "In the billionaire's house",
-    taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/7031413/pexels-photo-7031413.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    count: 81111,
+    thumbnail: imageNightlife.src,
   },
 ];
 
 function PageHome3() {
-  // CUSTOM THEME STYLE
-  // useEffect(() => {
-  //   const $body = document.querySelector("body");
-  //   if (!$body) return;
-  //   $body.classList.add("theme-purple-blueGrey");
-  //   return () => {
-  //     $body.classList.remove("theme-purple-blueGrey");
-  //   };
-  // }, []);
-
   return (
     <div className="nc-PageHome3 relative overflow-hidden">
       {/* GLASSMOPHIN */}
@@ -83,39 +67,47 @@ function PageHome3() {
 
       <div className="container relative space-y-24 mb-24 ">
         {/* SECTION 1 */}
+        <Heading
+          desc="Explore epic events by category! Whether you’re into concerts, comedy, or workshops, we’ve got something that’ll get you hyped!"
+          isCenter={true}
+        >
+          Browse Events by Categories
+        </Heading>
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-12 sm:col-span-6 lg:col-span-4 flex">
             <CardCategory6 taxonomy={DEMO_CATS_2[0]} />
           </div>
           <div className="col-span-12 sm:col-span-6 lg:col-span-4 grid grid-rows-2 gap-6">
-            <CardCategory6 taxonomy={DEMO_CATS_2[3]} />
             <CardCategory6 taxonomy={DEMO_CATS_2[1]} />
+            <CardCategory6 taxonomy={DEMO_CATS_2[2]} />
           </div>
           <div className="col-span-12 sm:col-span-6 lg:col-span-4 flex">
-            <CardCategory6 taxonomy={DEMO_CATS_2[4]} />
+            <CardCategory6 taxonomy={DEMO_CATS_2[3]} />
           </div>
         </div>
-
         {/* SECTION */}
-        <SectionGridCategoryBox />
-
+        {/* <SectionGridCategoryBox /> */}
         {/* SECTION */}
-        <div className="relative py-16">
+        {/* <div className="relative py-16">
           <BackgroundSection />
           <SectionGridAuthorBox boxCard="box2" />
-        </div>
-
+        </div> */}
         {/* SECTION */}
-        <SectionHowItWork />
-
+        {/* <SectionHowItWork /> */}
         {/* SECTION */}
         <div className="relative py-16">
           <BackgroundSection />
           <SectionGridFeaturePlaces />
         </div>
-
+        <SectionSliderNewCategories
+          heading="Browse Events by Venues"
+          subHeading=""
+          categoryCardType="card5"
+          itemPerRow={5}
+          uniqueClassName="PageHome_s3"
+        />
         {/* SECTION */}
-        <SectionSubscribe2 />
+        {/* <SectionSubscribe2 /> */}
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ const Avatar: FC<AvatarProps> = ({
   containerClassName = "ring-1 ring-white dark:ring-neutral-900",
   sizeClass = "h-6 w-6 text-sm",
   radius = "rounded-full",
-  imgUrl = avatar1,
+  imgUrl = avatar1.src,
   userName,
   hasChecked,
   hasCheckedClass = "w-4 h-4 -top-0.5 -right-0.5",
@@ -38,7 +38,7 @@ const Avatar: FC<AvatarProps> = ({
       {url && (
         <img
           className={`absolute inset-0 w-full h-full object-cover ${radius}`}
-          src={url.src}
+          src={url}
           alt={name}
         />
       )}

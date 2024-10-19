@@ -10,6 +10,7 @@ import { ReactNode } from "react";
 export interface HeaderFilterProps {
   tabActive: string;
   tabs: string[];
+  prettyPrintTabsMap?: Record<string, string>;
   heading: ReactNode;
   subHeading?: ReactNode;
   onClickTab: (item: string) => void;
@@ -18,6 +19,7 @@ export interface HeaderFilterProps {
 const HeaderFilter: FC<HeaderFilterProps> = ({
   tabActive,
   tabs,
+  prettyPrintTabsMap,
   subHeading = "",
   heading = "🎈 Latest Articles",
   onClickTab,
@@ -47,7 +49,7 @@ const HeaderFilter: FC<HeaderFilterProps> = ({
               isActive={tabActiveState === item}
               onClick={() => handleClickTab(item)}
             >
-              {item}
+              {prettyPrintTabsMap ? prettyPrintTabsMap[item] : item}
             </NavItem>
           ))}
         </Nav>

@@ -17,7 +17,7 @@ export interface SectionHowItWorkProps {
   }[];
 }
 
-const DEMO_DATA: SectionHowItWorkProps["@/app/data"] = [
+const DEMO_DATA: SectionHowItWorkProps["data"] = [
   {
     id: 1,
     img: HIW1img.src,

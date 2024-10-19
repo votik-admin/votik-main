@@ -5,7 +5,7 @@ import { FC } from "react";
 import ClearDataButton from "./ClearDataButton";
 import ButtonSubmit from "./ButtonSubmit";
 import { GuestsObject } from "@/app/components/HeroSearchForm2Mobile/GuestsInput";
-import { PathName } from "routers/types";
+import { PathName } from "@/app/routers/types";
 
 export interface GuestsInputProps {
   defaultValue: GuestsObject;

@@ -1,9 +1,14 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode, useState } from "react";
 import { DEMO_STAY_LISTINGS } from "@/app/data/listings";
 import { StayDataType } from "@/app/data/types";
 import ButtonPrimary from "@/app/shared/Button/ButtonPrimary";
 import HeaderFilter from "./HeaderFilter";
 import StayCard from "@/app/components/StayCard/StayCard";
+import useSWR from "swr";
+import { getAllEvents } from "@/app/queries";
+import { Database } from "@/app/types/database.types";
+import CardCategoryCustom from "@/app/components/CardCategoryCustom/CardCategoryCustom";
+import CardCategoryCustomSkeleton from "@/app/components/CardCategoryCustom/CardCategoryCustomSkeleton";
 
 // OTHER DEMO WILL PASS PROPS
 const DEMO_DATA: StayDataType[] = DEMO_STAY_LISTINGS.filter((_, i) => i < 8);
@@ -18,35 +23,85 @@ export interface SectionGridFeaturePlacesProps {
   tabs?: string[];
 }
 
+const events = [
+  "COMEDY",
+  "MUSIC",
+  "ACTIVITIES",
+  "CULTURE",
+  "WORKSHOPS",
+  "SPORTS",
+  "EXPERIENCES",
+  "OTHER",
+] as Database["public"]["Enums"]["EventCategory"][];
+
+const mapToEvent = {
+  COMEDY: "Comedy",
+  ACTIVITIES: "Activities",
+  CULTURE: "Culture",
+  MUSIC: "Music",
+  WORKSHOPS: "Workshops",
+  SPORTS: "Sports",
+  EXPERIENCES: "Experiences",
+  OTHER: "Other",
+};
+
 const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
   stayListings = DEMO_DATA,
   gridClass = "",
-  heading = "Featured places to stay",
-  subHeading = "Popular places to stay that Chisfis recommends for you",
+  heading = "Catch the Hottest Events in Town",
+  subHeading = "Popular events that Votik recommends for you",
   headingIsCenter,
-  tabs = ["New York", "Tokyo", "Paris", "London"],
+  tabs = events,
 }) => {
-  const renderCard = (stay: StayDataType) => {
-    return <StayCard key={stay.id} data={stay} />;
-  };
+  const { data, error, isLoading } = useSWR("getAllEvents", async () => {
+    const { data, error } = await getAllEvents();
+    if (error) throw error.message;
+    return data;
+  });
+
+  const [currentTab, setCurrentTab] =
+    useState<Database["public"]["Enums"]["EventCategory"]>("COMEDY");
 
   return (
     <div className="nc-SectionGridFeaturePlaces relative">
       <HeaderFilter
-        tabActive={"New York"}
+        tabActive={currentTab}
         subHeading={subHeading}
         tabs={tabs}
+        prettyPrintTabsMap={mapToEvent}
         heading={heading}
-        onClickTab={() => {}}
+        onClickTab={(tab) => {
+          setCurrentTab(tab as keyof typeof mapToEvent);
+        }}
       />
       <div
         className={`grid gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ${gridClass}`}
       >
-        {DEMO_DATA.map((stay) => renderCard(stay))}
+        {isLoading &&
+          Array.from({ length: 4 }).map((_, id) => (
+            <CardCategoryCustomSkeleton key={id} />
+          ))}
+        {data &&
+          data
+            .filter((event) => event.category === currentTab)
+            .map((event) => (
+              <CardCategoryCustom key={event.id} taxonomy={event} />
+            ))}
       </div>
-      <div className="flex mt-16 justify-center items-center">
+      {data &&
+        data.filter((event) => event.category === currentTab).length == 0 && (
+          <div className="py-8 space-y-2">
+            <p className="text-center text-xl font-semibold text-neutral-500 dark:text-neutral-400">
+              Sorry, there are no available events in this category.
+            </p>
+            <p className="text-center text-lg text-neutral-500 dark:text-neutral-400">
+              Try selecting a different category.
+            </p>
+          </div>
+        )}
+      {/* <div className="flex mt-16 justify-center items-center">
         <ButtonPrimary loading>Show me more</ButtonPrimary>
-      </div>
+      </div> */}
     </div>
   );
 };

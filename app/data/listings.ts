@@ -24,22 +24,22 @@ import car14 from "@/app/images/cars/14.png";
 import car15 from "@/app/images/cars/15.png";
 import car16 from "@/app/images/cars/16.png";
 const carsImgs = [
-  car1,
-  car2,
-  car3,
-  car4,
-  car5,
-  car6,
-  car7,
-  car8,
-  car9,
-  car10,
-  car11,
-  car12,
-  car13,
-  car14,
-  car15,
-  car16,
+  car1.src,
+  car2.src,
+  car3.src,
+  car4.src,
+  car5.src,
+  car6.src,
+  car7.src,
+  car8.src,
+  car9.src,
+  car10.src,
+  car11.src,
+  car12.src,
+  car13.src,
+  car14.src,
+  car15.src,
+  car16.src,
 ];
 
 const DEMO_STAY_LISTINGS = __stayListing.map((post, index): StayDataType => {

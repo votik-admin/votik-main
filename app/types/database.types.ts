@@ -247,6 +247,39 @@ export type Database = {
         }
         Relationships: []
       }
+      venues: {
+        Row: {
+          address: string
+          city: Database["public"]["Enums"]["City"]
+          created_at: string
+          id: string
+          image: string | null
+          latitude: number
+          longitude: number
+          name: string
+        }
+        Insert: {
+          address: string
+          city: Database["public"]["Enums"]["City"]
+          created_at?: string
+          id?: string
+          image?: string | null
+          latitude: number
+          longitude: number
+          name: string
+        }
+        Update: {
+          address?: string
+          city?: Database["public"]["Enums"]["City"]
+          created_at?: string
+          id?: string
+          image?: string | null
+          latitude?: number
+          longitude?: number
+          name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
