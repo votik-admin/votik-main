@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import Link from "next/link";
-import { PathName } from "@/app/routers/types";
+import { PathName } from "@app/routers/types";
 
 interface Props {
   href?: PathName;

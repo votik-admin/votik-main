@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { SingleDatePicker, AnchorDirectionShape } from "react-dates";
 import { FC } from "react";
 import moment from "moment";
-import useWindowSize from "@/app/hooks/useWindowResize";
-import useNcId from "@/app/hooks/useNcId";
+import useWindowSize from "@app/hooks/useWindowResize";
+import useNcId from "@app/hooks/useNcId";
 
 export interface ExperiencesDateSingleInputProps {
   defaultValue: moment.Moment | null;

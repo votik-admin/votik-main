@@ -1,10 +1,10 @@
-import Heading from "@/app/components/Heading/Heading";
+import Heading from "@app/components/Heading/Heading";
 import React, { FC } from "react";
-import NcImage from "@/app/shared/NcImage/NcImage";
-import HIW1img from "@/app/images/HIW1.png";
-import HIW2img from "@/app/images/HIW2.png";
-import HIW3img from "@/app/images/HIW3.png";
-import VectorImg from "@/app/images/VectorHIW.svg";
+import NcImage from "@app/shared/NcImage/NcImage";
+import HIW1img from "@app/images/HIW1.png";
+import HIW2img from "@app/images/HIW2.png";
+import HIW3img from "@app/images/HIW3.png";
+import VectorImg from "@app/images/VectorHIW.svg";
 
 export interface SectionHowItWorkProps {
   className?: string;

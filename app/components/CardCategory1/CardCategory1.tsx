@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { TaxonomyType } from "@/app/data/types";
+import { TaxonomyType } from "@app/data/types";
 import Link from "next/link";
-import NcImage from "@/app/shared/NcImage/NcImage";
+import NcImage from "@app/shared/NcImage/NcImage";
 
 export interface CardCategory1Props {
   className?: string;

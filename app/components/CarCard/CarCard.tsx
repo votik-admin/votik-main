@@ -1,12 +1,12 @@
 import React, { FC } from "react";
-import { DEMO_CAR_LISTINGS } from "@/app/data/listings";
-import { CarDataType } from "@/app/data/types";
-import StartRating from "@/app/components/StartRating/StartRating";
+import { DEMO_CAR_LISTINGS } from "@app/data/listings";
+import { CarDataType } from "@app/data/types";
+import StartRating from "@app/components/StartRating/StartRating";
 import Link from "next/link";
-import BtnLikeIcon from "@/app/components/BtnLikeIcon/BtnLikeIcon";
-import SaleOffBadge from "@/app/components/SaleOffBadge/SaleOffBadge";
-import Badge from "@/app/shared/Badge/Badge";
-import NcImage from "@/app/shared/NcImage/NcImage";
+import BtnLikeIcon from "@app/components/BtnLikeIcon/BtnLikeIcon";
+import SaleOffBadge from "@app/components/SaleOffBadge/SaleOffBadge";
+import Badge from "@app/shared/Badge/Badge";
+import NcImage from "@app/shared/NcImage/NcImage";
 
 export interface CarCardProps {
   className?: string;

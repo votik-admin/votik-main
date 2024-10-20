@@ -1,4 +1,4 @@
-import { PostDataType } from "@/app/data/types";
+import { PostDataType } from "@app/data/types";
 import React, { FC } from "react";
 
 export interface PostTypeFeaturedIconProps {

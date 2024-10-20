@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import NcImage from "@/app/shared/NcImage/NcImage";
+import NcImage from "@app/shared/NcImage/NcImage";
 
 export interface CardCategory5Props {
   className?: string;

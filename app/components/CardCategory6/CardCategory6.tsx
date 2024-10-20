@@ -1,8 +1,8 @@
 import React, { FC } from "react";
-import NcImage from "@/app/shared/NcImage/NcImage";
-import { TaxonomyType } from "@/app/data/types";
+import NcImage from "@app/shared/NcImage/NcImage";
+import { TaxonomyType } from "@app/data/types";
 import Link from "next/link";
-import convertNumbThousand from "@/app/utils/convertNumbThousand";
+import convertNumbThousand from "@app/utils/convertNumbThousand";
 
 export interface CardCategory6Props {
   className?: string;

@@ -1,13 +1,13 @@
 import React, { FC } from "react";
-import GallerySlider from "@/app/components/GallerySlider/GallerySlider";
-import { DEMO_EXPERIENCES_LISTINGS } from "@/app/data/listings";
-import { ExperiencesDataType } from "@/app/data/types";
-import StartRating from "@/app/components/StartRating/StartRating";
+import GallerySlider from "@app/components/GallerySlider/GallerySlider";
+import { DEMO_EXPERIENCES_LISTINGS } from "@app/data/listings";
+import { ExperiencesDataType } from "@app/data/types";
+import StartRating from "@app/components/StartRating/StartRating";
 import Link from "next/link";
-import BtnLikeIcon from "@/app/components/BtnLikeIcon/BtnLikeIcon";
-import SaleOffBadge from "@/app/components/SaleOffBadge/SaleOffBadge";
-import Badge from "@/app/shared/Badge/Badge";
-import Avatar from "@/app/shared/Avatar/Avatar";
+import BtnLikeIcon from "@app/components/BtnLikeIcon/BtnLikeIcon";
+import SaleOffBadge from "@app/components/SaleOffBadge/SaleOffBadge";
+import Badge from "@app/shared/Badge/Badge";
+import Avatar from "@app/shared/Avatar/Avatar";
 
 export interface ExperiencesCardHProps {
   className?: string;

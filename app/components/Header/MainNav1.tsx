@@ -1,11 +1,11 @@
 import React, { FC } from "react";
-import Logo from "@/app/shared/Logo/Logo";
-import Navigation from "@/app/shared/Navigation/Navigation";
+import Logo from "@app/shared/Logo/Logo";
+import Navigation from "@app/shared/Navigation/Navigation";
 import SearchDropdown from "./SearchDropdown";
-import ButtonPrimary from "@/app/shared/Button/ButtonPrimary";
-import MenuBar from "@/app/shared/MenuBar/MenuBar";
-import SwitchDarkMode from "@/app/shared/SwitchDarkMode/SwitchDarkMode";
-import HeroSearchForm2MobileFactory from "@/app/components/HeroSearchForm2Mobile/HeroSearchForm2MobileFactory";
+import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
+import MenuBar from "@app/shared/MenuBar/MenuBar";
+import SwitchDarkMode from "@app/shared/SwitchDarkMode/SwitchDarkMode";
+import HeroSearchForm2MobileFactory from "@app/components/HeroSearchForm2Mobile/HeroSearchForm2MobileFactory";
 
 export interface MainNav1Props {
   className?: string;

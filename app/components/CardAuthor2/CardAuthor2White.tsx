@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { PostDataType } from "@/app/data/types";
+import { PostDataType } from "@app/data/types";
 import Link from "next/link";
-import Avatar from "@/app/shared/Avatar/Avatar";
+import Avatar from "@app/shared/Avatar/Avatar";
 import { CardAuthor2Props } from "./CardAuthor2";
 
 export interface CardAuthor2WhiteProps extends CardAuthor2Props {}

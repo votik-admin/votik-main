@@ -9,9 +9,9 @@ import { FC } from "react";
 import { Listbox } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/24/solid";
 import { TimeRage } from "./RentalCarSearchForm";
-import useWindowSize from "@/app/hooks/useWindowResize";
+import useWindowSize from "@app/hooks/useWindowResize";
 import ButtonSubmit from "./ButtonSubmit";
-import useNcId from "@/app/hooks/useNcId";
+import useNcId from "@app/hooks/useNcId";
 
 type Fields = "pickUp" | "dropOff";
 

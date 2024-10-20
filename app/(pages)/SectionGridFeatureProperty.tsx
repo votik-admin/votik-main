@@ -1,9 +1,9 @@
 import React, { FC, ReactNode } from "react";
-import { DEMO_STAY_LISTINGS } from "@/app/data/listings";
-import { StayDataType } from "@/app/data/types";
-import ButtonPrimary from "@/app/shared/Button/ButtonPrimary";
+import { DEMO_STAY_LISTINGS } from "@app/data/listings";
+import { StayDataType } from "@app/data/types";
+import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import HeaderFilter from "./HeaderFilter";
-import PropertyCardH from "@/app/components/PropertyCardH/PropertyCardH";
+import PropertyCardH from "@app/components/PropertyCardH/PropertyCardH";
 
 // OTHER DEMO WILL PASS PROPS
 const DEMO_DATA: StayDataType[] = DEMO_STAY_LISTINGS.filter((_, i) => i < 8);

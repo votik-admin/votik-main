@@ -6,9 +6,9 @@ import {
 import React, { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PathName } from "@/app/routers/types";
-import MenuBar from "@/app/shared/MenuBar/MenuBar";
-import isInViewport from "@/app/utils/isInViewport";
+import { PathName } from "@app/routers/types";
+import MenuBar from "@app/shared/MenuBar/MenuBar";
+import isInViewport from "@app/utils/isInViewport";
 
 let WIN_PREV_POSITION = window.pageYOffset;
 

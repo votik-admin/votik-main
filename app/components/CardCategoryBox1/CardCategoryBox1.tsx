@@ -1,9 +1,9 @@
 import React, { FC } from "react";
-import { TaxonomyType } from "@/app/data/types";
+import { TaxonomyType } from "@app/data/types";
 import Link from "next/link";
-import NcImage from "@/app/shared/NcImage/NcImage";
-import Badge from "@/app/shared/Badge/Badge";
-import convertNumbThousand from "@/app/utils/convertNumbThousand";
+import NcImage from "@app/shared/NcImage/NcImage";
+import Badge from "@app/shared/Badge/Badge";
+import convertNumbThousand from "@app/utils/convertNumbThousand";
 
 export interface CardCategoryBox1Props {
   className?: string;

@@ -1,10 +1,10 @@
 "use client";
 
 import React, { FC, useEffect, useState } from "react";
-import Heading from "@/app/shared/Heading/Heading";
-import Nav from "@/app/shared/Nav/Nav";
-import NavItem from "@/app/shared/NavItem/NavItem";
-import ButtonSecondary from "@/app/shared/Button/ButtonSecondary";
+import Heading from "@app/shared/Heading/Heading";
+import Nav from "@app/shared/Nav/Nav";
+import NavItem from "@app/shared/NavItem/NavItem";
+import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
 import { ReactNode } from "react";
 
 export interface HeaderFilterProps {

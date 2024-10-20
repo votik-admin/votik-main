@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { FC } from "react";
-import Checkbox from "@/app/shared/Checkbox/Checkbox";
+import Checkbox from "@app/shared/Checkbox/Checkbox";
 
 // DEMO DATA
 export interface PropertyType {

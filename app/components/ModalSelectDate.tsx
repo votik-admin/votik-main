@@ -1,6 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import { DateRage } from "@/app/components/HeroSearchForm/StaySearchForm";
+import { DateRage } from "@app/components/HeroSearchForm/StaySearchForm";
 import moment from "moment";
 import React, { FC, Fragment, useEffect, useState } from "react";
 import {
@@ -8,7 +8,7 @@ import {
   FocusedInputShape,
   isInclusivelyAfterDay,
 } from "react-dates";
-import ButtonPrimary from "@/app/shared/Button/ButtonPrimary";
+import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 
 interface ModalSelectDateProps {
   onClose?: () => void;

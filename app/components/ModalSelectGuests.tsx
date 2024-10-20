@@ -2,9 +2,9 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import GuestsInput, {
   GuestsObject,
-} from "@/app/components/HeroSearchForm2Mobile/GuestsInput";
+} from "@app/components/HeroSearchForm2Mobile/GuestsInput";
 import React, { FC, Fragment, useState } from "react";
-import ButtonPrimary from "@/app/shared/Button/ButtonPrimary";
+import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 
 interface ModalSelectGuestsProps {
   onClose?: () => void;

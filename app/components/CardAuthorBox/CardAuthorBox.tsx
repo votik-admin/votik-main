@@ -1,11 +1,11 @@
 "use client";
 
 import React, { FC } from "react";
-import { AuthorType } from "@/app/data/types";
+import { AuthorType } from "@app/data/types";
 import { StarIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
-import Avatar from "@/app/shared/Avatar/Avatar";
-import Badge from "@/app/shared/Badge/Badge";
+import Avatar from "@app/shared/Avatar/Avatar";
+import Badge from "@app/shared/Badge/Badge";
 
 export interface CardAuthorBoxProps {
   className?: string;

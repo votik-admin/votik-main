@@ -1,12 +1,12 @@
 import { Transition } from "@headlessui/react";
-import CarCard from "@/app/components/CarCard/CarCard";
-import ExperiencesCard from "@/app/components/ExperiencesCard/ExperiencesCard";
-import StayCard from "@/app/components/StayCard/StayCard";
+import CarCard from "@app/components/CarCard/CarCard";
+import ExperiencesCard from "@app/components/ExperiencesCard/ExperiencesCard";
+import StayCard from "@app/components/StayCard/StayCard";
 import {
   CarDataType,
   ExperiencesDataType,
   StayDataType,
-} from "@/app/data/types";
+} from "@app/data/types";
 import React, { FC, Fragment } from "react";
 import { useState } from "react";
 

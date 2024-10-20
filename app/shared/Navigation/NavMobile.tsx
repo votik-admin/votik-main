@@ -1,16 +1,16 @@
 import React from "react";
-import ButtonClose from "@/app/shared/ButtonClose/ButtonClose";
-import Logo from "@/app/shared/Logo/Logo";
+import ButtonClose from "@app/shared/ButtonClose/ButtonClose";
+import Logo from "@app/shared/Logo/Logo";
 import { Disclosure } from "@headlessui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NavItemType } from "./NavigationItem";
-import { NAVIGATION_DEMO } from "@/app/data/navigation";
-import ButtonPrimary from "@/app/shared/Button/ButtonPrimary";
-import SocialsList from "@/app/shared/SocialsList/SocialsList";
+import { NAVIGATION_DEMO } from "@app/data/navigation";
+import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
+import SocialsList from "@app/shared/SocialsList/SocialsList";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
-import SwitchDarkMode from "@/app/shared/SwitchDarkMode/SwitchDarkMode";
-import LangDropdown from "@/app/components/Header/LangDropdown";
+import SwitchDarkMode from "@app/shared/SwitchDarkMode/SwitchDarkMode";
+import LangDropdown from "@app/components/Header/LangDropdown";
 
 export interface NavMobileProps {
   data?: NavItemType[];

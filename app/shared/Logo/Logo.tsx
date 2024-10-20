@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import logoImg from "@/app/images/logo.png";
-import logoLightImg from "@/app/images/logo-light.png";
+import logoImg from "@app/images/logo.png";
+import logoLightImg from "@app/images/logo-light.png";
 import LogoSvgLight from "./LogoSvgLight";
 import LogoSvg from "./LogoSvg";
 

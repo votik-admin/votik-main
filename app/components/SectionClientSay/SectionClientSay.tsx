@@ -1,19 +1,19 @@
 "use client";
 
 import Glide from "@glidejs/glide";
-import Heading from "@/app/components/Heading/Heading";
+import Heading from "@app/components/Heading/Heading";
 import React, { FC } from "react";
 import { useEffect } from "react";
-import clientSayMain from "@/app/images/clientSayMain.png";
-import clientSay1 from "@/app/images/clientSay1.png";
-import clientSay2 from "@/app/images/clientSay2.png";
-import clientSay3 from "@/app/images/clientSay3.png";
-import clientSay4 from "@/app/images/clientSay4.png";
-import clientSay5 from "@/app/images/clientSay5.png";
-import clientSay6 from "@/app/images/clientSay6.png";
-import quotationImg from "@/app/images/quotation.png";
-import quotationImg2 from "@/app/images/quotation2.png";
-import useNcId from "@/app/hooks/useNcId";
+import clientSayMain from "@app/images/clientSayMain.png";
+import clientSay1 from "@app/images/clientSay1.png";
+import clientSay2 from "@app/images/clientSay2.png";
+import clientSay3 from "@app/images/clientSay3.png";
+import clientSay4 from "@app/images/clientSay4.png";
+import clientSay5 from "@app/images/clientSay5.png";
+import clientSay6 from "@app/images/clientSay6.png";
+import quotationImg from "@app/images/quotation.png";
+import quotationImg2 from "@app/images/quotation2.png";
+import useNcId from "@app/hooks/useNcId";
 
 export interface SectionClientSayProps {
   className?: string;

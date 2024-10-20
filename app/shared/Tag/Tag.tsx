@@ -1,4 +1,4 @@
-import { TaxonomyType } from "@/app/data/types";
+import { TaxonomyType } from "@app/data/types";
 import React, { FC } from "react";
 import Link from "next/link";
 

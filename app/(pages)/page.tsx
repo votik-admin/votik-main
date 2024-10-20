@@ -1,23 +1,23 @@
 "use client";
 
 import React, { useEffect } from "react";
-import SectionSubscribe2 from "@/app/components/SectionSubscribe2/SectionSubscribe2";
+import SectionSubscribe2 from "@app/components/SectionSubscribe2/SectionSubscribe2";
 import SectionGridFeaturePlaces from "./SectionGridFeaturePlaces";
-import SectionHowItWork from "@/app/components/SectionHowItWork/SectionHowItWork";
-import BackgroundSection from "@/app/components/BackgroundSection/BackgroundSection";
-import BgGlassmorphism from "@/app/components/BgGlassmorphism/BgGlassmorphism";
-import { TaxonomyType } from "@/app/data/types";
-import SectionGridAuthorBox from "@/app/components/SectionGridAuthorBox/SectionGridAuthorBox";
-import SectionGridCategoryBox from "@/app/components/SectionGridCategoryBox/SectionGridCategoryBox";
-import SectionHero3 from "@/app/components/SectionHero/SectionHero3";
-import CardCategory6 from "@/app/components/CardCategory6/CardCategory6";
+import SectionHowItWork from "@app/components/SectionHowItWork/SectionHowItWork";
+import BackgroundSection from "@app/components/BackgroundSection/BackgroundSection";
+import BgGlassmorphism from "@app/components/BgGlassmorphism/BgGlassmorphism";
+import { TaxonomyType } from "@app/data/types";
+import SectionGridAuthorBox from "@app/components/SectionGridAuthorBox/SectionGridAuthorBox";
+import SectionGridCategoryBox from "@app/components/SectionGridCategoryBox/SectionGridCategoryBox";
+import SectionHero3 from "@app/components/SectionHero/SectionHero3";
+import CardCategory6 from "@app/components/CardCategory6/CardCategory6";
 import Heading from "../components/Heading/Heading";
 
-import imageMusic from "@/app/images/home/music.jpg";
-import imageComedy from "@/app/images/home/comedy.png";
-import imageWorkshops from "@/app/images/home/workshops.png";
-import imageNightlife from "@/app/images/home/nightlife.jpg";
-import SectionSliderNewCategories from "@/app/components/SectionSliderNewCategories/SectionSliderNewCategories";
+import imageMusic from "@app/images/home/music.jpg";
+import imageComedy from "@app/images/home/comedy.png";
+import imageWorkshops from "@app/images/home/workshops.png";
+import imageNightlife from "@app/images/home/nightlife.jpg";
+import SectionSliderNewCategories from "@app/components/SectionSliderNewCategories/SectionSliderNewCategories";
 
 const DEMO_CATS_2: TaxonomyType[] = [
   {

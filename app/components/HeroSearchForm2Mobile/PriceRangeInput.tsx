@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FC } from "react";
 import Slider from "rc-slider";
-import convertNumbThousand from "@/app/utils/convertNumbThousand";
+import convertNumbThousand from "@app/utils/convertNumbThousand";
 
 export interface PriceRangeInputProps {
   onChange?: (e: number[]) => void;

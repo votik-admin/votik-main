@@ -10,10 +10,10 @@ import { FC } from "react";
 import { Listbox } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/24/solid";
 import { TimeRage } from "./RentalCarSearchForm";
-import useWindowSize from "@/app/hooks/useWindowResize";
+import useWindowSize from "@app/hooks/useWindowResize";
 import ButtonSubmit from "./ButtonSubmit";
-import { PathName } from "@/app/routers/types";
-import useNcId from "@/app/hooks/useNcId";
+import { PathName } from "@app/routers/types";
+import useNcId from "@app/hooks/useNcId";
 import { TypeDropOffLocationType } from "./FlightSearchForm";
 
 type Fields = "pickUp" | "dropOff";

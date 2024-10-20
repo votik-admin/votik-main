@@ -1,6 +1,6 @@
-import { PostDataType } from "@/app/data/types";
+import { PostDataType } from "@app/data/types";
 import { useState, useEffect } from "react";
-import { DEMO_POSTS } from "@/app/data/posts";
+import { DEMO_POSTS } from "@app/data/posts";
 
 // WE USE THIS HOOK FOR DEMO  TAB FILTER ON ANY PAGE
 // WITH PRODUCT MODE PLEASE INSTEAD THIS HOOK FOR YOU WANT DO -- GET DATA FROM API ...
