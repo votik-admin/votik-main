@@ -1,3 +1,5 @@
+"use client";
+
 import React, { FC, ReactNode, useState } from "react";
 import { DEMO_STAY_LISTINGS } from "@/app/data/listings";
 import { StayDataType } from "@/app/data/types";
@@ -23,27 +25,7 @@ export interface SectionGridFeaturePlacesProps {
   tabs?: string[];
 }
 
-const events = [
-  "COMEDY",
-  "MUSIC",
-  "ACTIVITIES",
-  "CULTURE",
-  "WORKSHOPS",
-  "SPORTS",
-  "EXPERIENCES",
-  "OTHER",
-] as Database["public"]["Enums"]["EventCategory"][];
-
-const mapToEvent = {
-  COMEDY: "Comedy",
-  ACTIVITIES: "Activities",
-  CULTURE: "Culture",
-  MUSIC: "Music",
-  WORKSHOPS: "Workshops",
-  SPORTS: "Sports",
-  EXPERIENCES: "Experiences",
-  OTHER: "Other",
-};
+import { EVENTS, MAP_TO_EVENT } from "../types/hardcoded";
 
 const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
   stayListings = DEMO_DATA,
@@ -51,7 +33,7 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
   heading = "Catch the Hottest Events in Town",
   subHeading = "Popular events that Votik recommends for you",
   headingIsCenter,
-  tabs = events,
+  tabs = EVENTS,
 }) => {
   const { data, error, isLoading } = useSWR("getAllEvents", async () => {
     const { data, error } = await getAllEvents();
@@ -68,10 +50,10 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
         tabActive={currentTab}
         subHeading={subHeading}
         tabs={tabs}
-        prettyPrintTabsMap={mapToEvent}
+        prettyPrintTabsMap={MAP_TO_EVENT}
         heading={heading}
         onClickTab={(tab) => {
-          setCurrentTab(tab as keyof typeof mapToEvent);
+          setCurrentTab(tab as keyof typeof MAP_TO_EVENT);
         }}
       />
       <div

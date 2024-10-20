@@ -4,4 +4,10 @@ const getAllEvents = () => supabase.from("events").select("*");
 
 const getAllVenues = () => supabase.from("venues").select("*");
 
-export { getAllEvents, getAllVenues };
+const getEventFromSlug = (slug: string) =>
+  supabase
+    .from("events")
+    .select("*, organizers(*), venues(*)")
+    .eq("slug", slug);
+
+export { getAllEvents, getAllVenues, getEventFromSlug };

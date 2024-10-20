@@ -15,9 +15,9 @@ const OPTIONS = {
 let OBSERVER: IntersectionObserver | null = null;
 const PAGES_HIDE_HEADER_BORDER: PathName[] = [
   "/", // 💡 "/" is the new and default "/home-3",
+  "/events", // "/listing-stay-detail",
   "/listing-car-detail",
   "/listing-experiences-detail",
-  "/listing-stay-detail",
 ];
 
 const SiteHeader = () => {
@@ -32,9 +32,13 @@ const SiteHeader = () => {
     });
   };
 
+  let flag = false;
+  for (const option of PAGES_HIDE_HEADER_BORDER) {
+    flag ||= location.includes(option);
+  }
   useEffect(() => {
     // disconnect the observer
-    if (!PAGES_HIDE_HEADER_BORDER.includes(location as PathName)) {
+    if (!flag) {
       OBSERVER && OBSERVER.disconnect();
       OBSERVER = null;
       return;
@@ -47,7 +51,8 @@ const SiteHeader = () => {
 
   const renderHeader = () => {
     let headerClassName = "shadow-sm dark:border-b dark:border-neutral-700";
-    if (PAGES_HIDE_HEADER_BORDER.includes(location as PathName)) {
+
+    if (flag) {
       headerClassName = isTopOfPage
         ? ""
         : "shadow-sm dark:border-b dark:border-neutral-700";

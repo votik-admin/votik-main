@@ -95,14 +95,19 @@ const SectionSliderNewCategoriesCustom: FC<SectionSliderNewCategoriesProps> = ({
                   <CardCategoryCustomSkeleton />
                 </li>
               ))}
-            {!isLoading &&
-              data &&
-              data?.map((item, index) => (
+            {data &&
+              data.length &&
+              data.map((item, index) => (
                 <li key={item.id} className={`glide__slide ${itemClassName}`}>
                   <CardCategoryCustom taxonomy={item} />
                 </li>
               ))}
           </ul>
+          {data && !data.length && (
+            <div className="py-[10rem] flex items-center justify-center text-xl">
+              Trending events coming soon!
+            </div>
+          )}
         </div>
 
         {sliderStyle === "style2" && (

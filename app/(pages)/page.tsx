@@ -1,14 +1,8 @@
-"use client";
-
-import React, { useEffect } from "react";
-import SectionSubscribe2 from "@/app/components/SectionSubscribe2/SectionSubscribe2";
+import React from "react";
 import SectionGridFeaturePlaces from "./SectionGridFeaturePlaces";
-import SectionHowItWork from "@/app/components/SectionHowItWork/SectionHowItWork";
 import BackgroundSection from "@/app/components/BackgroundSection/BackgroundSection";
 import BgGlassmorphism from "@/app/components/BgGlassmorphism/BgGlassmorphism";
 import { TaxonomyType } from "@/app/data/types";
-import SectionGridAuthorBox from "@/app/components/SectionGridAuthorBox/SectionGridAuthorBox";
-import SectionGridCategoryBox from "@/app/components/SectionGridCategoryBox/SectionGridCategoryBox";
 import SectionHero3 from "@/app/components/SectionHero/SectionHero3";
 import CardCategory6 from "@/app/components/CardCategory6/CardCategory6";
 import Heading from "../components/Heading/Heading";
@@ -19,7 +13,7 @@ import imageWorkshops from "@/app/images/home/workshops.png";
 import imageNightlife from "@/app/images/home/nightlife.jpg";
 import SectionSliderNewCategories from "@/app/components/SectionSliderNewCategories/SectionSliderNewCategories";
 
-const DEMO_CATS_2: TaxonomyType[] = [
+const EVENT_CATEGORIES: TaxonomyType[] = [
   {
     id: "1",
     href: "/category/music",
@@ -75,25 +69,17 @@ function PageHome3() {
         </Heading>
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-12 sm:col-span-6 lg:col-span-4 flex">
-            <CardCategory6 taxonomy={DEMO_CATS_2[0]} />
+            <CardCategory6 taxonomy={EVENT_CATEGORIES[0]} />
           </div>
           <div className="col-span-12 sm:col-span-6 lg:col-span-4 grid grid-rows-2 gap-6">
-            <CardCategory6 taxonomy={DEMO_CATS_2[1]} />
-            <CardCategory6 taxonomy={DEMO_CATS_2[2]} />
+            <CardCategory6 taxonomy={EVENT_CATEGORIES[1]} />
+            <CardCategory6 taxonomy={EVENT_CATEGORIES[2]} />
           </div>
           <div className="col-span-12 sm:col-span-6 lg:col-span-4 flex">
-            <CardCategory6 taxonomy={DEMO_CATS_2[3]} />
+            <CardCategory6 taxonomy={EVENT_CATEGORIES[3]} />
           </div>
         </div>
-        {/* SECTION */}
-        {/* <SectionGridCategoryBox /> */}
-        {/* SECTION */}
-        {/* <div className="relative py-16">
-          <BackgroundSection />
-          <SectionGridAuthorBox boxCard="box2" />
-        </div> */}
-        {/* SECTION */}
-        {/* <SectionHowItWork /> */}
+
         {/* SECTION */}
         <div className="relative py-16">
           <BackgroundSection />
@@ -106,8 +92,6 @@ function PageHome3() {
           itemPerRow={5}
           uniqueClassName="PageHome_s3"
         />
-        {/* SECTION */}
-        {/* <SectionSubscribe2 /> */}
       </div>
     </div>
   );

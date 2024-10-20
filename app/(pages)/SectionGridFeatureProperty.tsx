@@ -1,3 +1,5 @@
+"use client";
+
 import React, { FC, ReactNode } from "react";
 import { DEMO_STAY_LISTINGS } from "@/app/data/listings";
 import { StayDataType } from "@/app/data/types";

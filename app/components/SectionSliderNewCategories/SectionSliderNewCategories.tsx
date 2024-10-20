@@ -1,3 +1,5 @@
+"use client";
+
 import React, { FC, useEffect, useMemo } from "react";
 import Heading from "@/app/components/Heading/Heading";
 import Glide from "@glidejs/glide";

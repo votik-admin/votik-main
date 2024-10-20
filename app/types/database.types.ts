@@ -11,46 +11,58 @@ export type Database = {
     Tables: {
       events: {
         Row: {
+          accepted: boolean
           category: Database["public"]["Enums"]["EventCategory"]
           city: Database["public"]["Enums"]["City"]
           created_at: string
           description: string
           expected_footfall: number
           id: string
-          location: string
+          location: string | null
           name: string
           organizer_id: string
           primary_img: string
           secondary_imgs: string[] | null
+          slug: string
           start_time: string
+          venue: string | null
+          venue_layout: string | null
         }
         Insert: {
+          accepted?: boolean
           category: Database["public"]["Enums"]["EventCategory"]
           city: Database["public"]["Enums"]["City"]
           created_at?: string
           description: string
           expected_footfall: number
           id?: string
-          location: string
+          location?: string | null
           name: string
           organizer_id?: string
           primary_img: string
           secondary_imgs?: string[] | null
+          slug: string
           start_time: string
+          venue?: string | null
+          venue_layout?: string | null
         }
         Update: {
+          accepted?: boolean
           category?: Database["public"]["Enums"]["EventCategory"]
           city?: Database["public"]["Enums"]["City"]
           created_at?: string
           description?: string
           expected_footfall?: number
           id?: string
-          location?: string
+          location?: string | null
           name?: string
           organizer_id?: string
           primary_img?: string
           secondary_imgs?: string[] | null
+          slug?: string
           start_time?: string
+          venue?: string | null
+          venue_layout?: string | null
         }
         Relationships: [
           {
@@ -58,6 +70,13 @@ export type Database = {
             columns: ["organizer_id"]
             isOneToOne: false
             referencedRelation: "organizers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_venue_fkey"
+            columns: ["venue"]
+            isOneToOne: false
+            referencedRelation: "venues"
             referencedColumns: ["id"]
           },
         ]
@@ -100,6 +119,7 @@ export type Database = {
       organizers: {
         Row: {
           addr: string
+          avatar_url: string | null
           bank_acc_beneficiary_name: string
           bank_acc_ifsc: string
           bank_acc_number: string
@@ -111,10 +131,12 @@ export type Database = {
           name: string
           pan_number: string
           phone_number: string
+          slug: string
           state: string
         }
         Insert: {
           addr: string
+          avatar_url?: string | null
           bank_acc_beneficiary_name: string
           bank_acc_ifsc: string
           bank_acc_number: string
@@ -122,14 +144,16 @@ export type Database = {
           created_at?: string
           email: string
           gstin_number?: string | null
-          id?: string
+          id: string
           name: string
           pan_number: string
           phone_number: string
+          slug: string
           state: string
         }
         Update: {
           addr?: string
+          avatar_url?: string | null
           bank_acc_beneficiary_name?: string
           bank_acc_ifsc?: string
           bank_acc_number?: string
@@ -141,6 +165,7 @@ export type Database = {
           name?: string
           pan_number?: string
           phone_number?: string
+          slug?: string
           state?: string
         }
         Relationships: []
@@ -194,6 +219,7 @@ export type Database = {
         Row: {
           address_1: string | null
           address_2: string | null
+          avatar_url: string | null
           birthday: string
           city: string | null
           created_at: string
@@ -206,12 +232,14 @@ export type Database = {
           middle_name: string | null
           phone_number: string
           pincode: string | null
+          slug: string
           state: string | null
           username: string
         }
         Insert: {
           address_1?: string | null
           address_2?: string | null
+          avatar_url?: string | null
           birthday: string
           city?: string | null
           created_at?: string
@@ -224,12 +252,14 @@ export type Database = {
           middle_name?: string | null
           phone_number: string
           pincode?: string | null
+          slug: string
           state?: string | null
           username: string
         }
         Update: {
           address_1?: string | null
           address_2?: string | null
+          avatar_url?: string | null
           birthday?: string
           city?: string | null
           created_at?: string
@@ -242,6 +272,7 @@ export type Database = {
           middle_name?: string | null
           phone_number?: string
           pincode?: string | null
+          slug?: string
           state?: string | null
           username?: string
         }
@@ -257,6 +288,7 @@ export type Database = {
           latitude: number
           longitude: number
           name: string
+          slug: string
         }
         Insert: {
           address: string
@@ -267,6 +299,7 @@ export type Database = {
           latitude: number
           longitude: number
           name: string
+          slug: string
         }
         Update: {
           address?: string
@@ -277,6 +310,7 @@ export type Database = {
           latitude?: number
           longitude?: number
           name?: string
+          slug?: string
         }
         Relationships: []
       }

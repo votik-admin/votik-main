@@ -1,3 +1,4 @@
+"use client";
 import Button, { ButtonProps } from "@/app/shared/Button/Button";
 import React from "react";
 

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { Fragment, useEffect, useState } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import NcInputNumber from "@/app/components/NcInputNumber/NcInputNumber";

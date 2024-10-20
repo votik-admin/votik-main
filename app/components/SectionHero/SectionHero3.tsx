@@ -38,7 +38,7 @@ const SectionHero3: FC<SectionHero3Props> = ({ className = "" }) => {
       <div className="bg-gradient-to-t from-black to-black 2xl:to-transparent via-black text-white 2xl:-translate-y-1/2 2xl:-mb-[22rem] pb-1">
         <div className="container relative space-y-24 mb-24 lg:space-y-28 lg:mb-28">
           <SectionSliderNewCategories
-            heading="Mumbai’s Teanding Events!"
+            heading="Mumbai’s Trending Events!"
             subHeading=""
             categoryCardType="card5"
             itemPerRow={4}

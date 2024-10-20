@@ -1,7 +1,10 @@
 import { ComponentType } from "react";
 
 export interface LocationStates {
+  // votik special
   "/"?: {};
+  "/events"?: {};
+
   "/#"?: {};
   "/home-2"?: {};
   "/home-3"?: {};

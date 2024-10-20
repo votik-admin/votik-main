@@ -5,6 +5,7 @@ import Link from "next/link";
 import convertNumbThousand from "@/app/utils/convertNumbThousand";
 import { Tables } from "@/app/types/database.types";
 import formatDate from "@/app/utils/formatDate";
+import ButtonCustom from "@/app/shared/Button/ButtonCustom";
 
 export interface CardCategoryCustomProps {
   className?: string;
@@ -15,8 +16,8 @@ const CardCategoryCustom: FC<CardCategoryCustomProps> = ({
   className = "",
   taxonomy,
 }) => {
-  const { id, name, city, location, start_time, primary_img } = taxonomy;
-  const href = `/events/${id}`;
+  const { slug, name, city, location, start_time, primary_img } = taxonomy;
+  const href = `/events/${slug}`;
 
   return (
     <div className="rounded-2xl overflow-hidden">
@@ -58,9 +59,7 @@ const CardCategoryCustom: FC<CardCategoryCustomProps> = ({
             Rs. 999 Onwards
           </h2>
           <Link href={href}>
-            <button className="ml-auto bg-[#430D7F] text-[#C3FD07] font-semibold px-4 py-2 rounded-lg hover:shadow">
-              BOOK NOW
-            </button>
+            <ButtonCustom>BOOK NOW</ButtonCustom>
           </Link>
         </div>
       </div>
