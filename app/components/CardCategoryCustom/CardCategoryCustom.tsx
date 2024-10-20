@@ -1,11 +1,11 @@
 import React, { FC } from "react";
-import NcImage from "@/app/shared/NcImage/NcImage";
-import { TaxonomyType } from "@/app/data/types";
+import NcImage from "@app/shared/NcImage/NcImage";
+import { TaxonomyType } from "@app/data/types";
 import Link from "next/link";
-import convertNumbThousand from "@/app/utils/convertNumbThousand";
-import { Tables } from "@/app/types/database.types";
-import formatDate from "@/app/utils/formatDate";
-import ButtonCustom from "@/app/shared/Button/ButtonCustom";
+import convertNumbThousand from "@app/utils/convertNumbThousand";
+import { Tables } from "@app/types/database.types";
+import formatDate from "@app/utils/formatDate";
+import ButtonCustom from "@app/shared/Button/ButtonCustom";
 
 export interface CardCategoryCustomProps {
   className?: string;

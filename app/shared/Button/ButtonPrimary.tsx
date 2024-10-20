@@ -1,5 +1,4 @@
-"use client";
-import Button, { ButtonProps } from "@/app/shared/Button/Button";
+import Button, { ButtonProps } from "@app/shared/Button/Button";
 import React from "react";
 
 export interface ButtonPrimaryProps extends ButtonProps {}

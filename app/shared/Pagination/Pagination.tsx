@@ -1,7 +1,7 @@
-import { CustomLink } from "@/app/data/types";
+import { CustomLink } from "@app/data/types";
 import React, { FC } from "react";
 import Link from "next/link";
-import twFocusClass from "@/app/utils/twFocusClass";
+import twFocusClass from "@app/utils/twFocusClass";
 
 const DEMO_PAGINATION: CustomLink[] = [
   {

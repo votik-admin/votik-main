@@ -1,16 +1,16 @@
 import React, { FC, useEffect, useRef, useState } from "react";
-import Logo from "@/app/shared/Logo/Logo";
-import useOutsideAlerter from "@/app/hooks/useOutsideAlerter";
+import Logo from "@app/shared/Logo/Logo";
+import useOutsideAlerter from "@app/hooks/useOutsideAlerter";
 import HeroSearchForm, {
   SearchTab,
-} from "@/app/components/HeroSearchForm2/HeroSearchForm";
+} from "@app/components/HeroSearchForm2/HeroSearchForm";
 import Link from "next/link";
-import SwitchDarkMode from "@/app/shared/SwitchDarkMode/SwitchDarkMode";
+import SwitchDarkMode from "@app/shared/SwitchDarkMode/SwitchDarkMode";
 import NotifyDropdown from "./NotifyDropdown";
 import AvatarDropdown from "./AvatarDropdown";
-import MenuBar from "@/app/shared/MenuBar/MenuBar";
-import { StaySearchFormFields } from "@/app/components/HeroSearchForm2/StaySearchForm";
-import HeroSearchForm2MobileFactory from "@/app/components/HeroSearchForm2Mobile/HeroSearchForm2MobileFactory";
+import MenuBar from "@app/shared/MenuBar/MenuBar";
+import { StaySearchFormFields } from "@app/components/HeroSearchForm2/StaySearchForm";
+import HeroSearchForm2MobileFactory from "@app/components/HeroSearchForm2Mobile/HeroSearchForm2MobileFactory";
 
 interface Header3Props {
   className?: string;
@@ -177,12 +177,12 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
             <div className="hidden md:flex relative z-10 flex-1 items-center justify-end text-neutral-700 dark:text-neutral-100">
               <div className="items-center flex space-x-1">
                 <Link
-                  href="/add-listing-1"
+                  href="/add-event"
                   className="
                 hidden xl:inline-flex text-opacity-90
                 group px-4 py-2 border border-neutral-300 hover:border-neutral-400 dark:border-neutral-700 rounded-full items-center text-sm text-gray-700 dark:text-neutral-300 font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
                 >
-                  List your property
+                  List your event
                 </Link>
 
                 <div></div>

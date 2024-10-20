@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import twFocusClass from "@/app/utils/twFocusClass";
-import { PostDataType } from "@/app/data/types";
+import twFocusClass from "@app/utils/twFocusClass";
+import { PostDataType } from "@app/data/types";
 
 export interface NcBookmarkProps {
   containerClassName?: string;

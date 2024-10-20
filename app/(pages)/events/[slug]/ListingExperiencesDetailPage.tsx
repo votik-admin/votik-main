@@ -2,31 +2,31 @@
 
 import React, { FC, useState } from "react";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import LocationMarker from "@/app/components/AnyReactComponent/LocationMarker";
-import CommentListing from "@/app/components/CommentListing/CommentListing";
-import FiveStartIconForRate from "@/app/components/FiveStartIconForRate/FiveStartIconForRate";
-import GuestsInput from "@/app/components/HeroSearchForm/GuestsInput";
-import StartRating from "@/app/components/StartRating/StartRating";
+import LocationMarker from "@app/components/AnyReactComponent/LocationMarker";
+import CommentListing from "@app/components/CommentListing/CommentListing";
+import FiveStartIconForRate from "@app/components/FiveStartIconForRate/FiveStartIconForRate";
+import GuestsInput from "@app/components/HeroSearchForm/GuestsInput";
+import StartRating from "@app/components/StartRating/StartRating";
 import GoogleMapReact from "google-map-react";
-import useWindowSize from "@/app/hooks/useWindowResize";
+import useWindowSize from "@app/hooks/useWindowResize";
 import moment from "moment";
 import {
   DayPickerSingleDateController,
   isInclusivelyAfterDay,
 } from "react-dates";
-import Avatar from "@/app/shared/Avatar/Avatar";
-import Badge from "@/app/shared/Badge/Badge";
-import ButtonCircle from "@/app/shared/Button/ButtonCircle";
-import ButtonPrimary from "@/app/shared/Button/ButtonPrimary";
-import ButtonSecondary from "@/app/shared/Button/ButtonSecondary";
-import Input from "@/app/shared/Input/Input";
-import NcImage from "@/app/shared/NcImage/NcImage";
+import Avatar from "@app/shared/Avatar/Avatar";
+import Badge from "@app/shared/Badge/Badge";
+import ButtonCircle from "@app/shared/Button/ButtonCircle";
+import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
+import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
+import Input from "@app/shared/Input/Input";
+import NcImage from "@app/shared/NcImage/NcImage";
 import LikeSaveBtns from "./LikeSaveBtns";
 import ModalPhotos from "./ModalPhotos";
-import BackgroundSection from "@/app/components/BackgroundSection/BackgroundSection";
-import SectionSliderNewCategories from "@/app/components/SectionSliderNewCategoriesCustom/SectionSliderNewCategoriesCustom";
-import SectionSubscribe2 from "@/app/components/SectionSubscribe2/SectionSubscribe2";
-import ExperiencesDateSingleInput from "@/app/components/HeroSearchForm/ExperiencesDateSingleInput";
+import BackgroundSection from "@app/components/BackgroundSection/BackgroundSection";
+import SectionSliderNewCategories from "@app/components/SectionSliderNewCategoriesCustom/SectionSliderNewCategoriesCustom";
+import SectionSubscribe2 from "@app/components/SectionSubscribe2/SectionSubscribe2";
+import ExperiencesDateSingleInput from "@app/components/HeroSearchForm/ExperiencesDateSingleInput";
 import MobileFooterSticky from "./MobileFooterSticky";
 
 export interface ListingExperiencesDetailPageProps {

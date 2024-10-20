@@ -3,7 +3,7 @@ import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import React, { FC, Fragment, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import NcImage from "@/app/shared/NcImage/NcImage";
+import NcImage from "@app/shared/NcImage/NcImage";
 
 // <--- NavItemType --->
 export interface MegamenuItem {

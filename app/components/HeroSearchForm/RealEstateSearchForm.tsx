@@ -3,7 +3,7 @@ import LocationInput from "./LocationInput";
 import { FC } from "react";
 import PropertyTypeSelect from "./PropertyTypeSelect";
 import PriceRangeInput from "./PriceRangeInput";
-import { PropertyType } from "@/app/components/HeroSearchForm2Mobile/PropertyTypeSelect";
+import { PropertyType } from "@app/components/HeroSearchForm2Mobile/PropertyTypeSelect";
 
 export interface RealEstateSearchFormProps {
   haveDefaultValue?: boolean;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import NcInputNumber from "@/app/components/NcInputNumber/NcInputNumber";
+import NcInputNumber from "@app/components/NcInputNumber/NcInputNumber";
 import { FC } from "react";
 
 export interface GuestsObject {

@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import NcImage from "@/app/shared/NcImage/NcImage";
+import NcImage from "@app/shared/NcImage/NcImage";
 import Link from "next/link";
-import { Tables } from "@/app/types/database.types";
+import { Tables } from "@app/types/database.types";
 
 export interface CardCategory5Props {
   className?: string;

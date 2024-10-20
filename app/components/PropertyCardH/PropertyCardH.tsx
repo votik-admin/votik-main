@@ -1,12 +1,12 @@
 import React, { FC } from "react";
-import GallerySlider from "@/app/components/GallerySlider/GallerySlider";
-import { DEMO_STAY_LISTINGS } from "@/app/data/listings";
-import StartRating from "@/app/components/StartRating/StartRating";
+import GallerySlider from "@app/components/GallerySlider/GallerySlider";
+import { DEMO_STAY_LISTINGS } from "@app/data/listings";
+import StartRating from "@app/components/StartRating/StartRating";
 import Link from "next/link";
-import BtnLikeIcon from "@/app/components/BtnLikeIcon/BtnLikeIcon";
-import SaleOffBadge from "@/app/components/SaleOffBadge/SaleOffBadge";
-import Badge from "@/app/shared/Badge/Badge";
-import { StayDataType } from "@/app/data/types";
+import BtnLikeIcon from "@app/components/BtnLikeIcon/BtnLikeIcon";
+import SaleOffBadge from "@app/components/SaleOffBadge/SaleOffBadge";
+import Badge from "@app/shared/Badge/Badge";
+import { StayDataType } from "@app/data/types";
 
 export interface PropertyCardHProps {
   className?: string;

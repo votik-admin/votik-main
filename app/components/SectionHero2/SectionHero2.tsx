@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import imagePng from "@/app/images/hero-right-3.png";
-import HeroRealEstateSearchForm from "@/app/components/HeroSearchForm/HeroRealEstateSearchForm";
+import imagePng from "@app/images/hero-right-3.png";
+import HeroRealEstateSearchForm from "@app/components/HeroSearchForm/HeroRealEstateSearchForm";
 
 export interface SectionHero2Props {
   className?: string;

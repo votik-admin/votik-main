@@ -1,9 +1,9 @@
 "use client";
 
-import Heading from "@/app/shared/Heading/Heading";
-import NcImage from "@/app/shared/NcImage/NcImage";
-import NcPlayIcon from "@/app/shared/NcPlayIcon/NcPlayIcon";
-import NcPlayIcon2 from "@/app/shared/NcPlayIcon2/NcPlayIcon2";
+import Heading from "@app/shared/Heading/Heading";
+import NcImage from "@app/shared/NcImage/NcImage";
+import NcPlayIcon from "@app/shared/NcPlayIcon/NcPlayIcon";
+import NcPlayIcon2 from "@app/shared/NcPlayIcon2/NcPlayIcon2";
 import React, { FC, useState } from "react";
 
 export interface VideoType {

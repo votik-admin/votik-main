@@ -1,6 +1,6 @@
 import { StarIcon } from "@heroicons/react/24/solid";
 import React, { FC } from "react";
-import Avatar from "@/app/shared/Avatar/Avatar";
+import Avatar from "@app/shared/Avatar/Avatar";
 
 interface CommentListingDataType {
   name: string;

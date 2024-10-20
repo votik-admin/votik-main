@@ -2,8 +2,8 @@
 
 import React, { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import ButtonClose from "@/app/shared/ButtonClose/ButtonClose";
-import ButtonSecondary from "@/app/shared/Button/ButtonSecondary";
+import ButtonClose from "@app/shared/ButtonClose/ButtonClose";
+import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
 
 const Amenities_demos = [
   { name: "la-key", icon: "la-key" },

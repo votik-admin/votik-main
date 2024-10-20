@@ -1,11 +1,11 @@
 "use client";
 
 import React, { FC } from "react";
-import ButtonCircle from "@/app/shared/Button/ButtonCircle";
-import rightImg from "@/app/images/SVG-subcribe2.png";
-import NcImage from "@/app/shared/NcImage/NcImage";
-import Badge from "@/app/shared/Badge/Badge";
-import Input from "@/app/shared/Input/Input";
+import ButtonCircle from "@app/shared/Button/ButtonCircle";
+import rightImg from "@app/images/SVG-subcribe2.png";
+import NcImage from "@app/shared/NcImage/NcImage";
+import Badge from "@app/shared/Badge/Badge";
+import Input from "@app/shared/Input/Input";
 
 export interface SectionSubscribe2Props {
   className?: string;

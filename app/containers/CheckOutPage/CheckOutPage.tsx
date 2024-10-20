@@ -1,21 +1,21 @@
 import { Tab } from "@headlessui/react";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import React, { FC, Fragment, useState } from "react";
-import visaPng from "@/app/images/vis.png";
-import mastercardPng from "@/app/images/mastercard.svg";
-import Input from "@/app/shared/Input/Input";
-import Label from "@/app/components/Label/Label";
-import Textarea from "@/app/shared/Textarea/Textarea";
-import ButtonPrimary from "@/app/shared/Button/ButtonPrimary";
-import NcImage from "@/app/shared/NcImage/NcImage";
-import StartRating from "@/app/components/StartRating/StartRating";
-import NcModal from "@/app/shared/NcModal/NcModal";
-import ModalSelectDate from "@/app/components/ModalSelectDate";
+import visaPng from "@app/images/vis.png";
+import mastercardPng from "@app/images/mastercard.svg";
+import Input from "@app/shared/Input/Input";
+import Label from "@app/components/Label/Label";
+import Textarea from "@app/shared/Textarea/Textarea";
+import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
+import NcImage from "@app/shared/NcImage/NcImage";
+import StartRating from "@app/components/StartRating/StartRating";
+import NcModal from "@app/shared/NcModal/NcModal";
+import ModalSelectDate from "@app/components/ModalSelectDate";
 import moment from "moment";
-import { DateRage } from "@/app/components/HeroSearchForm/StaySearchForm";
-import converSelectedDateToString from "@/app/utils/converSelectedDateToString";
-import ModalSelectGuests from "@/app/components/ModalSelectGuests";
-import { GuestsObject } from "@/app/components/HeroSearchForm2Mobile/GuestsInput";
+import { DateRage } from "@app/components/HeroSearchForm/StaySearchForm";
+import converSelectedDateToString from "@app/utils/converSelectedDateToString";
+import ModalSelectGuests from "@app/components/ModalSelectGuests";
+import { GuestsObject } from "@app/components/HeroSearchForm2Mobile/GuestsInput";
 
 export interface CheckOutPageProps {
   className?: string;

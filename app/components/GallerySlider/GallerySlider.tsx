@@ -1,10 +1,10 @@
 "use client";
 
 import Glide from "@glidejs/glide";
-import useNcId from "@/app/hooks/useNcId";
+import useNcId from "@app/hooks/useNcId";
 import React, { FC, useEffect, useMemo } from "react";
-import NcImage from "@/app/shared/NcImage/NcImage";
-import NextPrev from "@/app/shared/NextPrev/NextPrev";
+import NcImage from "@app/shared/NcImage/NcImage";
+import NextPrev from "@app/shared/NextPrev/NextPrev";
 import Link from "next/link";
 
 export interface GallerySliderProps {

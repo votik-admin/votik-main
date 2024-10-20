@@ -6,7 +6,7 @@ import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { Fragment } from "react";
 import moment from "moment";
-import NcInputNumber from "@/app/components/NcInputNumber/NcInputNumber";
+import NcInputNumber from "@app/components/NcInputNumber/NcInputNumber";
 import FlightDateRangeInput from "./FlightDateRangeInput";
 
 export interface DateRage {

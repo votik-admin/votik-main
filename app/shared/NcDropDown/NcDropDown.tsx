@@ -1,7 +1,7 @@
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 import React, { FC, Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
-import twFocusClass from "@/app/utils/twFocusClass";
+import twFocusClass from "@app/utils/twFocusClass";
 
 export interface NcDropDownItem {
   id: string;

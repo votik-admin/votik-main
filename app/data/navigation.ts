@@ -1,8 +1,8 @@
 import {
   MegamenuItem,
   NavItemType,
-} from "@/app/shared/Navigation/NavigationItem";
-import ncNanoId from "@/app/utils/ncNanoId";
+} from "@app/shared/Navigation/NavigationItem";
+import ncNanoId from "@app/utils/ncNanoId";
 import __megamenu from "./jsons/__megamenu.json";
 
 const megaMenuDemo: MegamenuItem[] = [
@@ -124,58 +124,58 @@ const otherPageChildMenus: NavItemType[] = [
 const templatesChildrenMenus: NavItemType[] = [
   {
     id: ncNanoId(),
-    href: "/add-listing-1",
+    href: "/add-event",
     name: "Add Listings",
     type: "dropdown",
     children: [
       {
         id: ncNanoId(),
-        href: "/add-listing-1",
+        href: "/add-event",
         name: "Add Listings 1",
       },
       {
         id: ncNanoId(),
-        href: "/add-listing-2",
+        href: "/add-event/2",
         name: "Add Listings 2",
       },
       {
         id: ncNanoId(),
-        href: "/add-listing-3",
+        href: "/add-event/3",
         name: "Add Listings 3",
       },
       {
         id: ncNanoId(),
-        href: "/add-listing-4",
+        href: "/add-event/4",
         name: "Add Listings 4",
       },
       {
         id: ncNanoId(),
-        href: "/add-listing-5",
+        href: "/add-event/5",
         name: "Add Listings 5",
       },
       {
         id: ncNanoId(),
-        href: "/add-listing-6",
+        href: "/add-event/6",
         name: "Add Listings 6",
       },
       {
         id: ncNanoId(),
-        href: "/add-listing-7",
+        href: "/add-event/7",
         name: "Add Listings 7",
       },
       {
         id: ncNanoId(),
-        href: "/add-listing-8",
+        href: "/add-event/8",
         name: "Add Listings 8",
       },
       {
         id: ncNanoId(),
-        href: "/add-listing-9",
+        href: "/add-event/9",
         name: "Add Listings 9",
       },
       {
         id: ncNanoId(),
-        href: "/add-listing-10",
+        href: "/add-event/10",
         name: "Add Listings 10",
       },
     ],

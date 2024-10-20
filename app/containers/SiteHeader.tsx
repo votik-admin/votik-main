@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect } from "react";
-import Header3 from "@/app/components/Header/Header3";
-import { PathName } from "@/app/routers/types";
+import Header3 from "@app/components/Header/Header3";
+import { PathName } from "@app/routers/types";
 import { usePathname } from "next/navigation";
 
 export type SiteHeaders = "Header 1" | "Header 2" | "Header 3";

@@ -1,12 +1,12 @@
 "use client";
 
 import React, { FC, useEffect, useMemo } from "react";
-import Heading from "@/app/components/Heading/Heading";
+import Heading from "@app/components/Heading/Heading";
 import Glide from "@glidejs/glide";
-import { TaxonomyType } from "@/app/data/types";
-import NextPrev from "@/app/shared/NextPrev/NextPrev";
-import useNcId from "@/app/hooks/useNcId";
-import NcImage from "@/app/shared/NcImage/NcImage";
+import { TaxonomyType } from "@app/data/types";
+import NextPrev from "@app/shared/NextPrev/NextPrev";
+import useNcId from "@app/hooks/useNcId";
+import NcImage from "@app/shared/NcImage/NcImage";
 
 export interface SectionSliderHighlightsProps {
   data?: string[];

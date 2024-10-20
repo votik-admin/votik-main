@@ -1,6 +1,6 @@
-import { PostDataType } from "@/app/data/types";
+import { PostDataType } from "@app/data/types";
 import React, { FC } from "react";
-import Badge from "@/app/shared/Badge/Badge";
+import Badge from "@app/shared/Badge/Badge";
 
 export interface CategoryBadgeListProps {
   className?: string;

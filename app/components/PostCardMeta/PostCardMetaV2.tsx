@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import Avatar from "@/app/shared/Avatar/Avatar";
-import { PostDataType } from "@/app/data/types";
+import Avatar from "@app/shared/Avatar/Avatar";
+import { PostDataType } from "@app/data/types";
 import Link from "next/link";
 
 export interface PostCardMetaV2Props {

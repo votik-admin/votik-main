@@ -7,22 +7,22 @@ import {
 } from "./taxonomies";
 import { CarDataType, ExperiencesDataType, StayDataType } from "./types";
 import { DEMO_AUTHORS } from "./authors";
-import car1 from "@/app/images/cars/1.png";
-import car2 from "@/app/images/cars/2.png";
-import car3 from "@/app/images/cars/3.png";
-import car4 from "@/app/images/cars/4.png";
-import car5 from "@/app/images/cars/5.png";
-import car6 from "@/app/images/cars/6.png";
-import car7 from "@/app/images/cars/7.png";
-import car8 from "@/app/images/cars/8.png";
-import car9 from "@/app/images/cars/9.png";
-import car10 from "@/app/images/cars/10.png";
-import car11 from "@/app/images/cars/11.png";
-import car12 from "@/app/images/cars/12.png";
-import car13 from "@/app/images/cars/13.png";
-import car14 from "@/app/images/cars/14.png";
-import car15 from "@/app/images/cars/15.png";
-import car16 from "@/app/images/cars/16.png";
+import car1 from "@app/images/cars/1.png";
+import car2 from "@app/images/cars/2.png";
+import car3 from "@app/images/cars/3.png";
+import car4 from "@app/images/cars/4.png";
+import car5 from "@app/images/cars/5.png";
+import car6 from "@app/images/cars/6.png";
+import car7 from "@app/images/cars/7.png";
+import car8 from "@app/images/cars/8.png";
+import car9 from "@app/images/cars/9.png";
+import car10 from "@app/images/cars/10.png";
+import car11 from "@app/images/cars/11.png";
+import car12 from "@app/images/cars/12.png";
+import car13 from "@app/images/cars/13.png";
+import car14 from "@app/images/cars/14.png";
+import car15 from "@app/images/cars/15.png";
+import car16 from "@app/images/cars/16.png";
 const carsImgs = [
   car1.src,
   car2.src,

@@ -6,8 +6,8 @@ import {
 } from "react-dates";
 import { DateRage } from "./StaySearchForm";
 import { FC } from "react";
-import useWindowSize from "@/app/hooks/useWindowResize";
-import useNcId from "@/app/hooks/useNcId";
+import useWindowSize from "@app/hooks/useWindowResize";
+import useNcId from "@app/hooks/useNcId";
 
 export interface StayDatesRangeInputProps {
   defaultValue: DateRage;

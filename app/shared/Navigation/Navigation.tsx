@@ -1,6 +1,6 @@
 import React from "react";
 import NavigationItem from "./NavigationItem";
-import { NAVIGATION_DEMO } from "@/app/data/navigation";
+import { NAVIGATION_DEMO } from "@app/data/navigation";
 
 function Navigation() {
   return (

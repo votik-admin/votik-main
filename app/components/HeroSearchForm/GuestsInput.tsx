@@ -2,12 +2,12 @@
 
 import React, { Fragment, useEffect, useState } from "react";
 import { Popover, Transition } from "@headlessui/react";
-import NcInputNumber from "@/app/components/NcInputNumber/NcInputNumber";
+import NcInputNumber from "@app/components/NcInputNumber/NcInputNumber";
 import { FC } from "react";
 import ClearDataButton from "./ClearDataButton";
 import ButtonSubmit from "./ButtonSubmit";
-import { GuestsObject } from "@/app/components/HeroSearchForm2Mobile/GuestsInput";
-import { PathName } from "@/app/routers/types";
+import { GuestsObject } from "@app/components/HeroSearchForm2Mobile/GuestsInput";
+import { PathName } from "@app/routers/types";
 
 export interface GuestsInputProps {
   defaultValue: GuestsObject;

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { ButtonHTMLAttributes } from "react";
-import twFocusClass from "@/app/utils/twFocusClass";
+import twFocusClass from "@app/utils/twFocusClass";
 
 export interface ButtonCircleProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {

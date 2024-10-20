@@ -1,14 +1,14 @@
 import React, { FC } from "react";
-import Logo from "@/app/shared/Logo/Logo";
-import MenuBar from "@/app/shared/MenuBar/MenuBar";
-import SwitchDarkMode from "@/app/shared/SwitchDarkMode/SwitchDarkMode";
+import Logo from "@app/shared/Logo/Logo";
+import MenuBar from "@app/shared/MenuBar/MenuBar";
+import SwitchDarkMode from "@app/shared/SwitchDarkMode/SwitchDarkMode";
 import LangDropdown from "./LangDropdown";
 import NotifyDropdown from "./NotifyDropdown";
 import AvatarDropdown from "./AvatarDropdown";
 import CurrencyDropdown from "./CurrencyDropdown";
 import DropdownTravelers from "./DropdownTravelers";
 import Link from "next/link";
-import HeroSearchForm2MobileFactory from "@/app/components/HeroSearchForm2Mobile/HeroSearchForm2MobileFactory";
+import HeroSearchForm2MobileFactory from "@app/components/HeroSearchForm2Mobile/HeroSearchForm2MobileFactory";
 
 export interface MainNav2Props {
   className?: string;
@@ -35,12 +35,12 @@ const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
             <CurrencyDropdown />
             <LangDropdown />
             <Link
-              href="/add-listing-1"
+              href="/add-event"
               className="
                 text-opacity-90
                 group px-4 py-2 border border-neutral-300 hover:border-neutral-400 dark:border-neutral-700 rounded-full inline-flex items-center text-sm text-gray-700 dark:text-neutral-300 font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
             >
-              List your property
+              List your event
             </Link>
 
             <div></div>

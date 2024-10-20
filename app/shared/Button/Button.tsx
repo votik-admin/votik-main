@@ -1,7 +1,7 @@
 import React, { ButtonHTMLAttributes, FC } from "react";
 import Link, { LinkProps } from "next/link";
-import { LocationStates } from "@/app/routers/types";
-import twFocusClass from "@/app/utils/twFocusClass";
+import { LocationStates } from "@app/routers/types";
+import twFocusClass from "@app/utils/twFocusClass";
 
 export interface ButtonProps {
   className?: string;

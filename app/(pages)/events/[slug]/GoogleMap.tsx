@@ -2,7 +2,7 @@
 
 import React from "react";
 import GoogleMapReact from "google-map-react";
-import LocationMarker from "@/app/components/AnyReactComponent/LocationMarker";
+import LocationMarker from "@app/components/AnyReactComponent/LocationMarker";
 
 const GoogleMap = ({ lat, lng }: { lat: number; lng: number }) => {
   return (

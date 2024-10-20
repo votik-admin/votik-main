@@ -2,41 +2,41 @@
 
 import React, { FC, useState } from "react";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import LocationMarker from "@/app/components/AnyReactComponent/LocationMarker";
-import CommentListing from "@/app/components/CommentListing/CommentListing";
-import FiveStartIconForRate from "@/app/components/FiveStartIconForRate/FiveStartIconForRate";
-import { DateRage } from "@/app/components/HeroSearchForm/StaySearchForm";
-import StartRating from "@/app/components/StartRating/StartRating";
+import LocationMarker from "@app/components/AnyReactComponent/LocationMarker";
+import CommentListing from "@app/components/CommentListing/CommentListing";
+import FiveStartIconForRate from "@app/components/FiveStartIconForRate/FiveStartIconForRate";
+import { DateRage } from "@app/components/HeroSearchForm/StaySearchForm";
+import StartRating from "@app/components/StartRating/StartRating";
 import GoogleMapReact from "google-map-react";
-import useWindowSize from "@/app/hooks/useWindowResize";
+import useWindowSize from "@app/hooks/useWindowResize";
 import moment from "moment";
 import {
   DayPickerRangeController,
   FocusedInputShape,
   isInclusivelyAfterDay,
 } from "react-dates";
-import Avatar from "@/app/shared/Avatar/Avatar";
-import Badge from "@/app/shared/Badge/Badge";
-import ButtonCircle from "@/app/shared/Button/ButtonCircle";
-import ButtonPrimary from "@/app/shared/Button/ButtonPrimary";
-import ButtonSecondary from "@/app/shared/Button/ButtonSecondary";
-import Input from "@/app/shared/Input/Input";
-import NcImage from "@/app/shared/NcImage/NcImage";
+import Avatar from "@app/shared/Avatar/Avatar";
+import Badge from "@app/shared/Badge/Badge";
+import ButtonCircle from "@app/shared/Button/ButtonCircle";
+import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
+import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
+import Input from "@app/shared/Input/Input";
+import NcImage from "@app/shared/NcImage/NcImage";
 import LikeSaveBtns from "./LikeSaveBtns";
 import ModalPhotos from "./ModalPhotos";
-import BackgroundSection from "@/app/components/BackgroundSection/BackgroundSection";
-import SectionSliderNewCategories from "@/app/components/SectionSliderNewCategoriesCustom/SectionSliderNewCategoriesCustom";
-import SectionSubscribe2 from "@/app/components/SectionSubscribe2/SectionSubscribe2";
-import carUtilities1 from "@/app/images/carUtilities/1.png";
-import carUtilities2 from "@/app/images/carUtilities/2.png";
-import carUtilities3 from "@/app/images/carUtilities/3.png";
-import carUtilities4 from "@/app/images/carUtilities/4.png";
-import carUtilities5 from "@/app/images/carUtilities/5.png";
-import carUtilities6 from "@/app/images/carUtilities/6.png";
-import carUtilities7 from "@/app/images/carUtilities/7.png";
-import carUtilities8 from "@/app/images/carUtilities/8.png";
-import RentalCarDatesRangeInput from "@/app/components/HeroSearchForm/RentalCarDatesRangeInput";
-import { TimeRage } from "@/app/components/HeroSearchForm/RentalCarSearchForm";
+import BackgroundSection from "@app/components/BackgroundSection/BackgroundSection";
+import SectionSliderNewCategories from "@app/components/SectionSliderNewCategoriesCustom/SectionSliderNewCategoriesCustom";
+import SectionSubscribe2 from "@app/components/SectionSubscribe2/SectionSubscribe2";
+import carUtilities1 from "@app/images/carUtilities/1.png";
+import carUtilities2 from "@app/images/carUtilities/2.png";
+import carUtilities3 from "@app/images/carUtilities/3.png";
+import carUtilities4 from "@app/images/carUtilities/4.png";
+import carUtilities5 from "@app/images/carUtilities/5.png";
+import carUtilities6 from "@app/images/carUtilities/6.png";
+import carUtilities7 from "@app/images/carUtilities/7.png";
+import carUtilities8 from "@app/images/carUtilities/8.png";
+import RentalCarDatesRangeInput from "@app/components/HeroSearchForm/RentalCarDatesRangeInput";
+import { TimeRage } from "@app/components/HeroSearchForm/RentalCarSearchForm";
 import MobileFooterSticky from "./MobileFooterSticky";
 
 export interface ListingCarDetailPageProps {

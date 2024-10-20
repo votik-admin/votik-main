@@ -1,14 +1,14 @@
 "use client";
 
-import { DateRage } from "@/app/components/HeroSearchForm/StaySearchForm";
-import { GuestsObject } from "@/app/components/HeroSearchForm2Mobile/GuestsInput";
-import ModalSelectDate from "@/app/components/ModalSelectDate";
+import { DateRage } from "@app/components/HeroSearchForm/StaySearchForm";
+import { GuestsObject } from "@app/components/HeroSearchForm2Mobile/GuestsInput";
+import ModalSelectDate from "@app/components/ModalSelectDate";
 import moment from "moment";
 import React, { useState } from "react";
-import ButtonPrimary from "@/app/shared/Button/ButtonPrimary";
-import converSelectedDateToString from "@/app/utils/converSelectedDateToString";
+import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
+import converSelectedDateToString from "@app/utils/converSelectedDateToString";
 import ModalReserveMobile from "./ModalReserveMobile";
-import ButtonCustom from "@/app/shared/Button/ButtonCustom";
+import ButtonCustom from "@app/shared/Button/ButtonCustom";
 
 const MobileFooterSticky = () => {
   const [selectedDate, setSelectedDate] = useState<DateRage>({

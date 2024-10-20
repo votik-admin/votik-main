@@ -2,9 +2,9 @@
 
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import { DateRage } from "@/app/components/HeroSearchForm/StaySearchForm";
-import { GuestsObject } from "@/app/components/HeroSearchForm2Mobile/GuestsInput";
-import CheckOutPage from "@/app/containers/CheckOutPage/CheckOutPage";
+import { DateRage } from "@app/components/HeroSearchForm/StaySearchForm";
+import { GuestsObject } from "@app/components/HeroSearchForm2Mobile/GuestsInput";
+import CheckOutPage from "@app/containers/CheckOutPage/CheckOutPage";
 import React, { FC, Fragment, useState } from "react";
 
 interface ModalReserveMobileProps {

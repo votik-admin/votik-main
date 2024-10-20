@@ -1,15 +1,15 @@
 "use client";
 
 import React, { FC, useEffect, useMemo } from "react";
-import Heading from "@/app/components/Heading/Heading";
+import Heading from "@app/components/Heading/Heading";
 import Glide from "@glidejs/glide";
-import { TaxonomyType } from "@/app/data/types";
-import CardCategoryCustom from "@/app/components/CardCategoryCustom/CardCategoryCustom";
-import NextPrev from "@/app/shared/NextPrev/NextPrev";
-import useNcId from "@/app/hooks/useNcId";
+import { TaxonomyType } from "@app/data/types";
+import CardCategoryCustom from "@app/components/CardCategoryCustom/CardCategoryCustom";
+import NextPrev from "@app/shared/NextPrev/NextPrev";
+import useNcId from "@app/hooks/useNcId";
 import useSWR from "swr";
-import { getAllEvents } from "@/app/queries";
-import CardCategoryCustomSkeleton from "@/app/components/CardCategoryCustom/CardCategoryCustomSkeleton";
+import { getAllEvents } from "@app/queries";
+import CardCategoryCustomSkeleton from "@app/components/CardCategoryCustom/CardCategoryCustomSkeleton";
 
 export interface SectionSliderNewCategoriesProps {
   className?: string;
