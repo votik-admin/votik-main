@@ -10,26 +10,31 @@ import supabase from "@app/lib/supabase";
 import { useForm } from "react-hook-form";
 import { toast, Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { SignInWithOAuthCredentials } from "@supabase/supabase-js";
 
 export interface PageLoginProps {
   className?: string;
 }
 
-const loginSocials = [
+const loginSocials: {
+  name: string;
+  icon: any;
+  provider: SignInWithOAuthCredentials["provider"];
+}[] = [
   {
     name: "Continue with Facebook",
-    href: "#",
     icon: facebookSvg,
+    provider: "facebook",
   },
   {
     name: "Continue with Twitter",
-    href: "#",
     icon: twitterSvg,
+    provider: "twitter",
   },
   {
     name: "Continue with Google",
-    href: "#",
     icon: googleSvg,
+    provider: "google",
   },
 ];
 
@@ -81,8 +86,27 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
             {loginSocials.map((item, index) => (
               <a
                 key={index}
-                href={item.href}
-                className="nc-will-change-transform flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px]"
+                className="nc-will-change-transform flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px] cursor-pointer"
+                onClick={async () => {
+                  const toastId = toast.loading("Signing up...");
+                  try {
+                    const { data, error } = await supabase.auth.signInWithOAuth(
+                      {
+                        provider: item.provider,
+                      }
+                    );
+
+                    if (error) {
+                      throw new Error(error.message);
+                    }
+
+                    toast.success("Signed up successfully!", { id: toastId });
+
+                    router.push("/auth/login");
+                  } catch (err: any) {
+                    toast.error(err.message, { id: toastId });
+                  }
+                }}
               >
                 <Image
                   className="flex-shrink-0"
