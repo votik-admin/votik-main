@@ -1,24 +1,11 @@
-"use client";
-
 import React, { FC } from "react";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import CommentListing from "@app/components/CommentListing/CommentListing";
-import FiveStartIconForRate from "@app/components/FiveStartIconForRate/FiveStartIconForRate";
-import GuestsInput from "@app/components/HeroSearchForm/GuestsInput";
-import StartRating from "@app/components/StartRating/StartRating";
 import Avatar from "@app/shared/Avatar/Avatar";
 import Badge from "@app/shared/Badge/Badge";
-import ButtonCircle from "@app/shared/Button/ButtonCircle";
-import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
-import Input from "@app/shared/Input/Input";
 import LikeSaveBtns from "./LikeSaveBtns";
-import ModalPhotos from "./ModalPhotos";
 import BackgroundSection from "@app/components/BackgroundSection/BackgroundSection";
 import SectionSliderNewCategories from "@app/components/SectionSliderNewCategoriesCustom/SectionSliderNewCategoriesCustom";
-import SectionSubscribe2 from "@app/components/SectionSubscribe2/SectionSubscribe2";
 import MobileFooterSticky from "./MobileFooterSticky";
-import ModalAmenities from "./ModalAmenities";
 import GoogleMap from "./GoogleMap";
 import { getEventFromSlug } from "@app/queries";
 import { notFound } from "next/navigation";
@@ -28,50 +15,13 @@ import ButtonCustom from "@app/shared/Button/ButtonCustom";
 import NcImage from "@app/shared/NcImage/NcImage";
 import SectionSliderHighlights from "@app/components/SectionSliderHighlights/SectionSliderHighlights";
 
-export interface ListingStayDetailPageProps {
-  className?: string;
-  isPreviewMode?: boolean;
+const ListingStayDetailPage = async ({
+  params: { slug },
+}: {
   params: {
     slug: string;
   };
-}
-
-const Amenities_demos = [
-  { name: "la-key", icon: "la-key" },
-  { name: "la-luggage-cart", icon: "la-luggage-cart" },
-  { name: "la-shower", icon: "la-shower" },
-  { name: "la-smoking", icon: "la-smoking" },
-  { name: "la-snowflake", icon: "la-snowflake" },
-  { name: "la-spa", icon: "la-spa" },
-  { name: "la-suitcase", icon: "la-suitcase" },
-  { name: "la-suitcase-rolling", icon: "la-suitcase-rolling" },
-  { name: "la-swimmer", icon: "la-swimmer" },
-  { name: "la-swimming-pool", icon: "la-swimming-pool" },
-  { name: "la-tv", icon: "la-tv" },
-  { name: "la-umbrella-beach", icon: "la-umbrella-beach" },
-  { name: "la-utensils", icon: "la-utensils" },
-  { name: "la-wheelchair", icon: "la-wheelchair" },
-  { name: "la-wifi", icon: "la-wifi" },
-  { name: "la-baby-carriage", icon: "la-baby-carriage" },
-  { name: "la-bath", icon: "la-bath" },
-  { name: "la-bed", icon: "la-bed" },
-  { name: "la-briefcase", icon: "la-briefcase" },
-  { name: "la-car", icon: "la-car" },
-  { name: "la-cocktail", icon: "la-cocktail" },
-  { name: "la-coffee", icon: "la-coffee" },
-  { name: "la-concierge-bell", icon: "la-concierge-bell" },
-  { name: "la-dice", icon: "la-dice" },
-  { name: "la-dumbbell", icon: "la-dumbbell" },
-  { name: "la-hot-tub", icon: "la-hot-tub" },
-  { name: "la-infinity", icon: "la-infinity" },
-];
-
-const ListingStayDetailPage: FC<ListingStayDetailPageProps> = async ({
-  className = "",
-  isPreviewMode,
-  params,
 }) => {
-  const slug = params.slug;
   const { data: events, error } = await getEventFromSlug(slug);
   if (error || events.length === 0) {
     if (error) {
@@ -285,7 +235,7 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = async ({
 
   return (
     <div
-      className={`ListingDetailPage nc-ListingStayDetailPage ${className}`}
+      className={`ListingDetailPage nc-ListingStayDetailPage`}
       data-nc-id="ListingStayDetailPage"
     >
       {/* MODAL PHOTOS */}
@@ -322,10 +272,10 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = async ({
       </main>
 
       {/* STICKY FOOTER MOBILE */}
-      {!isPreviewMode && <MobileFooterSticky />}
+      <MobileFooterSticky />
 
       {/* OTHER SECTION */}
-      {!isPreviewMode && (
+      {
         <div className="container py-24 lg:py-32">
           {/* SECTION 1 */}
           <div className="relative py-16">
@@ -340,7 +290,7 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = async ({
             />
           </div>
         </div>
-      )}
+      }
     </div>
   );
 };

@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import SectionGridFeaturePlaces from "./SectionGridFeaturePlaces";
 import BackgroundSection from "@app/components/BackgroundSection/BackgroundSection";
@@ -7,8 +5,7 @@ import BgGlassmorphism from "@app/components/BgGlassmorphism/BgGlassmorphism";
 import { TaxonomyType } from "@app/data/types";
 import SectionHero3 from "@app/components/SectionHero/SectionHero3";
 import CardCategory6 from "@app/components/CardCategory6/CardCategory6";
-import Heading from "../components/Heading/Heading";
-
+import Heading from "@app/components/Heading/Heading";
 import imageMusic from "@app/images/home/music.jpg";
 import imageComedy from "@app/images/home/comedy.png";
 import imageWorkshops from "@app/images/home/workshops.png";

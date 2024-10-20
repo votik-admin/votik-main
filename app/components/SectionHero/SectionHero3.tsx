@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import imagePng from "@app/images/stadium.png";
-import Input from "@app/shared/Input/Input";
 import SectionSliderNewCategories from "@app/components/SectionSliderNewCategoriesCustom/SectionSliderNewCategoriesCustom";
 
 export interface SectionHero3Props {
