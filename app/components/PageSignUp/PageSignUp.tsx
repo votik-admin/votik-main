@@ -90,7 +90,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
             {loginSocials.map((item, index) => (
               <a
                 key={index}
-                className="nc-will-change-transform flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px]"
+                className="nc-will-change-transform flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px] cursor-pointer"
                 onClick={async () => {
                   const toastId = toast.loading("Signing up...");
                   try {
