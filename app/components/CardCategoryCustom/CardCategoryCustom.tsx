@@ -9,14 +9,17 @@ import ButtonCustom from "@app/shared/Button/ButtonCustom";
 
 export interface CardCategoryCustomProps {
   className?: string;
-  taxonomy: Tables<"events">;
+  taxonomy: Tables<"events"> & {
+    tickets: { price: number }[];
+  };
 }
 
 const CardCategoryCustom: FC<CardCategoryCustomProps> = ({
   className = "",
   taxonomy,
 }) => {
-  const { slug, name, city, location, start_time, primary_img } = taxonomy;
+  const { slug, name, city, location, start_time, primary_img, tickets } =
+    taxonomy;
   const href = `/events/${slug}`;
 
   return (
@@ -56,7 +59,11 @@ const CardCategoryCustom: FC<CardCategoryCustomProps> = ({
           <h2
             className={`text-sm sm:text-sm text-neutral-900 font-semibold truncate line-clamp-2 text-wrap`}
           >
-            Rs. 999 Onwards
+            Rs.{" "}
+            {convertNumbThousand(
+              tickets.sort((a, b) => a.price - b.price)[0]?.price
+            )}{" "}
+            Onwards
           </h2>
           <Link href={href}>
             <ButtonCustom>BOOK NOW</ButtonCustom>

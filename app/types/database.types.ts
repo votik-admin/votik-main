@@ -170,7 +170,7 @@ export type Database = {
         }
         Relationships: []
       }
-      tickets: {
+      ticket_bookings: {
         Row: {
           created_at: string
           event_id: string
@@ -178,7 +178,7 @@ export type Database = {
           metadata: Json | null
           status: Database["public"]["Enums"]["TicketStatus"]
           type: string
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           created_at?: string
@@ -187,7 +187,7 @@ export type Database = {
           metadata?: Json | null
           status?: Database["public"]["Enums"]["TicketStatus"]
           type: string
-          user_id?: string | null
+          user_id?: string
         }
         Update: {
           created_at?: string
@@ -196,7 +196,7 @@ export type Database = {
           metadata?: Json | null
           status?: Database["public"]["Enums"]["TicketStatus"]
           type?: string
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: [
           {
@@ -211,6 +211,47 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tickets: {
+        Row: {
+          created_at: string
+          current_available_count: number
+          description: string | null
+          event_id: string
+          id: number
+          initial_available_count: number
+          name: string
+          price: number
+        }
+        Insert: {
+          created_at?: string
+          current_available_count: number
+          description?: string | null
+          event_id?: string
+          id?: number
+          initial_available_count: number
+          name: string
+          price: number
+        }
+        Update: {
+          created_at?: string
+          current_available_count?: number
+          description?: string | null
+          event_id?: string
+          id?: number
+          initial_available_count?: number
+          name?: string
+          price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tickets_event_id_fkey1"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
             referencedColumns: ["id"]
           },
         ]

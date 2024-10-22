@@ -14,6 +14,9 @@ import { MAP_TO_EVENT } from "@app/types/hardcoded";
 import ButtonCustom from "@app/shared/Button/ButtonCustom";
 import NcImage from "@app/shared/NcImage/NcImage";
 import SectionSliderHighlights from "@app/components/SectionSliderHighlights/SectionSliderHighlights";
+import ReadMoreParagraph from "@app/shared/ReadMoreParagraph/ReadMoreParagraph";
+import Link from "next/link";
+import convertNumbThousand from "@app/utils/convertNumbThousand";
 
 const ListingStayDetailPage = async ({
   params: { slug },
@@ -66,14 +69,20 @@ const ListingStayDetailPage = async ({
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">About Event</h2>
           <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-          <div className="text-neutral-6000 dark:text-neutral-300">
-            {event.description}
-          </div>
+          <ReadMoreParagraph>{event.description}</ReadMoreParagraph>
         </div>
 
-        <div className="hidden lg:flex justify-between items-center border-t sm:pt-4 xl:pt-8 sm:-mx-4 sm:px-4 xl:-mx-8 xl:px-8">
-          <h2 className="text-2xl font-semibold">₹ 5000 Onwards</h2>
-          <ButtonCustom>BOOK NOW</ButtonCustom>
+        <div className="hidden lg:flex justify-between items-center border-t dark:border-neutral-700 sm:pt-4 xl:pt-8 sm:-mx-4 sm:px-4 xl:-mx-8 xl:px-8">
+          <h2 className="text-2xl font-semibold">
+            ₹{" "}
+            {convertNumbThousand(
+              event.tickets.sort((a, b) => a.price - b.price)[0]?.price
+            )}{" "}
+            Onwards
+          </h2>
+          <Link href={`/events/${event.slug}/book`}>
+            <ButtonCustom>BOOK NOW</ButtonCustom>
+          </Link>
         </div>
       </div>
     );
@@ -257,6 +266,7 @@ const ListingStayDetailPage = async ({
             src={event.primary_img}
             className="rounded-2xl aspect-[1/1] object-cover"
           />
+          <div className="lg:hidden">{renderSection1()}</div>
           {renderSection4()}
           {event.secondary_imgs && renderSectionHighlights()}
           {renderSection7()}
