@@ -72,14 +72,11 @@ export default function AvatarDropdown({
             <Popover.Button
               className={`inline-flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
             >
-              {user.avatar_url ? (
-                <Avatar
-                  imgUrl={user.avatar_url}
-                  sizeClass="w-8 h-8 sm:w-9 sm:h-9"
-                />
-              ) : (
-                <AutoAvatar username={user.username} />
-              )}
+              <Avatar
+                imgUrl={user.avatar_url ?? undefined}
+                sizeClass="w-8 h-8 sm:w-9 sm:h-9"
+                userName={user.username}
+              />
             </Popover.Button>
             <Transition
               as={Fragment}

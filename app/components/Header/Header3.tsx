@@ -198,7 +198,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
                 {user ? (
                   <AvatarDropdown user={user} />
                 ) : (
-                  <ButtonPrimary href="/auth/login">Sign up</ButtonPrimary>
+                  <ButtonPrimary href="/auth/signup">Sign up</ButtonPrimary>
                 )}
                 <div className="hidden md:block">
                   <MenuBar />

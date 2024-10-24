@@ -21,6 +21,7 @@ export interface PageSignUpProps {
 
 type FormValues = {
   email: string;
+  phone: string;
   password: string;
   confirmPassword: string;
 };
@@ -40,6 +41,8 @@ const loginSocials: {
 const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
   const router = useRouter();
 
+  const [phoneLogin, setPhoneLogin] = React.useState(false);
+
   const {
     register,
     handleSubmit,
@@ -50,15 +53,45 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
   const onSubmit: SubmitHandler<FormValues> = async (d) => {
     const toastId = toast.loading("Signing up...");
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email: d.email,
-        password: d.password,
-      });
-      if (error) {
-        throw new Error(error.message);
+      if (phoneLogin) {
+        const { data, error } = await supabase.auth.signUp({
+          phone: d.phone,
+          password: d.password,
+          options: {
+            channel: "sms",
+            data: {
+              email: "",
+              username: d.phone,
+              phone_number: d.phone,
+            },
+          },
+        });
+
+        if (error) {
+          throw new Error(error.message);
+        }
+
+        toast.success("Signed up successfully!", { id: toastId });
+
+        router.push("/auth/login");
+      } else {
+        const { data, error } = await supabase.auth.signUp({
+          email: d.email,
+          password: d.password,
+          options: {
+            data: {
+              username: d.email,
+              phone_number: "",
+              email: d.email,
+            },
+          },
+        });
+        if (error) {
+          throw new Error(error.message);
+        }
+        toast.success("Signed up successfully!", { id: toastId });
+        router.push("/auth/login");
       }
-      toast.success("Signed up successfully!", { id: toastId });
-      router.push("/auth/login");
     } catch (err: any) {
       toast.error(err.message, { id: toastId });
     }
@@ -111,6 +144,16 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                 </h3>
               </a>
             ))}
+            <a
+              className="nc-will-change-transform flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px] cursor-pointer"
+              onClick={() => {
+                setPhoneLogin(!phoneLogin);
+              }}
+            >
+              <h3 className="flex-grow text-center text-sm font-medium text-neutral-700 dark:text-neutral-300 sm:text-sm">
+                Continue with {phoneLogin ? "Email" : "Phone number"}
+              </h3>
+            </a>
           </div>
           {/* OR */}
           <div className="relative text-center">
@@ -124,21 +167,41 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
             className="grid grid-cols-1 gap-6"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <label className="block">
-              <span className="text-neutral-800 dark:text-neutral-200">
-                Email address
-              </span>
-              <Input
-                type="email"
-                autoComplete="email webauthn"
-                placeholder="example@example.com"
-                className="mt-1"
-                {...register("email", { required: "Email is required" })}
-              />
-              {errors.email && (
-                <p className="text-red-500">{errors.email.message}</p>
-              )}
-            </label>
+            {phoneLogin ? (
+              <label className="block">
+                <span className="text-neutral-800 dark:text-neutral-200">
+                  Phone number
+                </span>
+                <Input
+                  type="tel"
+                  autoComplete="tel webauthn"
+                  placeholder="Phone number"
+                  className="mt-1"
+                  {...register("phone", {
+                    required: "Phone number is required",
+                  })}
+                />
+                {errors.phone && (
+                  <p className="text-red-500">{errors.phone.message}</p>
+                )}
+              </label>
+            ) : (
+              <label className="block">
+                <span className="text-neutral-800 dark:text-neutral-200">
+                  Email address
+                </span>
+                <Input
+                  type="email"
+                  autoComplete="email webauthn"
+                  placeholder="example@example.com"
+                  className="mt-1"
+                  {...register("email", { required: "Email is required" })}
+                />
+                {errors.email && (
+                  <p className="text-red-500">{errors.email.message}</p>
+                )}
+              </label>
+            )}
             <label className="block">
               <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
                 Password

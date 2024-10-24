@@ -209,11 +209,11 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
           <div className="flex flex-col md:flex-row">
             <div className="flex-shrink-0 flex items-start">
               <div className="relative rounded-full overflow-hidden flex">
-                {avatarUrl ? (
-                  <Avatar sizeClass="w-32 h-32" imgUrl={avatarUrl} />
-                ) : (
-                  <AutoAvatar username={user.username} />
-                )}
+                <Avatar
+                  sizeClass="w-32 h-32"
+                  imgUrl={avatarUrl ?? undefined}
+                  userName={user.username}
+                />
                 <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center text-neutral-50 cursor-pointer">
                   <svg
                     width="30"

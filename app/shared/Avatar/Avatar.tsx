@@ -1,26 +1,38 @@
 import { avatarColors } from "@app/contains/contants";
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import avatar1 from "@app/images/avatars/Image-1.png";
+import { minidenticon } from "minidenticons";
 
 export interface AvatarProps {
   containerClassName?: string;
   sizeClass?: string;
   radius?: string;
   imgUrl?: string;
-  userName?: string;
+  userName: string;
   hasChecked?: boolean;
   hasCheckedClass?: string;
+  saturation?: number;
+  lightness?: number;
 }
 
 const Avatar: FC<AvatarProps> = ({
   containerClassName = "ring-1 ring-white dark:ring-neutral-900",
   sizeClass = "h-6 w-6 text-sm",
   radius = "rounded-full",
-  imgUrl = avatar1.src,
+  imgUrl = "",
   userName,
   hasChecked,
   hasCheckedClass = "w-4 h-4 -top-0.5 -right-0.5",
+  saturation = 0.5,
+  lightness = 0.5,
 }) => {
+  const svgURI = useMemo(
+    () =>
+      "data:image/svg+xml;utf8," +
+      encodeURIComponent(minidenticon(userName, saturation, lightness)),
+    [userName, saturation, lightness]
+  );
+
   const url = imgUrl || "";
   const name = userName || "John Doe";
   const _setBgColor = (name: string) => {
@@ -32,23 +44,21 @@ const Avatar: FC<AvatarProps> = ({
 
   return (
     <div
-      className={`wil-avatar relative flex-shrink-0 inline-flex items-center justify-center text-neutral-100 uppercase font-semibold shadow-inner ${radius} ${sizeClass} ${containerClassName}`}
+      className={`relative flex-shrink-0 inline-flex items-center justify-center text-neutral-100 uppercase font-semibold shadow-inner ${radius} ${sizeClass} ${containerClassName}`}
       style={{ backgroundColor: url ? undefined : _setBgColor(name) }}
     >
-      {url && (
+      {url ? (
         <img
           className={`absolute inset-0 w-full h-full object-cover ${radius}`}
           src={url}
           alt={name}
         />
-      )}
-      <span className="wil-avatar__name">{name[0]}</span>
-      {hasChecked && (
-        <span
-          className={` bg-teal-500 rounded-full text-white text-xs flex items-center justify-center absolute  ${hasCheckedClass}`}
-        >
-          <i className="las la-check"></i>
-        </span>
+      ) : (
+        <img
+          src={svgURI}
+          className={`absolute inset-0 w-full h-full object-cover ${radius}`}
+          alt={userName}
+        />
       )}
     </div>
   );
