@@ -12,7 +12,6 @@ import Link from "next/link";
 import Avatar from "@app/shared/Avatar/Avatar";
 import { Session } from "@supabase/supabase-js";
 import { Database } from "@app/types/database.types";
-import AutoAvatar from "../AutoAvatar";
 import supabase from "@app/lib/supabase";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";

@@ -9,7 +9,6 @@ import Select from "@app/shared/Select/Select";
 import Textarea from "@app/shared/Textarea/Textarea";
 import CommonLayout from "./CommonLayout";
 import { Database } from "@app/types/database.types";
-import AutoAvatar from "@app/components/AutoAvatar";
 import supabase from "@app/lib/supabase";
 import toast, { Toaster } from "react-hot-toast";
 import { set, useForm } from "react-hook-form";
