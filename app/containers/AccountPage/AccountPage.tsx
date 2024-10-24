@@ -1,7 +1,7 @@
 "use client";
 
 import Label from "@app/components/Label/Label";
-import React, { FC } from "react";
+import React, { FC, useContext, useEffect } from "react";
 import Avatar from "@app/shared/Avatar/Avatar";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import Input from "@app/shared/Input/Input";
@@ -12,20 +12,36 @@ import { Database } from "@app/types/database.types";
 import AutoAvatar from "@app/components/AutoAvatar";
 import supabase from "@app/lib/supabase";
 import toast, { Toaster } from "react-hot-toast";
-import { useForm } from "react-hook-form";
-import { GENDER } from "@app/types/enums";
+import { set, useForm } from "react-hook-form";
+import { GENDER, STATES } from "@app/types/enums";
+import { SessionContext } from "@app/contexts/SessionContext";
 
 export interface AccountPageProps {
   className?: string;
-  user: Database["public"]["Tables"]["users"]["Row"];
+}
+
+function isPhoneNumber(number: string): boolean {
+  // Check if the phone number is valid: (+\d{1,3}\d{10})
+  return /^\+[1-9]\d{1,14}$/.test(number);
 }
 
 type UserDetailsForm = Database["public"]["Tables"]["users"]["Row"];
 
-const AccountPage: FC<AccountPageProps> = ({ className = "", user }) => {
+const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
+  const { user } = useContext(SessionContext);
+
+  if (!user) {
+    return null;
+  }
+
   const [avatarUrl, setAvatarUrl] = React.useState<string | null>(
     user.avatar_url
   );
+
+  const [otp, setOtp] = React.useState<string | null>(null);
+
+  const [otpSent, setOtpSent] = React.useState<boolean>(false);
+  const [sendingOtp, setSendingOtp] = React.useState<boolean>(false);
 
   // By default, the phone number is verified
   const [phoneNumberData, setPhoneNumberData] = React.useState<{
@@ -36,9 +52,94 @@ const AccountPage: FC<AccountPageProps> = ({ className = "", user }) => {
     isVerified: true,
   });
 
-  const { register, handleSubmit, formState } = useForm<UserDetailsForm>({
+  const { register, handleSubmit, watch, setValue } = useForm<UserDetailsForm>({
     defaultValues: user,
   });
+
+  useEffect(() => {
+    if (phoneNumberData.isVerified)
+      setValue("phone_number", phoneNumberData.phoneNumber);
+  }, [phoneNumberData]);
+
+  const handleUserUpdate = async (data: UserDetailsForm) => {
+    // handle user update
+    const toastId = toast.loading("Updating user...");
+    const { error } = await supabase
+      .from("users")
+      .update(data)
+      .eq("id", user.id);
+
+    if (error) {
+      toast.error("Error updating user", { id: toastId });
+      return;
+    }
+
+    toast.success("User updated successfully", { id: toastId });
+  };
+
+  const handleOtpSend = async () => {
+    // handle otp send
+    if (!isPhoneNumber(phoneNumberData.phoneNumber)) {
+      toast.error("Invalid phone number");
+      return;
+    }
+
+    // Send OTP
+    console.log("Sending OTP to", phoneNumberData.phoneNumber);
+    const otpToast = toast.loading(
+      `Sending OTP to ${phoneNumberData.phoneNumber}`
+    );
+    setSendingOtp(true);
+
+    const { data, error } = await supabase.auth.updateUser({
+      phone: phoneNumberData.phoneNumber,
+    });
+
+    //
+
+    if (error) {
+      setSendingOtp(false);
+      toast.error("Error sending OTP", { id: otpToast });
+      return;
+    }
+    setSendingOtp(false);
+    setOtpSent(true);
+    toast.success("OTP sent successfully", { id: otpToast });
+  };
+
+  const handleVerifyOtp = async () => {
+    if (!otp) {
+      toast.error("Please enter OTP");
+      return;
+    }
+    const otpToast = toast.loading("Verifying OTP...");
+    const { data, error } = await supabase.auth.verifyOtp({
+      phone: phoneNumberData.phoneNumber,
+      token: otp,
+      type: "sms",
+    });
+
+    if (error) {
+      toast.error("Error verifying OTP", { id: otpToast });
+      return;
+    }
+
+    setPhoneNumberData({ ...phoneNumberData, isVerified: true });
+    toast.success("OTP verified successfully", { id: otpToast });
+
+    // Update the phone number
+    const { error: updateError } = await supabase
+      .from("users")
+      .update({ phone_number: phoneNumberData.phoneNumber })
+      .eq("id", user.id);
+
+    if (updateError) {
+      toast.error("Error updating phone number", { id: otpToast });
+      return;
+    }
+
+    toast.success("Phone number updated successfully", { id: otpToast });
+  };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     // handle image upload
@@ -155,7 +256,16 @@ const AccountPage: FC<AccountPageProps> = ({ className = "", user }) => {
               {/* ---- */}
               <div>
                 <Label>Gender</Label>
-                <Select className="mt-1.5" {...register("gender")}>
+                <Select
+                  className="mt-1.5"
+                  value={watch("gender") ?? GENDER[0]}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                    setValue(
+                      "gender",
+                      e.target.value as (typeof GENDER)[number]
+                    );
+                  }}
+                >
                   {GENDER.map((item) => (
                     <option key={item} value={item}>
                       {item}
@@ -171,10 +281,10 @@ const AccountPage: FC<AccountPageProps> = ({ className = "", user }) => {
               {/* ---- */}
               <div>
                 <Label>Email</Label>
-                <Input className="mt-1.5" {...register("email")} />
+                <Input disabled className="mt-1.5" {...register("email")} />
               </div>
               {/* ---- */}
-              <div className="max-w-lg">
+              <div>
                 <Label>Date of birth</Label>
                 <Input
                   className="mt-1.5"
@@ -194,25 +304,108 @@ const AccountPage: FC<AccountPageProps> = ({ className = "", user }) => {
                 </div>
               </div>
               {/* Phone number field when changed asks for otp and verifies */}
-              <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2">
+              <div className="flex flex-col gap-2">
                 <div>
                   <Label>Phone number</Label>
-                  <Input className="mt-1.5" />
-                </div>
-                {!phoneNumberData.isVerified && (
-                  <div>
-                    <Label>OTP</Label>
-                    <Input className="mt-1.5" />
+                  <div className="relative">
+                    <Input
+                      className="mt-1.5"
+                      value={phoneNumberData.phoneNumber}
+                      onChange={(e) =>
+                        setPhoneNumberData({
+                          phoneNumber: e.target.value,
+                          isVerified:
+                            e.target.value === (user.phone_number ?? ""),
+                        })
+                      }
+                    />
+                    {/* Put the tick symbol if the phone number is verified */}
+                    {phoneNumberData.isVerified &&
+                      isPhoneNumber(phoneNumberData.phoneNumber) && (
+                        <span className="text-green-500 absolute top-1/2 right-4 transform -translate-y-1/2">
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M9.5 17L5.5 13L4 14.5L9.5 20L21 8.5L19.5 7L9.5 17Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      )}
                   </div>
-                )}
+                </div>
+                {!phoneNumberData.isVerified &&
+                  (otpSent ? (
+                    <div className="flex items-center gap-2">
+                      <Input
+                        className="mt-1.5"
+                        placeholder="Enter OTP"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          // handle otp verification
+                          setOtp(e.target.value);
+                        }}
+                      />
+                      <ButtonPrimary onClick={handleVerifyOtp}>
+                        Verify
+                      </ButtonPrimary>
+                    </div>
+                  ) : (
+                    <ButtonPrimary
+                      disabled={!isPhoneNumber(phoneNumberData.phoneNumber)}
+                      onClick={handleOtpSend}
+                    >
+                      Send OTP
+                    </ButtonPrimary>
+                  ))}
               </div>
-              {/* ---- */}
-              <div>
-                <Label>About you</Label>
-                <Textarea className="mt-1.5" defaultValue="..." />
+              {/* Landmark and pincode */}
+              <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2">
+                <div>
+                  <Label>Landmark</Label>
+                  <Input className="mt-1.5" {...register("landmark")} />
+                </div>
+                <div>
+                  <Label>Pincode</Label>
+                  <Input className="mt-1.5" {...register("pincode")} />
+                </div>
+              </div>
+              {/* City and state */}
+              <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2">
+                <div>
+                  <Label>City</Label>
+                  <Input className="mt-1.5" {...register("city")} />
+                </div>
+                <div>
+                  <Label>State</Label>
+                  <Select
+                    className="mt-1.5"
+                    value={watch("state") ?? STATES[0]}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                      setValue(
+                        "state",
+                        e.target.value as (typeof STATES)[number]
+                      );
+                    }}
+                  >
+                    {STATES.map((item) => (
+                      <option key={item} value={item}>
+                        {item
+                          .toLocaleLowerCase()
+                          .replace(/^\w/, (c) => c.toUpperCase())}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
               </div>
               <div className="pt-2">
-                <ButtonPrimary>Update info</ButtonPrimary>
+                <ButtonPrimary onClick={handleSubmit(handleUserUpdate)}>
+                  Update info
+                </ButtonPrimary>
               </div>
             </div>
           </div>

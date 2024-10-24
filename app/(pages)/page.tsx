@@ -11,6 +11,8 @@ import imageComedy from "@app/images/home/comedy.png";
 import imageWorkshops from "@app/images/home/workshops.png";
 import imageNightlife from "@app/images/home/nightlife.jpg";
 import SectionSliderNewCategories from "@app/components/SectionSliderNewCategories/SectionSliderNewCategories";
+import { getSessionAndUser } from "@app/lib/auth";
+import SessionProvider from "@app/contexts/SessionContext";
 
 const EVENT_CATEGORIES: TaxonomyType[] = [
   {
@@ -47,52 +49,56 @@ const EVENT_CATEGORIES: TaxonomyType[] = [
   },
 ];
 
-function PageHome3() {
+async function PageHome3() {
+  const { session, user, error } = await getSessionAndUser();
+
   return (
-    <div className="nc-PageHome3 relative overflow-hidden">
-      {/* GLASSMOPHIN */}
-      <BgGlassmorphism />
+    <SessionProvider initialSession={session} initialUser={user}>
+      <div className="nc-PageHome3 relative overflow-hidden">
+        {/* GLASSMOPHIN */}
+        <BgGlassmorphism />
 
-      <SectionHero3 className="" />
+        <SectionHero3 className="" />
 
-      {/* SECTION HERO */}
-      <div className="container px-1 sm:px-4 mb-24 "></div>
+        {/* SECTION HERO */}
+        <div className="container px-1 sm:px-4 mb-24 "></div>
 
-      <div className="container relative space-y-24 mb-24 ">
-        {/* SECTION 1 */}
-        <Heading
-          desc="Explore epic events by category! Whether you’re into concerts, comedy, or workshops, we’ve got something that’ll get you hyped!"
-          isCenter={true}
-        >
-          Browse Events by Categories
-        </Heading>
-        <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-12 sm:col-span-6 lg:col-span-4 flex">
-            <CardCategory6 taxonomy={EVENT_CATEGORIES[0]} />
+        <div className="container relative space-y-24 mb-24 ">
+          {/* SECTION 1 */}
+          <Heading
+            desc="Explore epic events by category! Whether you’re into concerts, comedy, or workshops, we’ve got something that’ll get you hyped!"
+            isCenter={true}
+          >
+            Browse Events by Categories
+          </Heading>
+          <div className="grid grid-cols-12 gap-6">
+            <div className="col-span-12 sm:col-span-6 lg:col-span-4 flex">
+              <CardCategory6 taxonomy={EVENT_CATEGORIES[0]} />
+            </div>
+            <div className="col-span-12 sm:col-span-6 lg:col-span-4 grid grid-rows-2 gap-6">
+              <CardCategory6 taxonomy={EVENT_CATEGORIES[1]} />
+              <CardCategory6 taxonomy={EVENT_CATEGORIES[2]} />
+            </div>
+            <div className="col-span-12 sm:col-span-6 lg:col-span-4 flex">
+              <CardCategory6 taxonomy={EVENT_CATEGORIES[3]} />
+            </div>
           </div>
-          <div className="col-span-12 sm:col-span-6 lg:col-span-4 grid grid-rows-2 gap-6">
-            <CardCategory6 taxonomy={EVENT_CATEGORIES[1]} />
-            <CardCategory6 taxonomy={EVENT_CATEGORIES[2]} />
+
+          {/* SECTION */}
+          <div className="relative py-16">
+            <BackgroundSection />
+            <SectionGridFeaturePlaces />
           </div>
-          <div className="col-span-12 sm:col-span-6 lg:col-span-4 flex">
-            <CardCategory6 taxonomy={EVENT_CATEGORIES[3]} />
-          </div>
+          <SectionSliderNewCategories
+            heading="Browse Events by Venues"
+            subHeading=""
+            categoryCardType="card5"
+            itemPerRow={5}
+            uniqueClassName="PageHome_s3"
+          />
         </div>
-
-        {/* SECTION */}
-        <div className="relative py-16">
-          <BackgroundSection />
-          <SectionGridFeaturePlaces />
-        </div>
-        <SectionSliderNewCategories
-          heading="Browse Events by Venues"
-          subHeading=""
-          categoryCardType="card5"
-          itemPerRow={5}
-          uniqueClassName="PageHome_s3"
-        />
       </div>
-    </div>
+    </SessionProvider>
   );
 }
 

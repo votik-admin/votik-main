@@ -12,7 +12,7 @@ export interface CommonLayoutProps {
 const TABS = [
   { href: "/account", label: "Account info" },
   { href: "/account-password", label: "Change password" },
-  { href: "/account-billing", label: "Change Billing" },
+  // { href: "/account-billing", label: "Change Billing" },
 ];
 
 const CommonLayout: FC<CommonLayoutProps> = ({ children }) => {

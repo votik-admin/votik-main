@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useContext, useEffect, useRef, useState } from "react";
 import Logo from "@app/shared/Logo/Logo";
 import useOutsideAlerter from "@app/hooks/useOutsideAlerter";
 import HeroSearchForm, {
@@ -11,11 +11,9 @@ import AvatarDropdown from "./AvatarDropdown";
 import MenuBar from "@app/shared/MenuBar/MenuBar";
 import { StaySearchFormFields } from "@app/components/HeroSearchForm2/StaySearchForm";
 import HeroSearchForm2MobileFactory from "@app/components/HeroSearchForm2Mobile/HeroSearchForm2MobileFactory";
-import supabase from "@app/lib/supabase";
-import { Session } from "@supabase/supabase-js";
-import useAuth from "@app/hooks/useAuth";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import { Database } from "@app/types/database.types";
+import { SessionContext } from "@app/contexts/SessionContext";
 
 interface Header3Props {
   className?: string;
@@ -24,7 +22,11 @@ interface Header3Props {
 
 let WIN_PREV_POSITION = 0;
 
-const Header3: FC<Header3Props> = ({ className = "", user }) => {
+const Header3: FC<Header3Props> = ({ className = "" }) => {
+  const { user } = useContext(SessionContext);
+
+  console.log({ user });
+
   const headerInnerRef = useRef<HTMLDivElement>(null);
 
   const [showHeroSearch, setShowHeroSearch] =

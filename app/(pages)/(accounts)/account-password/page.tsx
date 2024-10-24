@@ -1,14 +1,18 @@
 import AccountPass from "@app/containers/AccountPage/AccountPass";
-import { createClient } from "@app/lib/supabase/server";
+import SessionProvider from "@app/contexts/SessionContext";
+import { getSessionAndUser } from "@app/lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function Page() {
-  const supabase = createClient();
+  const { session, user, error } = await getSessionAndUser();
 
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data?.user) {
+  if (error || !user) {
     redirect("/auth/login");
   }
 
-  return <AccountPass />;
+  return (
+    <SessionProvider initialSession={session} initialUser={user}>
+      <AccountPass />
+    </SessionProvider>
+  );
 }
