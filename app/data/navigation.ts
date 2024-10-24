@@ -184,7 +184,7 @@ const templatesChildrenMenus: NavItemType[] = [
   { id: ncNanoId(), href: "/checkout", name: "Checkout" },
   { id: ncNanoId(), href: "/pay-done", name: "Pay done" },
   //
-  { id: ncNanoId(), href: "/author", name: "Author Page" },
+  { id: ncNanoId(), href: "/account", name: "Author Page" },
   { id: ncNanoId(), href: "/account", name: "Account Page" },
 ];
 
@@ -298,7 +298,7 @@ export const NAVIGATION_DEMO: NavItemType[] = [
   },
   {
     id: ncNanoId(),
-    href: "/author",
+    href: "/account",
     name: "Templates",
     type: "dropdown",
     children: templatesChildrenMenus,

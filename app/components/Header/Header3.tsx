@@ -11,28 +11,32 @@ import AvatarDropdown from "./AvatarDropdown";
 import MenuBar from "@app/shared/MenuBar/MenuBar";
 import { StaySearchFormFields } from "@app/components/HeroSearchForm2/StaySearchForm";
 import HeroSearchForm2MobileFactory from "@app/components/HeroSearchForm2Mobile/HeroSearchForm2MobileFactory";
+import supabase from "@app/lib/supabase";
+import { Session } from "@supabase/supabase-js";
+import useAuth from "@app/hooks/useAuth";
+import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
+import { Database } from "@app/types/database.types";
 
 interface Header3Props {
   className?: string;
+  user: Database["public"]["Tables"]["users"]["Row"] | null;
 }
 
 let WIN_PREV_POSITION = 0;
 
-const Header3: FC<Header3Props> = ({ className = "" }) => {
+const Header3: FC<Header3Props> = ({ className = "", user }) => {
   const headerInnerRef = useRef<HTMLDivElement>(null);
-  //
+
   const [showHeroSearch, setShowHeroSearch] =
     useState<StaySearchFormFields | null>();
-  //
+
   const [currentTab, setCurrentTab] = useState<SearchTab>("Stays");
 
-  //
   useOutsideAlerter(headerInnerRef, () => {
     setShowHeroSearch(null);
     setCurrentTab("Stays");
   });
 
-  // HIDDEN WHEN SCROLL EVENT
   useEffect(() => {
     window.addEventListener("scroll", handleEvent);
     return () => {
@@ -48,7 +52,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
     if (!document.querySelector("#nc-Header-3-anchor")) {
       return;
     }
-    //
+
     const currentScrollPos = window.pageYOffset;
     if (
       WIN_PREV_POSITION - currentScrollPos > 100 ||
@@ -61,7 +65,6 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
     WIN_PREV_POSITION = currentScrollPos;
   };
 
-  //
   const renderHeroSearch = () => {
     return (
       <div
@@ -190,7 +193,11 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
                 <div className="pr-1.5">
                   <NotifyDropdown className="-ml-2 xl:-ml-1" />
                 </div>
-                <AvatarDropdown />
+                {user ? (
+                  <AvatarDropdown user={user} />
+                ) : (
+                  <ButtonPrimary href="/auth/login">Sign up</ButtonPrimary>
+                )}
                 <div className="hidden md:block">
                   <MenuBar />
                 </div>

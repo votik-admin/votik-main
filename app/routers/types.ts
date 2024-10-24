@@ -50,7 +50,7 @@ export interface LocationStates {
   "/add-event/9"?: {};
   "/add-event/10"?: {};
   //
-  "/author"?: {};
+  "/account"?: {};
   "/search"?: {};
   "/about"?: {};
   "/contact"?: {};
