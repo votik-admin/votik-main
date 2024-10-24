@@ -1,3 +1,5 @@
+"use client";
+
 import React, { FC } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import facebookSvg from "@app/images/Facebook.svg";
@@ -29,16 +31,6 @@ const loginSocials: {
   provider: SignInWithOAuthCredentials["provider"];
 }[] = [
   {
-    name: "Continue with Facebook",
-    icon: facebookSvg,
-    provider: "facebook",
-  },
-  {
-    name: "Continue with Twitter",
-    icon: twitterSvg,
-    provider: "twitter",
-  },
-  {
     name: "Continue with Google",
     icon: googleSvg,
     provider: "google",
@@ -62,13 +54,10 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
         email: d.email,
         password: d.password,
       });
-
       if (error) {
         throw new Error(error.message);
       }
-
       toast.success("Signed up successfully!", { id: toastId });
-
       router.push("/auth/login");
     } catch (err: any) {
       toast.error(err.message, { id: toastId });
@@ -104,7 +93,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                       throw new Error(error.message);
                     }
 
-                    toast.success("Signed up successfully!", { id: toastId });
+                    toast.success("Redirecting...", { id: toastId });
 
                     router.push("/auth/login");
                   } catch (err: any) {

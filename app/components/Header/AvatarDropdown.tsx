@@ -10,18 +10,21 @@ import {
 import { Fragment } from "react";
 import Link from "next/link";
 import Avatar from "@app/shared/Avatar/Avatar";
+import { Session } from "@supabase/supabase-js";
+import { Database } from "@app/types/database.types";
+import AutoAvatar from "../AutoAvatar";
 
 const solutions = [
   {
     name: "Account",
-    href: "/author",
+    href: "/account",
     icon: UserCircleIcon,
   },
-  {
-    name: "Messages",
-    href: "##",
-    icon: ChatBubbleBottomCenterTextIcon,
-  },
+  // {
+  //   name: "Messages",
+  //   href: "##",
+  //   icon: ChatBubbleBottomCenterTextIcon,
+  // },
   {
     name: "Wishlists",
     href: "/account-savelists",
@@ -48,7 +51,11 @@ const solutionsFoot = [
   },
 ];
 
-export default function AvatarDropdown() {
+export default function AvatarDropdown({
+  user,
+}: {
+  user: Database["public"]["Tables"]["users"]["Row"];
+}) {
   return (
     <div className="AvatarDropdown">
       <Popover className="relative">
@@ -57,7 +64,14 @@ export default function AvatarDropdown() {
             <Popover.Button
               className={`inline-flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
             >
-              <Avatar sizeClass="w-8 h-8 sm:w-9 sm:h-9" />
+              {user.avatar_url ? (
+                <Avatar
+                  imgUrl={user.avatar_url}
+                  sizeClass="w-8 h-8 sm:w-9 sm:h-9"
+                />
+              ) : (
+                <AutoAvatar username={user.username} />
+              )}
             </Popover.Button>
             <Transition
               as={Fragment}

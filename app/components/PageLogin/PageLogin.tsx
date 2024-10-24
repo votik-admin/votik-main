@@ -1,3 +1,5 @@
+"use client";
+
 import React, { FC } from "react";
 import facebookSvg from "@app/images/Facebook.svg";
 import twitterSvg from "@app/images/Twitter.svg";
@@ -21,16 +23,6 @@ const loginSocials: {
   icon: any;
   provider: SignInWithOAuthCredentials["provider"];
 }[] = [
-  {
-    name: "Continue with Facebook",
-    icon: facebookSvg,
-    provider: "facebook",
-  },
-  {
-    name: "Continue with Twitter",
-    icon: twitterSvg,
-    provider: "twitter",
-  },
   {
     name: "Continue with Google",
     icon: googleSvg,
