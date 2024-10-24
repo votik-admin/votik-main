@@ -1,11 +1,20 @@
 "use client";
 import NcInputNumber from "@app/components/NcInputNumber/NcInputNumber";
+import { changeTicketCount, storeBookedTicket } from "@app/queries";
 import ButtonCustom from "@app/shared/Button/ButtonCustom";
 import { Tables } from "@app/types/database.types";
 import convertNumbThousand from "@app/utils/convertNumbThousand";
 import React, { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
-const SectionChoseTicket = ({ tickets }: { tickets: Tables<"tickets">[] }) => {
+const SectionChoseTicket = ({
+  tickets,
+  event_id,
+}: {
+  tickets: Tables<"tickets">[];
+  event_id: string;
+}) => {
+  const user_id = "6330e012-45de-4f38-ae9e-d759ef048898";
   const [selectedTickets, setSelectedTickets] = useState(
     Object.fromEntries(tickets.map((ticket) => [ticket.id, 0]))
   );
@@ -17,65 +26,82 @@ const SectionChoseTicket = ({ tickets }: { tickets: Tables<"tickets">[] }) => {
 
   const createOrderId = async () => {
     const amount = Object.values(price).reduce((a, b) => a + b, 0);
-    try {
-      const response = await fetch("/api/razorpay/createOrder", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          amount: amount * 100,
-          currency: "INR",
-        }),
-      });
+    const response = await fetch("/api/razorpay/createOrder", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        amount: amount * 100,
+        currency: "INR",
+        notes: { user_id, event_id, selectedTickets },
+      }),
+    });
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const data = await response.json();
-      return data.orderId;
-    } catch (error) {
-      console.error("There was a problem with your fetch operation:", error);
+    const json = await response.json();
+    console.log(json);
+    if (json.error) {
+      throw new Error(json.message);
     }
+    return json.data.orderId;
   };
 
   const processPayment = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    console.log(e);
     e.preventDefault();
     const amount = Object.values(price).reduce((a, b) => a + b, 0);
-    console.log({ amount });
-
     setLoading(true);
     try {
       const orderId: string = await createOrderId();
-      const options = {
+
+      if (!window.Razorpay) {
+        toast.error("Couldn't load Razorpay, please refresh the page.");
+        return;
+      }
+
+      const paymentObject = new window.Razorpay({
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: amount * 100,
         currency: "INR",
         // TODO
         name: "Votik",
-        description: "ticket payment",
+        description: "Ticket Payment",
         order_id: orderId,
         handler: async function (response: any) {
           const data = {
-            orderCreationId: orderId,
+            orderCreationId: orderId, // Retrieve the order_id from your server. Do not use the razorpay_order_id returned by Checkout.
             razorpayPaymentId: response.razorpay_payment_id,
             razorpayOrderId: response.razorpay_order_id,
             razorpaySignature: response.razorpay_signature,
           };
-
+          const toastId = toast.loading("Verifying your payment...");
           const result = await fetch("/api/razorpay/verifyPayment", {
             method: "POST",
             body: JSON.stringify(data),
             headers: { "Content-Type": "application/json" },
           });
           const res = await result.json();
-          if (res.isOk) alert("payment succeed");
-          else {
-            alert(res.message);
+          console.log({ res });
+          if (res.isOk) {
+            toast.success("Payment Verified", { id: toastId });
+            // TODO
+            // populate ticket_bookings table in supabase from razorpay
+            for (const ticketId in selectedTickets) {
+              if (selectedTickets[ticketId] > 0) {
+                storeBookedTicket(
+                  user_id,
+                  event_id,
+                  Number(ticketId),
+                  selectedTickets[ticketId],
+                  data
+                );
+              }
+            }
+          } else {
+            console.log(res.message);
+            toast.error(res.message, { id: toastId });
           }
         },
         // TODO: Replace with user's info
@@ -87,19 +113,17 @@ const SectionChoseTicket = ({ tickets }: { tickets: Tables<"tickets">[] }) => {
         theme: {
           color: "#430D7F",
         },
-      };
-      if (window.Razorpay) {
-        const paymentObject = new window.Razorpay(options);
-        paymentObject.on("payment.failed", function (response: any) {
-          alert(response.error.description);
-        });
-        paymentObject.open();
-      } else {
-        alert("Couldn't load Razorpay, please refresh the page.");
-      }
-    } catch (error) {
+      });
+      paymentObject.on("payment.failed", function (response: any) {
+        console.log({ response });
+        toast.error(response.error.description);
+      });
+      paymentObject.open();
+    } catch (error: any) {
       console.log(error);
+      toast.error(error.message);
     } finally {
+      console.log("Finally block executed");
       setLoading(false);
     }
   };
@@ -107,6 +131,7 @@ const SectionChoseTicket = ({ tickets }: { tickets: Tables<"tickets">[] }) => {
   return (
     <div className="listingSection__wrap !space-y-6">
       {/* HEADING */}
+      <Toaster position="bottom-center" />
       <div>
         <h2 className="text-2xl font-semibold">Chose Tickets</h2>
       </div>

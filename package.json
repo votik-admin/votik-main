@@ -13,6 +13,7 @@
     "@glidejs/glide": "^3.6.2",
     "@headlessui/react": "^1.7.7",
     "@heroicons/react": "^2.1.5",
+    "@sendgrid/mail": "^8.1.4",
     "@supabase/supabase-js": "^2.45.4",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.9",
@@ -31,7 +32,7 @@
     "react-hot-toast": "^2.4.1",
     "react-use": "^17.5.1",
     "sass": "^1.79.5",
-    "supabase": "^1.204.3",
+    "supabase": "^1.207.9",
     "swr": "^2.2.5"
   },
   "devDependencies": {

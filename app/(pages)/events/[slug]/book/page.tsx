@@ -1,22 +1,15 @@
-import React, { FC } from "react";
-import Avatar from "@app/shared/Avatar/Avatar";
+import React from "react";
 import Badge from "@app/shared/Badge/Badge";
-import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
 import LikeSaveBtns from "../LikeSaveBtns";
 import BackgroundSection from "@app/components/BackgroundSection/BackgroundSection";
 import SectionSliderNewCategories from "@app/components/SectionSliderNewCategoriesCustom/SectionSliderNewCategoriesCustom";
 import MobileFooterSticky from "../MobileFooterSticky";
-import GoogleMap from "../GoogleMap";
 import { getEventFromSlug } from "@app/queries";
 import { notFound } from "next/navigation";
 import formatDate from "@app/utils/formatDate";
 import { MAP_TO_EVENT } from "@app/types/hardcoded";
-import ButtonCustom from "@app/shared/Button/ButtonCustom";
 import NcImage from "@app/shared/NcImage/NcImage";
-import SectionSliderHighlights from "@app/components/SectionSliderHighlights/SectionSliderHighlights";
 import ReadMoreParagraph from "@app/shared/ReadMoreParagraph/ReadMoreParagraph";
-import Link from "next/link";
-import NcInputNumber from "@app/components/NcInputNumber/NcInputNumber";
 import SectionChoseTicket from "./SectionChoseTicket";
 
 const ListingStayDetailPage = async ({
@@ -76,7 +69,7 @@ const ListingStayDetailPage = async ({
     );
   };
   const renderSection2 = () => {
-    return <SectionChoseTicket tickets={event.tickets} />;
+    return <SectionChoseTicket tickets={event.tickets} event_id={event.id} />;
   };
 
   const renderSidebar = () => {
