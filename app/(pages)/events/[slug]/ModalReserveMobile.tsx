@@ -11,7 +11,7 @@ import { Tables } from "@app/types/database.types";
 
 interface ModalReserveMobileProps {
   tickets?: Tables<"tickets">[];
-  event_id: string;
+  event_id?: string;
   onClose?: () => void;
   renderChildren?: (p: { openModal: () => void }) => React.ReactNode;
 }

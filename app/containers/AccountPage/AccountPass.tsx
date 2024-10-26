@@ -97,7 +97,7 @@ const AccountPass = () => {
                   if (formState.errors) {
                     let flag = false;
                     for (const key in formState.errors) {
-                      // @ts-ignore
+                      // @ts-expect-error Just to avoid the error
                       // TODO: Fix this
                       toast.error(formState.errors[key].message);
                       flag = true;

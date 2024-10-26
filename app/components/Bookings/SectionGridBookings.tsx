@@ -8,6 +8,8 @@ import { getAllEvents } from "@app/queries";
 import { Database } from "@app/types/database.types";
 import CardCategoryCustom from "@app/components/CardCategoryCustom/CardCategoryCustom";
 import CardCategoryCustomSkeleton from "@app/components/CardCategoryCustom/CardCategoryCustomSkeleton";
+import { EVENTS, MAP_TO_EVENT } from "@app/types/hardcoded";
+import HeaderFilter from "@app/(pages)/HeaderFilter";
 
 // OTHER DEMO WILL PASS PROPS
 const DEMO_DATA: StayDataType[] = DEMO_STAY_LISTINGS.filter((_, i) => i < 8);

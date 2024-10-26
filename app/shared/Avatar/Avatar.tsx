@@ -8,7 +8,7 @@ export interface AvatarProps {
   sizeClass?: string;
   radius?: string;
   imgUrl?: string;
-  userName: string;
+  userName?: string;
   hasChecked?: boolean;
   hasCheckedClass?: string;
   saturation?: number;
@@ -20,7 +20,7 @@ const Avatar: FC<AvatarProps> = ({
   sizeClass = "h-6 w-6 text-sm",
   radius = "rounded-full",
   imgUrl = "",
-  userName,
+  userName = "Kevin",
   hasChecked,
   hasCheckedClass = "w-4 h-4 -top-0.5 -right-0.5",
   saturation = 0.5,

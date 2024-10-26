@@ -146,7 +146,12 @@ const ListingCarDetailPage: FC<ListingCarDetailPageProps> = ({
 
         {/* 4 */}
         <div className="flex items-center">
-          <Avatar hasChecked sizeClass="h-10 w-10" radius="rounded-full" />
+          <Avatar
+            userName=""
+            hasChecked
+            sizeClass="h-10 w-10"
+            radius="rounded-full"
+          />
           <span className="ml-2.5 text-neutral-500 dark:text-neutral-400">
             Car owner{" "}
             <span className="text-neutral-900 dark:text-neutral-200 font-medium">
@@ -324,6 +329,7 @@ const ListingCarDetailPage: FC<ListingCarDetailPageProps> = ({
         {/* host */}
         <div className="flex items-center space-x-4">
           <Avatar
+            userName="Kevin Francis"
             hasChecked
             hasCheckedClass="w-4 h-4 -top-0.5 right-0.5"
             sizeClass="h-14 w-14"
@@ -718,7 +724,7 @@ const ListingCarDetailPage: FC<ListingCarDetailPageProps> = ({
       </main>
 
       {/* STICKY FOOTER MOBILE */}
-      <MobileFooterSticky />
+      <MobileFooterSticky event_id="" />
 
       {/* OTHER SECTION */}
       <div className="container py-24 lg:py-32">

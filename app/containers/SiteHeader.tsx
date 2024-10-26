@@ -28,7 +28,7 @@ const SiteHeader = ({
   session,
 }: {
   user: Database["public"]["Tables"]["users"]["Row"] | null;
-  session: Session;
+  session: Session | null;
 }) => {
   const anchorRef = React.useRef<HTMLDivElement>(null);
 

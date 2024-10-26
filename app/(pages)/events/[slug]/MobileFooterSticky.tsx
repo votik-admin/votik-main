@@ -17,7 +17,7 @@ const MobileFooterSticky = ({
   event_id,
 }: {
   tickets?: Tables<"tickets">[];
-  event_id: string;
+  event_id?: string;
 }) => {
   return (
     <div className="block lg:hidden fixed bottom-0 inset-x-0 py-2 sm:py-3 bg-white dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-6000 z-20">

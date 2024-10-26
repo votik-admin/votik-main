@@ -1,7 +1,7 @@
 "use client";
 
 import Label from "@app/components/Label/Label";
-import React, { FC, useContext, useEffect } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import Avatar from "@app/shared/Avatar/Avatar";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import Input from "@app/shared/Input/Input";
@@ -27,27 +27,23 @@ function isPhoneNumber(number: string): boolean {
 type UserDetailsForm = Database["public"]["Tables"]["users"]["Row"];
 
 const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
-  const { user } = useContext(SessionContext);
+  const { user: u } = useContext(SessionContext);
 
-  if (!user) {
-    return null;
-  }
+  const user = u!;
 
-  const [avatarUrl, setAvatarUrl] = React.useState<string | null>(
-    user.avatar_url
-  );
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(user.avatar_url);
 
-  const [otp, setOtp] = React.useState<string | null>(null);
+  const [otp, setOtp] = useState<string | null>(null);
 
-  const [otpSent, setOtpSent] = React.useState<boolean>(false);
-  const [sendingOtp, setSendingOtp] = React.useState<boolean>(false);
+  const [otpSent, setOtpSent] = useState<boolean>(false);
+  const [sendingOtp, setSendingOtp] = useState<boolean>(false);
 
   // By default, the phone number is verified
-  const [phoneNumberData, setPhoneNumberData] = React.useState<{
+  const [phoneNumberData, setPhoneNumberData] = useState<{
     phoneNumber: string;
     isVerified: boolean;
   }>({
-    phoneNumber: user.phone_number,
+    phoneNumber: user.phone_number ?? "",
     isVerified: true,
   });
 
@@ -63,9 +59,10 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
   const handleUserUpdate = async (data: UserDetailsForm) => {
     // handle user update
     const toastId = toast.loading("Updating user...");
+    const { birthday, ...newData } = data;
     const { error } = await supabase
       .from("users")
-      .update(data)
+      .update(newData)
       .eq("id", user.id);
 
     if (error) {

@@ -9,7 +9,7 @@ export interface NcInputNumberProps {
   onChange?: (value: number) => void;
   label?: string;
   desc?: string;
-  availableCount: number;
+  availableCount?: number;
 }
 
 const NcInputNumber: FC<NcInputNumberProps> = ({
@@ -20,7 +20,7 @@ const NcInputNumber: FC<NcInputNumberProps> = ({
   onChange,
   label,
   desc,
-  availableCount,
+  availableCount = 0,
 }) => {
   const [value, setValue] = useState(defaultValue);
 

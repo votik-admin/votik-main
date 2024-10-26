@@ -17,7 +17,6 @@ import { SessionContext } from "@app/contexts/SessionContext";
 
 interface Header3Props {
   className?: string;
-  user: Database["public"]["Tables"]["users"]["Row"] | null;
 }
 
 let WIN_PREV_POSITION = 0;

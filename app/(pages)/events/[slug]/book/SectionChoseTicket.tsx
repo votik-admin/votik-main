@@ -11,7 +11,7 @@ const SectionChoseTicket = ({
   event_id,
 }: {
   tickets: Tables<"tickets">[];
-  event_id: string;
+  event_id?: string;
 }) => {
   const [selectedTickets, setSelectedTickets] = useState(
     Object.fromEntries(tickets.map((ticket) => [ticket.id, 0]))
