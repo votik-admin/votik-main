@@ -168,7 +168,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
               <Logo />
             </div>
 
-            <div className="flex-[2] lg:flex-none mx-auto">
+            {/* <div className="flex-[2] lg:flex-none mx-auto">
               <div className="hidden lg:block">
                 {renderButtonOpenHeroSearch()}
               </div>
@@ -176,25 +176,25 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
                 <HeroSearchForm2MobileFactory />
               </div>
               {renderHeroSearch()}
-            </div>
+            </div> */}
 
             {/* NAV */}
             <div className="hidden md:flex relative z-10 flex-1 items-center justify-end text-neutral-700 dark:text-neutral-100">
               <div className="items-center flex space-x-1">
-                <Link
+                {/* <Link
                   href="/add-event"
                   className="
                 hidden xl:inline-flex text-opacity-90
                 group px-4 py-2 border border-neutral-300 hover:border-neutral-400 dark:border-neutral-700 rounded-full items-center text-sm text-gray-700 dark:text-neutral-300 font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
                 >
                   List your event
-                </Link>
+                </Link> */}
 
                 <div></div>
                 <SwitchDarkMode />
-                <div className="pr-1.5">
+                {/* <div className="pr-1.5">
                   <NotifyDropdown className="-ml-2 xl:-ml-1" />
-                </div>
+                </div> */}
                 {user ? (
                   <AvatarDropdown user={user} />
                 ) : (

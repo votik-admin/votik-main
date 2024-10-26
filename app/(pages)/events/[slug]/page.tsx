@@ -133,6 +133,7 @@ const ListingStayDetailPage = async ({
             hasCheckedClass="w-4 h-4 -top-0.5 right-0.5"
             sizeClass="h-14 w-14"
             radius="rounded-full"
+            userName="King"
           />
           <div>
             <a className="block text-xl font-medium" href="##">
@@ -152,10 +153,10 @@ const ListingStayDetailPage = async ({
         </span>
 
         {/* == */}
-        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
+        {/* <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
         <div>
           <ButtonSecondary href="##">See host profile</ButtonSecondary>
-        </div>
+        </div> */}
       </div>
     );
   };

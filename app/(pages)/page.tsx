@@ -17,7 +17,7 @@ import SessionProvider from "@app/contexts/SessionContext";
 const EVENT_CATEGORIES: TaxonomyType[] = [
   {
     id: "1",
-    href: "/category/music",
+    href: "/events/category/music",
     name: "Music Concerts",
     taxonomy: "category",
     count: 188,
@@ -25,7 +25,7 @@ const EVENT_CATEGORIES: TaxonomyType[] = [
   },
   {
     id: "2",
-    href: "/category/comedy",
+    href: "/events/category/comedy",
     name: "Comedy",
     taxonomy: "category",
     count: 288,
@@ -33,7 +33,7 @@ const EVENT_CATEGORIES: TaxonomyType[] = [
   },
   {
     id: "3",
-    href: "/category/workshops",
+    href: "/events/category/workshops",
     name: "Workshops",
     taxonomy: "category",
     count: 82,
@@ -41,7 +41,7 @@ const EVENT_CATEGORIES: TaxonomyType[] = [
   },
   {
     id: "4",
-    href: "/category/nightlife",
+    href: "/events/category/nightlife",
     name: "Nightlife",
     taxonomy: "category",
     count: 81111,

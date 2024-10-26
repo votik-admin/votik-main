@@ -1,22 +1,10 @@
+import socials, { SocialType } from "@app/data/socials";
 import React, { FC } from "react";
 
 export interface SocialsShareProps {
   className?: string;
   itemClass?: string;
 }
-
-export interface SocialType {
-  name: string;
-  icon: string;
-  href: string;
-}
-
-const socials: SocialType[] = [
-  { name: "Facebook", icon: "lab la-facebook-f", href: "#" },
-  { name: "Twitter", icon: "lab la-twitter", href: "#" },
-  { name: "Linkedin", icon: "lab la-linkedin-in", href: "#" },
-  { name: "Instagram", icon: "lab la-instagram", href: "#" },
-];
 
 const SocialsShare: FC<SocialsShareProps> = ({
   className = "grid gap-[6px]",
@@ -27,6 +15,7 @@ const SocialsShare: FC<SocialsShareProps> = ({
       <a
         key={index}
         href={item.href}
+        target="_blank"
         className={`rounded-full leading-none flex items-center justify-center bg-white text-neutral-6000 ${itemClass}`}
         title={`Share on ${item.name}`}
       >

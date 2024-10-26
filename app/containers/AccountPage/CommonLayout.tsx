@@ -11,7 +11,8 @@ export interface CommonLayoutProps {
 
 const TABS = [
   { href: "/account", label: "Account info" },
-  { href: "/account-password", label: "Change password" },
+  { href: "/account/password", label: "Change password" },
+  { href: "/account/bookings", label: "Your Bookings" },
   // { href: "/account-billing", label: "Change Billing" },
 ];
 
@@ -26,7 +27,6 @@ const CommonLayout: FC<CommonLayoutProps> = ({ children }) => {
     children: React.ReactNode;
   }) => {
     const pathname = usePathname();
-    console.log(to, pathname === to);
     return (
       <Link className={className({ isActive: pathname === to })} href={to}>
         {children}

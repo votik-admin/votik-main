@@ -342,10 +342,10 @@ const ListingExperiencesDetailPage: FC<ListingExperiencesDetailPageProps> = ({
         </div>
 
         {/* == */}
-        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
+        {/* <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
         <div>
           <ButtonSecondary href="##">See host profile</ButtonSecondary>
-        </div>
+        </div> */}
       </div>
     );
   };

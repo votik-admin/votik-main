@@ -34,12 +34,17 @@ type LoginForm = {
   email: string;
   phone: string;
   password: string;
+  otp: string;
 };
 
 const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
   const router = useRouter();
 
   const [phoneLogin, setPhoneLogin] = React.useState(false);
+  const otpTimer = React.useRef<NodeJS.Timeout | null>(null);
+  const [otpTimerValue, setOtpTimerValue] = React.useState(60);
+  const [otpSent, setOtpSent] = React.useState(false);
+  const [otpExpired, setOtpExpired] = React.useState(false);
 
   const {
     register,
@@ -51,6 +56,7 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
       email: "",
       password: "",
       phone: "",
+      otp: "",
     },
   });
 
@@ -61,12 +67,25 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
         const { data, error } = await supabase.auth.signInWithOtp({
           phone: formData.phone,
         });
+        otpTimer.current = setInterval(() => {
+          setOtpTimerValue((prev) => {
+            if (prev <= 0) {
+              clearInterval(otpTimer.current!);
+              setOtpExpired(true);
+              setOtpSent(false);
+              return 60;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+        setOtpExpired(false);
+        setOtpSent(true);
 
         if (error) {
           throw new Error(error.message);
         }
 
-        toast.success("Logged in successfully!", { id: toastId });
+        toast.success("OTP sent successfully!", { id: toastId });
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
           email: formData.email,
@@ -79,9 +98,60 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
 
         toast.success("Logged in successfully!", { id: toastId });
       }
-      router.push("/");
     } catch (error: any) {
       toast.error(`Login failed: ${error.message}`, { id: toastId });
+    }
+  };
+
+  const verifyOtp = async (otp: string) => {
+    const toastId = toast.loading("Verifying OTP...");
+    try {
+      const { data, error } = await supabase.auth.verifyOtp({
+        phone: watch("phone"),
+        token: otp,
+        type: "sms",
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      toast.success("OTP verified successfully!", { id: toastId });
+      router.push("/");
+    } catch (error: any) {
+      toast.error(`OTP verification failed: ${error.message}`, { id: toastId });
+    }
+  };
+
+  const resendOtp = async () => {
+    const toastId = toast.loading("Resending OTP...");
+    try {
+      const { data, error } = await supabase.auth.signInWithOtp({
+        phone: watch("phone"),
+      });
+
+      otpTimer.current = setInterval(() => {
+        setOtpTimerValue((prev) => {
+          if (prev <= 0) {
+            clearInterval(otpTimer.current!);
+            setOtpExpired(true);
+            setOtpSent(false);
+            return 60;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      setOtpExpired(false);
+      setOtpSent(true);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      toast.success("OTP sent successfully!", { id: toastId });
+    } catch (error: any) {
+      toast.error(`OTP resend failed: ${error.message}`, { id: toastId });
     }
   };
 
@@ -155,7 +225,7 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
             onSubmit={handleSubmit(onSubmit)}
           >
             {phoneLogin ? (
-              <label className="block">
+              <label className="flex flex-col gap-4">
                 <span className="text-neutral-800 dark:text-neutral-200">
                   Phone number
                 </span>
@@ -170,6 +240,49 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
                 />
                 {errors.phone && (
                   <p className="text-red-500">{errors.phone.message}</p>
+                )}
+                {otpSent && (
+                  <label className="flex flex-col gap-4">
+                    <span className="text-neutral-800 dark:text-neutral-200">
+                      OTP
+                    </span>
+                    <Input
+                      type="text"
+                      autoComplete="one-time-code"
+                      placeholder="OTP"
+                      className="mt-1"
+                      {...register("otp", { required: "OTP is required" })}
+                    />
+                    {errors.otp && (
+                      <p className="text-red-500">{errors.otp.message}</p>
+                    )}
+                    <p className="text-neutral-500 dark:text-neutral-400">
+                      OTP expires in {otpTimerValue} seconds
+                    </p>
+                    <ButtonPrimary
+                      type="button"
+                      onClick={async () => {
+                        await verifyOtp(watch("otp"));
+                      }}
+                    >
+                      Verify OTP
+                    </ButtonPrimary>
+                  </label>
+                )}
+                {otpExpired && (
+                  <>
+                    <p className="text-red-500">
+                      OTP expired. Please try again.
+                    </p>
+                    <ButtonPrimary
+                      type="button"
+                      onClick={() => {
+                        resendOtp();
+                      }}
+                    >
+                      Resend OTP
+                    </ButtonPrimary>
+                  </>
                 )}
               </label>
             ) : (
@@ -189,42 +302,48 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
                 )}
               </label>
             )}
-            <label className="block">
-              <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
-                Password
-                <a
-                  className="text-sm"
-                  onClick={async () => {
-                    const toastId = toast.loading("Sending reset email...");
+            {!otpSent && (
+              <>
+                {" "}
+                <label className="block">
+                  <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
+                    Password
+                    <a
+                      className="text-sm"
+                      onClick={async () => {
+                        const toastId = toast.loading("Sending reset email...");
 
-                    try {
-                      const { data, error } =
-                        await supabase.auth.resetPasswordForEmail(email, {
-                          redirectTo: "https://votik.app/auth/update-password",
-                        });
+                        try {
+                          const { data, error } =
+                            await supabase.auth.resetPasswordForEmail(email, {
+                              redirectTo:
+                                "https://votik.app/auth/update-password",
+                            });
 
-                      if (error) {
-                        throw new Error(error.message);
-                      }
+                          if (error) {
+                            throw new Error(error.message);
+                          }
 
-                      toast.success("Reset email sent!", { id: toastId });
+                          toast.success("Reset email sent!", { id: toastId });
 
-                      router.push("/auth/forgot-pass-mail");
-                    } catch (error: any) {
-                      toast.error(error.message, { id: toastId });
-                    }
-                  }}
-                >
-                  Forgot password?
-                </a>
-              </span>
-              <Input
-                type="password"
-                className="mt-1"
-                {...register("password", { required: true })}
-              />
-            </label>
-            <ButtonPrimary type="submit">Continue</ButtonPrimary>
+                          router.push("/auth/forgot-pass-mail");
+                        } catch (error: any) {
+                          toast.error(error.message, { id: toastId });
+                        }
+                      }}
+                    >
+                      Forgot password?
+                    </a>
+                  </span>
+                  <Input
+                    type="password"
+                    className="mt-1"
+                    {...register("password", { required: true })}
+                  />
+                </label>
+                <ButtonPrimary type="submit">Continue</ButtonPrimary>
+              </>
+            )}
           </form>
 
           {/* ==== */}

@@ -3,7 +3,7 @@ import {
   UserCircleIcon,
   ChatBubbleBottomCenterTextIcon,
   HeartIcon,
-  HomeIcon,
+  CalendarIcon,
   ArrowRightOnRectangleIcon,
   LifebuoyIcon,
 } from "@heroicons/react/24/outline";
@@ -28,14 +28,9 @@ const solutions = [
   //   icon: ChatBubbleBottomCenterTextIcon,
   // },
   {
-    name: "Wishlists",
-    href: "/account-savelists",
-    icon: HeartIcon,
-  },
-  {
-    name: "Booking",
-    href: "##",
-    icon: HomeIcon,
+    name: "Bookings",
+    href: "/account/bookings",
+    icon: CalendarIcon,
   },
 ];
 
