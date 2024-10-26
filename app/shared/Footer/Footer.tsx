@@ -1,7 +1,7 @@
 import Logo from "@app/shared/Logo/Logo";
-import SocialsList1 from "@app/shared/SocialsList1/SocialsList1";
 import { CustomLink } from "@app/data/types";
 import React from "react";
+import SocialsList1 from "../SocialsList1/SocialsList1";
 
 export interface WidgetFooterMenu {
   id: string;

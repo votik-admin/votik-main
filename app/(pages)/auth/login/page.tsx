@@ -1,14 +1,20 @@
 import PageLogin from "@app/components/PageLogin/PageLogin";
+import SessionProvider from "@app/contexts/SessionContext";
+import { getSessionAndUser } from "@app/lib/auth";
 import { createClient } from "@app/lib/supabase/server";
+import { Database } from "@app/types/database.types";
 import { redirect } from "next/navigation";
 
 export default async function Login() {
-  const supabase = createClient();
+  const { session, user, error } = await getSessionAndUser();
 
-  const { data, error } = await supabase.auth.getUser();
-  if (!error && data?.user) {
-    redirect("/");
+  if (!error && user && session) {
+    redirect("/account");
   }
 
-  return <PageLogin />;
+  return (
+    <SessionProvider initialSession={session} initialUser={user}>
+      <PageLogin />
+    </SessionProvider>
+  );
 }

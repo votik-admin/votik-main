@@ -1,4 +1,4 @@
-import { SocialType } from "@app/shared/SocialsShare/SocialsShare";
+import socialsList, { SocialType } from "@app/data/socials";
 import React, { FC } from "react";
 
 export interface SocialsListProps {
@@ -7,17 +7,10 @@ export interface SocialsListProps {
   socials?: SocialType[];
 }
 
-const socialsDemo: SocialType[] = [
-  { name: "Facebook", icon: "lab la-facebook-square", href: "#" },
-  { name: "Twitter", icon: "lab la-twitter", href: "#" },
-  { name: "Youtube", icon: "lab la-youtube", href: "#" },
-  { name: "Instagram", icon: "lab la-instagram", href: "#" },
-];
-
 const SocialsList: FC<SocialsListProps> = ({
   className = "",
   itemClass = "block",
-  socials = socialsDemo,
+  socials = socialsList,
 }) => {
   return (
     <nav

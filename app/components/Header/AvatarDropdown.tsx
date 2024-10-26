@@ -3,7 +3,7 @@ import {
   UserCircleIcon,
   ChatBubbleBottomCenterTextIcon,
   HeartIcon,
-  HomeIcon,
+  CalendarIcon,
   ArrowRightOnRectangleIcon,
   LifebuoyIcon,
 } from "@heroicons/react/24/outline";
@@ -12,7 +12,9 @@ import Link from "next/link";
 import Avatar from "@app/shared/Avatar/Avatar";
 import { Session } from "@supabase/supabase-js";
 import { Database } from "@app/types/database.types";
-import AutoAvatar from "../AutoAvatar";
+import supabase from "@app/lib/supabase";
+import toast, { Toaster } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const solutions = [
   {
@@ -26,28 +28,9 @@ const solutions = [
   //   icon: ChatBubbleBottomCenterTextIcon,
   // },
   {
-    name: "Wishlists",
-    href: "/account-savelists",
-    icon: HeartIcon,
-  },
-  {
-    name: "Booking",
-    href: "##",
-    icon: HomeIcon,
-  },
-];
-
-const solutionsFoot = [
-  {
-    name: "Help",
-    href: "##",
-    icon: LifebuoyIcon,
-  },
-
-  {
-    name: "Logout",
-    href: "##",
-    icon: ArrowRightOnRectangleIcon,
+    name: "Bookings",
+    href: "/account/bookings",
+    icon: CalendarIcon,
   },
 ];
 
@@ -56,22 +39,38 @@ export default function AvatarDropdown({
 }: {
   user: Database["public"]["Tables"]["users"]["Row"];
 }) {
+  const router = useRouter();
+
+  const solutionsFoot = [
+    {
+      name: "Logout",
+      onClick: async () => {
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+          toast.error(error.message);
+          return;
+        }
+        toast.success("Logged out successfully!");
+        router.push("/");
+      },
+      icon: ArrowRightOnRectangleIcon,
+    },
+  ];
+
   return (
     <div className="AvatarDropdown">
+      <Toaster />
       <Popover className="relative">
         {({ open }) => (
           <>
             <Popover.Button
               className={`inline-flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
             >
-              {user.avatar_url ? (
-                <Avatar
-                  imgUrl={user.avatar_url}
-                  sizeClass="w-8 h-8 sm:w-9 sm:h-9"
-                />
-              ) : (
-                <AutoAvatar username={user.username} />
-              )}
+              <Avatar
+                imgUrl={user.avatar_url ?? undefined}
+                sizeClass="w-8 h-8 sm:w-9 sm:h-9"
+                userName={user.username}
+              />
             </Popover.Button>
             <Transition
               as={Fragment}
@@ -105,7 +104,7 @@ export default function AvatarDropdown({
                     {solutionsFoot.map((item, index) => (
                       <a
                         key={index}
-                        href={item.href}
+                        onClick={item.onClick}
                         className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                       >
                         <div className="flex items-center justify-center flex-shrink-0 text-neutral-500 dark:text-neutral-300">

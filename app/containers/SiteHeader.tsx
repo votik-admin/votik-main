@@ -5,6 +5,8 @@ import Header3 from "@app/components/Header/Header3";
 import { PathName } from "@app/routers/types";
 import { usePathname } from "next/navigation";
 import { Database } from "@app/types/database.types";
+import SessionProvider from "@app/contexts/SessionContext";
+import { Session } from "@supabase/supabase-js";
 
 export type SiteHeaders = "Header 1" | "Header 2" | "Header 3";
 
@@ -23,8 +25,10 @@ const PAGES_HIDE_HEADER_BORDER: PathName[] = [
 
 const SiteHeader = ({
   user,
+  session,
 }: {
   user: Database["public"]["Tables"]["users"]["Row"] | null;
+  session: Session;
 }) => {
   const anchorRef = React.useRef<HTMLDivElement>(null);
 
@@ -62,14 +66,14 @@ const SiteHeader = ({
         ? ""
         : "shadow-sm dark:border-b dark:border-neutral-700";
     }
-    return <Header3 className={headerClassName} user={user} />;
+    return <Header3 className={headerClassName} />;
   };
 
   return (
-    <>
+    <SessionProvider initialSession={session} initialUser={user}>
       {renderHeader()}
       <div ref={anchorRef} className="h-1 absolute invisible"></div>
-    </>
+    </SessionProvider>
   );
 };
 

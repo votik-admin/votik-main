@@ -13,6 +13,7 @@ import SiteHeader from "@app/containers/SiteHeader";
 import Footer from "./shared/Footer/Footer";
 import { createClient } from "./lib/supabase/server";
 import { Database } from "./types/database.types";
+import { getSessionAndUser } from "./lib/auth";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -41,23 +42,7 @@ export default async function RootLayout({
     user: null,
   };
 
-  const supabase = createClient();
-
-  const { data: authData, error: authError } = await supabase.auth.getUser();
-
-  if (!authError && authData?.user) {
-    // Fetch the user details
-    const { data, error } = await supabase
-      .from("users") // Table name
-      .select("*") // Select all columns (or specify specific columns)
-      .eq("id", authData.user.id); // Use 'eq' to filter by primary key value
-
-    if (!error && data?.[0]) {
-      userDetails.user = data[0];
-    }
-  }
-
-  console.log({ userDetails });
+  const { session, user } = await getSessionAndUser();
 
   return (
     <html lang="en" className="dark">
@@ -65,7 +50,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
-          <SiteHeader user={userDetails.user} />
+          <SiteHeader session={session} user={user} />
           {children}
           <Footer />
         </div>

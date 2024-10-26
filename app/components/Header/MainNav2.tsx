@@ -26,32 +26,32 @@ const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
           </div>
         </div>
 
-        <div className="lg:hidden flex-[3] max-w-lg !mx-auto md:px-3">
+        {/* <div className="lg:hidden flex-[3] max-w-lg !mx-auto md:px-3">
           <HeroSearchForm2MobileFactory />
-        </div>
+        </div> */}
 
         <div className="hidden md:flex flex-shrink-0 items-center justify-end flex-1 lg:flex-none text-neutral-700 dark:text-neutral-100">
           <div className="hidden items-center lg:flex space-x-1">
             <CurrencyDropdown />
             <LangDropdown />
-            <Link
+            {/* <Link
               href="/add-event"
               className="
                 text-opacity-90
                 group px-4 py-2 border border-neutral-300 hover:border-neutral-400 dark:border-neutral-700 rounded-full inline-flex items-center text-sm text-gray-700 dark:text-neutral-300 font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
             >
               List your event
-            </Link>
+            </Link> */}
 
             <div></div>
             <SwitchDarkMode />
-            <div className="pr-1.5">
+            {/* <div className="pr-1.5">
               <NotifyDropdown className="-ml-2 xl:-ml-1" />
-            </div>
+            </div> */}
             <AvatarDropdown />
           </div>
           <div className="flex items-center space-x-2 lg:hidden">
-            <NotifyDropdown />
+            {/* <NotifyDropdown /> */}
             <AvatarDropdown />
             <MenuBar />
           </div>

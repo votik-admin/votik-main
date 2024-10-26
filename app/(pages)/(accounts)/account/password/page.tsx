@@ -1,19 +1,18 @@
-import PageLogin from "@app/components/PageLogin/PageLogin";
-import PageSignUp from "@app/components/PageSignUp/PageSignUp";
+import AccountPass from "@app/containers/AccountPage/AccountPass";
 import SessionProvider from "@app/contexts/SessionContext";
 import { getSessionAndUser } from "@app/lib/auth";
 import { redirect } from "next/navigation";
 
-export default async function Login() {
+export default async function Page() {
   const { session, user, error } = await getSessionAndUser();
 
-  if (!error && user && session) {
-    redirect("/account");
+  if (error || !user) {
+    redirect("/auth/login");
   }
 
   return (
     <SessionProvider initialSession={session} initialUser={user}>
-      <PageSignUp />
+      <AccountPass />
     </SessionProvider>
   );
 }
