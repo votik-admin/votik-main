@@ -1,6 +1,5 @@
 "use client";
 import NcInputNumber from "@app/components/NcInputNumber/NcInputNumber";
-import { changeTicketCount, storeBookedTicket } from "@app/queries";
 import ButtonCustom from "@app/shared/Button/ButtonCustom";
 import { Tables } from "@app/types/database.types";
 import convertNumbThousand from "@app/utils/convertNumbThousand";
@@ -14,7 +13,6 @@ const SectionChoseTicket = ({
   tickets: Tables<"tickets">[];
   event_id: string;
 }) => {
-  const user_id = "6330e012-45de-4f38-ae9e-d759ef048898";
   const [selectedTickets, setSelectedTickets] = useState(
     Object.fromEntries(tickets.map((ticket) => [ticket.id, 0]))
   );
@@ -35,7 +33,7 @@ const SectionChoseTicket = ({
       body: JSON.stringify({
         amount: amount * 100,
         currency: "INR",
-        notes: { user_id, event_id, selectedTickets },
+        notes: { event_id, selectedTickets }, // user_id is appended server side
       }),
     });
 
@@ -84,24 +82,11 @@ const SectionChoseTicket = ({
           });
           const res = await result.json();
           console.log({ res });
-          if (res.isOk) {
-            toast.success("Payment Verified", { id: toastId });
-            // TODO
-            // populate ticket_bookings table in supabase from razorpay
-            for (const ticketId in selectedTickets) {
-              if (selectedTickets[ticketId] > 0) {
-                storeBookedTicket(
-                  user_id,
-                  event_id,
-                  Number(ticketId),
-                  selectedTickets[ticketId],
-                  data
-                );
-              }
-            }
-          } else {
-            console.log(res.message);
+          if (res.error) {
+            console.log(res);
             toast.error(res.message, { id: toastId });
+          } else {
+            toast.success(res.message, { id: toastId });
           }
         },
         // TODO: Replace with user's info
@@ -147,14 +132,19 @@ const SectionChoseTicket = ({
               className="w-full mt-2"
               defaultValue={0}
               onChange={(val) => {
-                setSelectedTickets({ ...selectedTickets, [ticket.id]: val });
+                setSelectedTickets({
+                  ...selectedTickets,
+                  [ticket.id]: val,
+                });
                 setPrice({ ...price, [ticket.id]: val * ticket.price });
               }}
-              max={10}
+              max={Math.min(10, ticket.current_available_count)}
               min={0}
               label={"₹ " + convertNumbThousand(ticket.price)}
               desc=""
+              availableCount={ticket.current_available_count}
             />
+
             <p className="text-neutral-500 dark:text-neutral-400 border-t dark:border-neutral-700 mt-4 pt-4">
               {ticket.description}
             </p>
@@ -162,7 +152,7 @@ const SectionChoseTicket = ({
         ))}
       </div>
       {Object.values(selectedTickets).reduce((a, b) => a + b, 0) !== 0 && (
-        <div className="hidden lg:flex justify-between items-center border-t dark:border-neutral-700 sm:pt-4 xl:pt-8 sm:-mx-4 sm:px-4 xl:-mx-8 xl:px-8">
+        <div className="flex justify-between items-center border-t dark:border-neutral-700 pt-4 xl:pt-8 -mx-4 px-4 xl:-mx-8 xl:px-8">
           <div>
             <h2 className="text-2xl font-semibold">
               ₹{" "}

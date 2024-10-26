@@ -5,12 +5,13 @@ import BackgroundSection from "@app/components/BackgroundSection/BackgroundSecti
 import SectionSliderNewCategories from "@app/components/SectionSliderNewCategoriesCustom/SectionSliderNewCategoriesCustom";
 import MobileFooterSticky from "../MobileFooterSticky";
 import { getEventFromSlug } from "@app/queries";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import formatDate from "@app/utils/formatDate";
 import { MAP_TO_EVENT } from "@app/types/hardcoded";
 import NcImage from "@app/shared/NcImage/NcImage";
 import ReadMoreParagraph from "@app/shared/ReadMoreParagraph/ReadMoreParagraph";
 import SectionChoseTicket from "./SectionChoseTicket";
+import { createClient } from "@app/lib/supabase/server";
 
 const ListingStayDetailPage = async ({
   params: { slug },
@@ -19,6 +20,13 @@ const ListingStayDetailPage = async ({
     slug: string;
   };
 }) => {
+  const supabase = createClient();
+
+  const { data: authData, error: authError } = await supabase.auth.getUser();
+  if (authError && !authData.user) {
+    redirect("/auth/login");
+  }
+
   const { data: events, error } = await getEventFromSlug(slug);
   if (error || events.length === 0) {
     if (error) {
@@ -27,6 +35,9 @@ const ListingStayDetailPage = async ({
     return notFound();
   }
   const event = events[0];
+
+  // sort tickets by price
+  event.tickets.sort((a, b) => a.price - b.price);
 
   const renderSection1 = () => {
     return (
@@ -92,13 +103,13 @@ const ListingStayDetailPage = async ({
         </div>
 
         {/* SIDEBAR */}
-        <div className="hidden lg:block w-1/2 flex-grow mt-14 lg:mt-0">
+        <div className="lg:w-1/2 flex-grow mt-14 lg:mt-0">
           <div className="">{renderSidebar()}</div>
         </div>
       </main>
 
       {/* STICKY FOOTER MOBILE */}
-      <MobileFooterSticky />
+      {/* <MobileFooterSticky /> */}
 
       {/* OTHER SECTION */}
       {

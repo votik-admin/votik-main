@@ -1,6 +1,6 @@
 import sgMail from "@sendgrid/mail";
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
 const msg = {
   to: "test@example.com",
@@ -13,7 +13,7 @@ const msg = {
 (async () => {
   try {
     await sgMail.send(msg);
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
 
     if (error.response) {
@@ -24,7 +24,7 @@ const msg = {
 
 export async function POST(request: Request) {
   return Response.json({
-    data: { orderId: order.id },
+    data: { orderId: "test" },
     error: null,
     message: null,
   });

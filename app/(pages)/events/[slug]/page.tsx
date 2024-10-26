@@ -257,7 +257,6 @@ const ListingStayDetailPage = async ({
           uniqueClassName="nc-ListingStayDetailPage-modalPhotos"
         />
       </> */}
-
       {/* MAIn */}
       <main className="container relative z-10 mt-11 flex flex-col lg:flex-row ">
         {/* CONTENT */}
@@ -280,10 +279,9 @@ const ListingStayDetailPage = async ({
           <div className="sticky top-28">{renderSidebar()}</div>
         </div>
       </main>
-
       {/* STICKY FOOTER MOBILE */}
-      <MobileFooterSticky />
 
+      <MobileFooterSticky tickets={event.tickets} event_id={event.id} />
       {/* OTHER SECTION */}
       {
         <div className="container py-24 lg:py-32">

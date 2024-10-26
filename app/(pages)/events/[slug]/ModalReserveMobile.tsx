@@ -6,23 +6,21 @@ import { DateRage } from "@app/components/HeroSearchForm/StaySearchForm";
 import { GuestsObject } from "@app/components/HeroSearchForm2Mobile/GuestsInput";
 import CheckOutPage from "@app/containers/CheckOutPage/CheckOutPage";
 import React, { FC, Fragment, useState } from "react";
+import SectionChoseTicket from "./book/SectionChoseTicket";
+import { Tables } from "@app/types/database.types";
 
 interface ModalReserveMobileProps {
+  tickets?: Tables<"tickets">[];
+  event_id: string;
   onClose?: () => void;
-  onChangeGuests: (date: GuestsObject) => void;
   renderChildren?: (p: { openModal: () => void }) => React.ReactNode;
-  onChangeDate: (date: DateRage) => void;
-  defaultGuests: GuestsObject;
-  defaultDate: DateRage;
 }
 
 const ModalReserveMobile: FC<ModalReserveMobileProps> = ({
+  tickets,
+  event_id,
   onClose,
-  onChangeGuests,
-  onChangeDate,
   renderChildren,
-  defaultGuests,
-  defaultDate,
 }) => {
   const [showModal, setShowModal] = useState(false);
 
@@ -76,8 +74,13 @@ const ModalReserveMobile: FC<ModalReserveMobileProps> = ({
                     </div>
 
                     <div className="flex-1 pt-12 py-1 flex flex-col ">
-                      <div className="flex-1 bg-white dark:bg-neutral-900">
-                        <CheckOutPage />
+                      <div className="flex-1 bg-white dark:bg-neutral-900 px-4">
+                        {tickets && (
+                          <SectionChoseTicket
+                            tickets={tickets}
+                            event_id={event_id}
+                          />
+                        )}
                       </div>
                     </div>
                   </>
