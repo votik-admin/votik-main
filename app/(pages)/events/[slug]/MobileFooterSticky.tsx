@@ -5,8 +5,8 @@ import ModalReserveMobile from "./ModalReserveMobile";
 import ButtonCustom from "@app/shared/Button/ButtonCustom";
 import convertNumbThousand from "@app/utils/convertNumbThousand";
 import { Tables } from "@app/types/database.types";
-import { redirect } from "next/navigation";
 import { getUserFromAuthTable, getUserFromUserTable } from "@app/queries";
+import { useRouter } from "next/navigation";
 
 const MobileFooterSticky = ({
   tickets,
@@ -15,6 +15,7 @@ const MobileFooterSticky = ({
   tickets?: Tables<"tickets">[];
   event_id?: string;
 }) => {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<Tables<"users"> | null>(null);
 
@@ -42,7 +43,8 @@ const MobileFooterSticky = ({
                   await getUserFromAuthTable();
                 const user = authData.user;
                 if (authError && !user) {
-                  redirect("/auth/login");
+                  router.push("/auth/login");
+                  return;
                 }
                 const { data, error } = await getUserFromUserTable(user!.id);
                 setUser(data);
