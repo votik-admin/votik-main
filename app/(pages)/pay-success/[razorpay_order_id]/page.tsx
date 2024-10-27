@@ -6,6 +6,7 @@ import { createClient } from "@app/lib/supabase/server";
 import { notFound } from "next/navigation";
 import formatDate from "@app/utils/formatDate";
 import Link from "next/link";
+import ConfettiBoom from "@app/shared/Confetti/Confetti";
 
 const PayPage = async ({
   params: { razorpay_order_id },
@@ -25,7 +26,6 @@ const PayPage = async ({
     return notFound();
   }
 
-  console.log(data);
   const event = data[0].events;
 
   const renderContent = () => {
@@ -168,7 +168,7 @@ const PayPage = async ({
         </div>
         <div>
           <Link href="/">
-            <ButtonPrimary href="/">Explore more events</ButtonPrimary>
+            <ButtonPrimary>Explore more events</ButtonPrimary>
           </Link>
         </div>
       </div>
@@ -177,6 +177,7 @@ const PayPage = async ({
 
   return (
     <div className={`nc-PayPage`} data-nc-id="PayPage">
+      <ConfettiBoom />
       <main className="container mt-11 mb-24 lg:mb-32 ">
         <div className="max-w-4xl mx-auto">{renderContent()}</div>
       </main>
