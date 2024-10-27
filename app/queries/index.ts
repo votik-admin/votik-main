@@ -10,7 +10,4 @@ const getEventFromSlug = (slug: string) =>
     .select("*, organizers(*), venues(*), tickets(*)")
     .eq("slug", slug);
 
-const changeTicketCount = (row_id: number, change: number) =>
-  supabase.rpc("change_count_dynamically", { row_id, change });
-
-export { getAllEvents, getAllVenues, getEventFromSlug, changeTicketCount };
+export { getAllEvents, getAllVenues, getEventFromSlug };

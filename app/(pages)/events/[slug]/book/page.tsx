@@ -12,6 +12,7 @@ import NcImage from "@app/shared/NcImage/NcImage";
 import ReadMoreParagraph from "@app/shared/ReadMoreParagraph/ReadMoreParagraph";
 import SectionChoseTicket from "./SectionChoseTicket";
 import { createClient } from "@app/lib/supabase/server";
+import { getSessionAndUser } from "@app/lib/auth";
 
 const ListingStayDetailPage = async ({
   params: { slug },
@@ -80,7 +81,13 @@ const ListingStayDetailPage = async ({
     );
   };
   const renderSection2 = () => {
-    return <SectionChoseTicket tickets={event.tickets} event_id={event.id} />;
+    return (
+      <SectionChoseTicket
+        tickets={event.tickets}
+        user={authData.user!}
+        event_id={event.id}
+      />
+    );
   };
 
   const renderSidebar = () => {

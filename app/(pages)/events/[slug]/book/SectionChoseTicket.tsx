@@ -3,16 +3,22 @@ import NcInputNumber from "@app/components/NcInputNumber/NcInputNumber";
 import ButtonCustom from "@app/shared/Button/ButtonCustom";
 import { Tables } from "@app/types/database.types";
 import convertNumbThousand from "@app/utils/convertNumbThousand";
+import { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 const SectionChoseTicket = ({
   tickets,
+  user,
   event_id,
 }: {
   tickets: Tables<"tickets">[];
+  user: User;
   event_id?: string;
 }) => {
+  const router = useRouter();
+
   const [selectedTickets, setSelectedTickets] = useState(
     Object.fromEntries(tickets.map((ticket) => [ticket.id, 0]))
   );
@@ -87,13 +93,13 @@ const SectionChoseTicket = ({
             toast.error(res.message, { id: toastId });
           } else {
             toast.success(res.message, { id: toastId });
+            router.push(`/pay-success/${response.razorpay_order_id}`);
           }
         },
-        // TODO: Replace with user's info
         prefill: {
-          name: "Prince Singh",
-          email: "prince@gmail.com",
-          contact: "9305680096",
+          name: user.user_metadata?.full_name,
+          email: user.email,
+          contact: user.phone ?? "",
         },
         theme: {
           color: "#430D7F",

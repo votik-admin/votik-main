@@ -8,10 +8,12 @@ import CheckOutPage from "@app/containers/CheckOutPage/CheckOutPage";
 import React, { FC, Fragment, useState } from "react";
 import SectionChoseTicket from "./book/SectionChoseTicket";
 import { Tables } from "@app/types/database.types";
+import { User } from "@supabase/supabase-js";
 
 interface ModalReserveMobileProps {
   tickets?: Tables<"tickets">[];
   event_id?: string;
+  user: User;
   onClose?: () => void;
   renderChildren?: (p: { openModal: () => void }) => React.ReactNode;
 }
@@ -19,13 +21,11 @@ interface ModalReserveMobileProps {
 const ModalReserveMobile: FC<ModalReserveMobileProps> = ({
   tickets,
   event_id,
+  user,
   onClose,
   renderChildren,
 }) => {
   const [showModal, setShowModal] = useState(false);
-
-  // FOR RESET ALL DATA WHEN CLICK CLEAR BUTTON
-  //
   function closeModal() {
     setShowModal(false);
   }
@@ -73,10 +73,11 @@ const ModalReserveMobile: FC<ModalReserveMobileProps> = ({
                       </button>
                     </div>
 
-                    <div className="flex-1 pt-12 py-1 flex flex-col ">
+                    <div className="flex-1 pt-12 flex flex-col">
                       <div className="flex-1 bg-white dark:bg-neutral-900 px-4">
                         {tickets && (
                           <SectionChoseTicket
+                            user={user}
                             tickets={tickets}
                             event_id={event_id}
                           />

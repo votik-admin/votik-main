@@ -59,7 +59,7 @@ export default function AvatarDropdown({
 
   return (
     <div className="AvatarDropdown">
-      <Toaster />
+      <Toaster position="bottom-center" />
       <Popover className="relative">
         {({ open }) => (
           <>
