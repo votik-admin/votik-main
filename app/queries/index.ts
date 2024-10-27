@@ -10,4 +10,14 @@ const getEventFromSlug = (slug: string) =>
     .select("*, organizers(*), venues(*), tickets(*)")
     .eq("slug", slug);
 
-export { getAllEvents, getAllVenues, getEventFromSlug };
+const getUserFromAuthTable = () => supabase.auth.getUser();
+const getUserFromUserTable = (id: string) =>
+  supabase.from("users").select("*").eq("id", id).single();
+
+export {
+  getAllEvents,
+  getAllVenues,
+  getEventFromSlug,
+  getUserFromAuthTable,
+  getUserFromUserTable,
+};

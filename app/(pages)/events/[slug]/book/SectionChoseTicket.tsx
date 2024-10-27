@@ -14,7 +14,7 @@ const SectionChoseTicket = ({
   event_id,
 }: {
   tickets: Tables<"tickets">[];
-  user: User;
+  user: Tables<"users">;
   event_id?: string;
 }) => {
   const router = useRouter();
@@ -97,9 +97,9 @@ const SectionChoseTicket = ({
           }
         },
         prefill: {
-          name: user.user_metadata?.full_name,
+          name: user.first_name + " " + user.last_name,
           email: user.email,
-          contact: user.phone ?? "",
+          contact: user.phone_number,
         },
         theme: {
           color: "#430D7F",

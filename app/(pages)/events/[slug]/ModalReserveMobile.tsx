@@ -2,18 +2,14 @@
 
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import { DateRage } from "@app/components/HeroSearchForm/StaySearchForm";
-import { GuestsObject } from "@app/components/HeroSearchForm2Mobile/GuestsInput";
-import CheckOutPage from "@app/containers/CheckOutPage/CheckOutPage";
 import React, { FC, Fragment, useState } from "react";
 import SectionChoseTicket from "./book/SectionChoseTicket";
 import { Tables } from "@app/types/database.types";
-import { User } from "@supabase/supabase-js";
 
 interface ModalReserveMobileProps {
   tickets?: Tables<"tickets">[];
   event_id?: string;
-  user: User;
+  user: Tables<"users">;
   onClose?: () => void;
   renderChildren?: (p: { openModal: () => void }) => React.ReactNode;
 }

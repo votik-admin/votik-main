@@ -1,19 +1,12 @@
 "use client";
 
-import { DateRage } from "@app/components/HeroSearchForm/StaySearchForm";
-import { GuestsObject } from "@app/components/HeroSearchForm2Mobile/GuestsInput";
-import ModalSelectDate from "@app/components/ModalSelectDate";
-import moment from "moment";
 import React, { useState } from "react";
-import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
-import converSelectedDateToString from "@app/utils/converSelectedDateToString";
 import ModalReserveMobile from "./ModalReserveMobile";
 import ButtonCustom from "@app/shared/Button/ButtonCustom";
 import convertNumbThousand from "@app/utils/convertNumbThousand";
 import { Tables } from "@app/types/database.types";
-import { createClient } from "@app/lib/supabase/client";
 import { redirect } from "next/navigation";
-import { User } from "@supabase/supabase-js";
+import { getUserFromAuthTable, getUserFromUserTable } from "@app/queries";
 
 const MobileFooterSticky = ({
   tickets,
@@ -23,7 +16,7 @@ const MobileFooterSticky = ({
   event_id?: string;
 }) => {
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<Tables<"users"> | null>(null);
 
   return (
     <div className="block lg:hidden fixed bottom-0 inset-x-0 py-2 sm:py-3 bg-white dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-6000 z-20">
@@ -45,13 +38,14 @@ const MobileFooterSticky = ({
             <ButtonCustom
               onClick={async () => {
                 setLoading(true);
-                const supabase = createClient();
                 const { data: authData, error: authError } =
-                  await supabase.auth.getUser();
-                if (authError && !authData.user) {
+                  await getUserFromAuthTable();
+                const user = authData.user;
+                if (authError && !user) {
                   redirect("/auth/login");
                 }
-                setUser(authData.user);
+                const { data, error } = await getUserFromUserTable(user!.id);
+                setUser(data);
                 setLoading(false);
                 openModal();
               }}

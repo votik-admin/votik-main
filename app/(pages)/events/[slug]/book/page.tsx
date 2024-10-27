@@ -21,10 +21,8 @@ const ListingStayDetailPage = async ({
     slug: string;
   };
 }) => {
-  const supabase = createClient();
-
-  const { data: authData, error: authError } = await supabase.auth.getUser();
-  if (authError && !authData.user) {
+  const { user, session, error: authError } = await getSessionAndUser();
+  if (authError && !user) {
     redirect("/auth/login");
   }
 
@@ -84,7 +82,7 @@ const ListingStayDetailPage = async ({
     return (
       <SectionChoseTicket
         tickets={event.tickets}
-        user={authData.user!}
+        user={user!}
         event_id={event.id}
       />
     );
