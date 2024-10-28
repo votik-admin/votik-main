@@ -12,6 +12,7 @@ import NcImage from "@app/shared/NcImage/NcImage";
 import ReadMoreParagraph from "@app/shared/ReadMoreParagraph/ReadMoreParagraph";
 import SectionChoseTicket from "./SectionChoseTicket";
 import { createClient } from "@app/lib/supabase/server";
+import { getSessionAndUser } from "@app/lib/auth";
 
 const ListingStayDetailPage = async ({
   params: { slug },
@@ -20,10 +21,8 @@ const ListingStayDetailPage = async ({
     slug: string;
   };
 }) => {
-  const supabase = createClient();
-
-  const { data: authData, error: authError } = await supabase.auth.getUser();
-  if (authError && !authData.user) {
+  const { user, session, error: authError } = await getSessionAndUser();
+  if (authError && !user) {
     redirect("/auth/login");
   }
 
@@ -80,7 +79,13 @@ const ListingStayDetailPage = async ({
     );
   };
   const renderSection2 = () => {
-    return <SectionChoseTicket tickets={event.tickets} event_id={event.id} />;
+    return (
+      <SectionChoseTicket
+        tickets={event.tickets}
+        user={user!}
+        event_id={event.id}
+      />
+    );
   };
 
   const renderSidebar = () => {

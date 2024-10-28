@@ -14,6 +14,7 @@ import Footer from "./shared/Footer/Footer";
 import { createClient } from "./lib/supabase/server";
 import { Database } from "./types/database.types";
 import { getSessionAndUser } from "./lib/auth";
+import NextTopLoader from "nextjs-toploader";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
 
@@ -51,6 +52,10 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <NextTopLoader
+          color={"#c4fd078b"}
+          // color={"#430D7F"}
+        />
         <div className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
           <SiteHeader session={session} user={user} />
           {children}
