@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 
 const ReadMoreParagraph = ({ children }: { children?: React.ReactNode }) => {
-  const MAX_WORDS = 50;
+  const MAX_WORDS = 25;
   const [readMoreToggled, setReadMoreToggled] = useState(false);
 
   if (!children) return null;

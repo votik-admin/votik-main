@@ -11,7 +11,6 @@ import "react-dates/initialize";
 
 import SiteHeader from "@app/containers/SiteHeader";
 import Footer from "./shared/Footer/Footer";
-import { createClient } from "./lib/supabase/server";
 import { Database } from "./types/database.types";
 import { getSessionAndUser } from "./lib/auth";
 import NextTopLoader from "nextjs-toploader";

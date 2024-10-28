@@ -58,7 +58,6 @@ export async function POST(request: Request) {
       );
     }
     const responses = await Promise.all(decreaseAvailableCount);
-    console.log(responses);
     for (const response of responses) {
       if (response.error) throw new Error(response.error.message);
     }

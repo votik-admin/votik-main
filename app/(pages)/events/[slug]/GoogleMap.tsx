@@ -9,6 +9,7 @@ const GoogleMap = ({ lat, lng }: { lat: number; lng: number }) => {
     <div className="aspect-w-5 aspect-h-5 sm:aspect-h-3">
       <div className="rounded-xl overflow-hidden">
         <GoogleMapReact
+          key={process.env.GMAP_API_KEY!}
           bootstrapURLKeys={{
             key: process.env.GMAP_API_KEY!,
           }}

@@ -37,7 +37,8 @@
     "react-use": "^17.5.1",
     "sass": "^1.79.5",
     "supabase": "^1.207.9",
-    "swr": "^2.2.5"
+    "swr": "^2.2.5",
+    "twilio": "^5.3.5"
   },
   "devDependencies": {
     "@types/glidejs__glide": "^3.6.5",

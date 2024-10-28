@@ -44,7 +44,6 @@ const SectionChoseTicket = ({
     });
 
     const json = await response.json();
-    console.log(json);
     if (json.error) {
       throw new Error(json.message);
     }
@@ -87,7 +86,6 @@ const SectionChoseTicket = ({
             headers: { "Content-Type": "application/json" },
           });
           const res = await result.json();
-          console.log({ res });
           if (res.error) {
             console.log(res);
             toast.error(res.message, { id: toastId });
@@ -114,7 +112,6 @@ const SectionChoseTicket = ({
       console.log(error);
       toast.error(error.message);
     } finally {
-      console.log("Finally block executed");
       setLoading(false);
     }
   };

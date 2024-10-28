@@ -1,0 +1,28 @@
+{
+  "data": {
+    "body": "Sent from your Twilio trial account - Hello test megik demn",
+    "numSegments": "1",
+    "direction": "outbound-api",
+    "from": "+15034064319",
+    "to": "+919305680096",
+    "dateUpdated": "2024-10-27T17:29:41.000Z",
+    "price": null,
+    "errorMessage": null,
+    "uri": "/2010-04-01/Accounts/AC37e813e708697e094a810a72f8525020/Messages/SMba138fe17921ca1cc35f295b78d5069e.json",
+    "accountSid": "AC37e813e708697e094a810a72f8525020",
+    "numMedia": "0",
+    "status": "queued",
+    "messagingServiceSid": null,
+    "sid": "SMba138fe17921ca1cc35f295b78d5069e",
+    "dateSent": null,
+    "dateCreated": "2024-10-27T17:29:41.000Z",
+    "errorCode": null,
+    "priceUnit": "USD",
+    "apiVersion": "2010-04-01",
+    "subresourceUris": {
+      "media": "/2010-04-01/Accounts/AC37e813e708697e094a810a72f8525020/Messages/SMba138fe17921ca1cc35f295b78d5069e/Media.json"
+    }
+  },
+  "error": null,
+  "message": "message sent successfully"
+}

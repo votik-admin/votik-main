@@ -24,8 +24,6 @@ let WIN_PREV_POSITION = 0;
 const Header3: FC<Header3Props> = ({ className = "" }) => {
   const { user } = useContext(SessionContext);
 
-  console.log({ user });
-
   const headerInnerRef = useRef<HTMLDivElement>(null);
 
   const [showHeroSearch, setShowHeroSearch] =
