@@ -1,3 +1,4 @@
+import Ticket from "@app/components/Ticket/MobileTicket";
 import AccountBookings from "@app/containers/AccountPage/AccountBookings";
 import { getSessionAndUser } from "@app/lib/auth";
 import { redirect } from "next/navigation";

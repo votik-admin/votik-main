@@ -34,12 +34,15 @@ const ButtonCustom = ({ children, loading, ...args }: ButtonCustomProps) => {
     );
   };
 
+  const clsName = args.className || "";
+  delete args.className;
+
   return (
     <button
       disabled={loading}
       className={`flex items-center justify-center bg-[#430D7F] text-[#C3FD07] font-semibold px-4 py-2 rounded-lg hover:shadow ${
         loading ? "opacity-75" : ""
-      }`}
+      } ${clsName}`}
       {...args}
     >
       {loading && _renderLoading()}

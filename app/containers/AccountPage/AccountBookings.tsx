@@ -14,27 +14,25 @@ import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
 import CommonLayout from "./CommonLayout";
 import usePagination from "@app/hooks/usePagination";
 import supabase from "@app/lib/supabase";
+import TicketDetails from "@app/components/TicketDetails/TicketDetails";
+import { Tables } from "@app/types/database.types";
 
-type Ticket = {
-  eventName: string;
-  eventDate: string;
-  eventTime: string;
-  eventLocation: string;
-  ticketNumber: string;
-  ticketPrice: string;
-  ticketStatus: string;
-  ticketType: string;
-  eventImage: string;
-  ticketCount: string;
+type Ticket = Tables<"ticket_bookings"> & {
+  events: Tables<"events">;
+  tickets: Tables<"tickets">;
 };
 
-const AccountBookings: React.FC = () => {
-  const categories = ["Upcoming", "Past", "Cancelled"];
-  const [selectedTab, setSelectedTab] = useState(1);
+const TicketTimeline = ["Upcoming", "Past", "Cancelled"] as const;
 
+const TicketTab = ({ type }: { type: (typeof TicketTimeline)[number] }) => {
   const baseQuery = supabase
     .from("ticket_bookings")
-    .select(`*, events!inner(*)`); // !inner is required, see https://stackoverflow.com/questions/69137919/filtering-in-join-in-supabase
+    .select(`*, events!inner(*), tickets!inner(*)`); // !inner is required, see https://stackoverflow.com/questions/69137919/filtering-in-join-in-supabase
+
+  const [actualData, setActualData] = useState<{ [ticketId: string]: Ticket }>(
+    {}
+  );
+  const [page, setPage] = useState(1);
 
   const getQueryForTab = (tabIndex: number) => {
     switch (tabIndex) {
@@ -55,28 +53,55 @@ const AccountBookings: React.FC = () => {
     }
   };
 
-  const { count, data } = usePagination<Ticket>({
-    query: getQueryForTab(selectedTab),
-    page: 1,
-    pageSize: 10,
+  const { data, loading, error } = usePagination<Ticket>({
+    pageSize: 12,
+    page,
+    query: getQueryForTab(TicketTimeline.indexOf(type)),
   });
 
-  console.log({ data });
-
   useEffect(() => {
-    getQueryForTab(selectedTab);
-  }, [selectedTab]);
+    if (data) {
+      setActualData((prev) => {
+        return {
+          ...prev,
+          ...data.reduce((acc, item) => {
+            acc[item.id] = item;
+            return acc;
+          }, {} as { [ticketId: string]: Ticket }),
+        };
+      });
+    }
+  }, [data]);
 
   const renderContent = () => {
-    if (!data) return <p>Loading...</p>;
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error.message}</p>;
 
     return (
-      <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {data.map((ticket) => JSON.stringify(ticket))}
-      </div>
+      <>
+        <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {Object.values(actualData).map((ticket) => {
+            return <TicketDetails key={ticket.id} taxonomy={ticket} />;
+          })}
+        </div>
+        <div className="flex mt-11 justify-center items-center">
+          <ButtonSecondary
+            onClick={() => {
+              setPage((prev) => prev + 1);
+            }}
+            loading={loading}
+          >
+            Show me more
+          </ButtonSecondary>
+        </div>
+      </>
     );
   };
 
+  return <Tab.Panel className="mt-8">{renderContent()}</Tab.Panel>;
+};
+
+const AccountBookings: React.FC = () => {
   return (
     <div>
       <CommonLayout>
@@ -85,9 +110,9 @@ const AccountBookings: React.FC = () => {
             <h2 className="text-3xl font-semibold">Bookings</h2>
           </div>
           <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-          <Tab.Group selectedIndex={selectedTab} onChange={setSelectedTab}>
+          <Tab.Group>
             <Tab.List className="flex space-x-1 overflow-x-auto">
-              {categories.map((item) => (
+              {TicketTimeline.map((item) => (
                 <Tab key={item} as={Fragment}>
                   {({ selected }) => (
                     <button
@@ -104,20 +129,11 @@ const AccountBookings: React.FC = () => {
               ))}
             </Tab.List>
             <Tab.Panels>
-              <Tab.Panel className="mt-8">{renderContent()}</Tab.Panel>
-              <Tab.Panel className="mt-8">{renderContent()}</Tab.Panel>
-              <Tab.Panel className="mt-8">{renderContent()}</Tab.Panel>
+              {TicketTimeline.map((item) => (
+                <TicketTab key={item} type={item} />
+              ))}
             </Tab.Panels>
           </Tab.Group>
-          <div className="flex mt-11 justify-center items-center">
-            <ButtonSecondary
-              onClick={() => {
-                console.log("Show me more");
-              }}
-            >
-              Show me more
-            </ButtonSecondary>
-          </div>
         </div>
       </CommonLayout>
     </div>
