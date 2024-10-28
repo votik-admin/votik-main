@@ -15,6 +15,8 @@ import { Database } from "./types/database.types";
 import { getSessionAndUser } from "./lib/auth";
 import NextTopLoader from "nextjs-toploader";
 
+import { GoogleAnalytics } from "@next/third-parties/google";
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -59,6 +61,7 @@ export default async function RootLayout({
           <Footer />
         </div>
       </body>
+      <GoogleAnalytics gaId="G-R1RJRTNCKF" />
     </html>
   );
 }

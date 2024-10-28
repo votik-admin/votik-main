@@ -1,10 +1,19 @@
-export default function Page() {
-  return (
-    <div className="Page">
-      <h1>Page</h1>
-      <p>
-        Find me in <code>app/pages/page/page.tsx</code>
-      </p>
-    </div>
-  );
+import AccountBookings from "@app/containers/AccountPage/AccountBookings";
+import { getSessionAndUser } from "@app/lib/auth";
+import { redirect } from "next/navigation";
+
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
+  const { session, user, error } = await getSessionAndUser();
+
+  if (error || !user) {
+    redirect("/auth/login");
+  }
+
+  return <AccountBookings />;
 }
