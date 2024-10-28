@@ -27,3 +27,27 @@
 .ticket-container::after {
   bottom: -4.2rem; /* Position at the bottom crimp */
 }
+.ticket-section {
+  position: relative;
+}
+
+.ticket-section::before,
+.ticket-section::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  transform: translateX(50%);
+  right: 0;
+}
+
+.ticket-section::before {
+  bottom: -10px; /* Left crimp */
+  left: -20px; /* Left crimp */
+}
+
+.ticket-section::after {
+  bottom: -10px; /* Bottom crimp */
+}
