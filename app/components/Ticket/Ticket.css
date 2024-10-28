@@ -1,0 +1,53 @@
+/* CSS */
+.small-font {
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+.ticket-container {
+  position: relative;
+}
+
+.ticket-container::before,
+.ticket-container::after {
+  content: "";
+  position: absolute;
+  width: 4rem;
+  height: 4rem;
+  background-color: white;
+  border-radius: 50%;
+  transform: translateX(50%);
+  right: 0;
+}
+
+.ticket-container::before {
+  top: -4.2rem; /* Position at the top crimp */
+}
+
+.ticket-container::after {
+  bottom: -4.2rem; /* Position at the bottom crimp */
+}
+.ticket-section {
+  position: relative;
+}
+
+.ticket-section::before,
+.ticket-section::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  transform: translateX(50%);
+  right: 0;
+}
+
+.ticket-section::before {
+  bottom: -10px; /* Left crimp */
+  left: -20px; /* Left crimp */
+}
+
+.ticket-section::after {
+  bottom: -10px; /* Bottom crimp */
+}
