@@ -30,11 +30,11 @@ type Ticket = {
 
 const AccountBookings: React.FC = () => {
   const categories = ["Upcoming", "Past", "Cancelled"];
-  const [selectedTab, setSelectedTab] = useState(0);
+  const [selectedTab, setSelectedTab] = useState(1);
 
-  const baseQuery = supabase.from("ticket_bookings").select(`
-    *, events(*)
-    `);
+  const baseQuery = supabase
+    .from("ticket_bookings")
+    .select(`*, events!inner(*)`); // !inner is required, see https://stackoverflow.com/questions/69137919/filtering-in-join-in-supabase
 
   const getQueryForTab = (tabIndex: number) => {
     switch (tabIndex) {
@@ -48,7 +48,7 @@ const AccountBookings: React.FC = () => {
           .order("created_at", { ascending: true });
       case 2:
         return baseQuery
-          .eq("status", "cancelled")
+          .eq("status", "CANCELED")
           .order("created_at", { ascending: true });
       default:
         return null;
