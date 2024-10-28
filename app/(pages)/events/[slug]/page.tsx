@@ -25,14 +25,13 @@ const ListingStayDetailPage = async ({
     slug: string;
   };
 }) => {
-  const { data: events, error } = await getEventFromSlug(slug);
-  if (error || events.length === 0) {
+  const { data: event, error } = await getEventFromSlug(slug);
+  if (error || !event) {
     if (error) {
       console.log("💣💣💣", error);
     }
     return notFound();
   }
-  const event = events[0];
 
   const renderSection1 = () => {
     return (

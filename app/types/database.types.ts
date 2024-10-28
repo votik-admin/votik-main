@@ -9,6 +9,33 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      event_categories: {
+        Row: {
+          banner_image: string
+          category: Database["public"]["Enums"]["EventCategory"]
+          description: string
+          id: number
+          slug: string
+          title: string
+        }
+        Insert: {
+          banner_image: string
+          category: Database["public"]["Enums"]["EventCategory"]
+          description: string
+          id?: number
+          slug: string
+          title: string
+        }
+        Update: {
+          banner_image?: string
+          category?: Database["public"]["Enums"]["EventCategory"]
+          description?: string
+          id?: number
+          slug?: string
+          title?: string
+        }
+        Relationships: []
+      }
       events: {
         Row: {
           accepted: boolean
@@ -407,6 +434,7 @@ export type Database = {
         | "SPORTS"
         | "EXPERIENCES"
         | "OTHER"
+        | "NIGHTLIFE"
       Gender:
         | "MALE"
         | "FEMALE"

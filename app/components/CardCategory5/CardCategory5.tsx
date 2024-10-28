@@ -12,14 +12,15 @@ const CardCategory5: FC<CardCategory5Props> = ({
   className = "",
   taxonomy,
 }) => {
-  const { name, id, image, address } = taxonomy;
-  const href = `/venues/${id}`;
+  const { name, slug, image, address } = taxonomy;
+  const href = `/venues/${slug}`;
   return (
-    <Link
-      href={href}
-      className={`nc-CardCategory5 flex flex-col ${className}`}
-      data-nc-id="CardCategory5"
-    >
+    // <Link
+    //   href={href}
+    //   className={`nc-CardCategory5 flex flex-col ${className}`}
+    //   data-nc-id="CardCategory5"
+    // >
+    <>
       <div
         className={`flex-shrink-0 relative w-full aspect-w-4 aspect-h-3 h-0 rounded-2xl overflow-hidden group`}
       >
@@ -41,7 +42,8 @@ const CardCategory5: FC<CardCategory5Props> = ({
           {address}
         </p>
       </div>
-    </Link>
+    </>
+    // </Link>
   );
 };
 

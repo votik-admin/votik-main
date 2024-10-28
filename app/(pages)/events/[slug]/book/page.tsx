@@ -11,7 +11,6 @@ import { MAP_TO_EVENT } from "@app/types/hardcoded";
 import NcImage from "@app/shared/NcImage/NcImage";
 import ReadMoreParagraph from "@app/shared/ReadMoreParagraph/ReadMoreParagraph";
 import SectionChoseTicket from "./SectionChoseTicket";
-import { createClient } from "@app/lib/supabase/server";
 import { getSessionAndUser } from "@app/lib/auth";
 
 const ListingStayDetailPage = async ({
@@ -26,14 +25,13 @@ const ListingStayDetailPage = async ({
     redirect("/auth/login");
   }
 
-  const { data: events, error } = await getEventFromSlug(slug);
-  if (error || events.length === 0) {
+  const { data: event, error } = await getEventFromSlug(slug);
+  if (error || !event) {
     if (error) {
       console.log("💣💣💣", error);
     }
     return notFound();
   }
-  const event = events[0];
 
   // sort tickets by price
   event.tickets.sort((a, b) => a.price - b.price);

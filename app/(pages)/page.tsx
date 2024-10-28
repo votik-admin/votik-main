@@ -33,8 +33,8 @@ const EVENT_CATEGORIES: TaxonomyType[] = [
   },
   {
     id: "3",
-    href: "/events/category/workshops",
-    name: "Workshops",
+    href: "/events/category/experiences",
+    name: "Experiences",
     taxonomy: "category",
     count: 82,
     thumbnail: imageWorkshops.src,
