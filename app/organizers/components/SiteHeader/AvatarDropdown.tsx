@@ -1,17 +1,12 @@
 import { Popover, Transition } from "@headlessui/react";
 import {
   UserCircleIcon,
-  ChatBubbleBottomCenterTextIcon,
-  HeartIcon,
-  CalendarIcon,
   ArrowRightOnRectangleIcon,
-  LifebuoyIcon,
 } from "@heroicons/react/24/outline";
 import { Fragment } from "react";
 import Link from "next/link";
 import Avatar from "@app/shared/Avatar/Avatar";
-import { Session } from "@supabase/supabase-js";
-import { Database } from "@app/types/database.types";
+import { Tables } from "@app/types/database.types";
 import supabase from "@app/lib/supabase";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -19,25 +14,15 @@ import { useRouter } from "next/navigation";
 const solutions = [
   {
     name: "Account",
-    href: "/account",
+    href: "/organizer/account",
     icon: UserCircleIcon,
-  },
-  // {
-  //   name: "Messages",
-  //   href: "##",
-  //   icon: ChatBubbleBottomCenterTextIcon,
-  // },
-  {
-    name: "Bookings",
-    href: "/account/bookings",
-    icon: CalendarIcon,
   },
 ];
 
 export default function AvatarDropdown({
-  user,
+  organizer,
 }: {
-  user: Database["public"]["Tables"]["users"]["Row"];
+  organizer: Tables<"organizers">;
 }) {
   const router = useRouter();
 
@@ -66,9 +51,9 @@ export default function AvatarDropdown({
               className={`inline-flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
             >
               <Avatar
-                imgUrl={user.avatar_url ?? undefined}
+                imgUrl={organizer.avatar_url ?? undefined}
                 sizeClass="w-8 h-8 sm:w-9 sm:h-9"
-                userName={user.username}
+                userName={organizer.name ?? "Hello World!"}
               />
             </Popover.Button>
             <Transition
