@@ -1,14 +1,12 @@
 import React, { FC, useState } from "react";
 import NcImage from "@app/shared/NcImage/NcImage";
-import { TaxonomyType } from "@app/data/types";
 import Link from "next/link";
-import convertNumbThousand from "@app/utils/convertNumbThousand";
 import { Tables } from "@app/types/database.types";
 import formatDate from "@app/utils/formatDate";
 import ButtonCustom from "@app/shared/Button/ButtonCustom";
 import { Dialog, Transition } from "@headlessui/react";
 import ButtonClose from "@app/shared/ButtonClose/ButtonClose";
-import Ticket from "../Ticket/Ticket";
+import Ticket from "@app/components/Ticket/Ticket";
 import MobileTicket from "../Ticket/MobileTicket";
 import generateBookingId from "@app/utils/generateCustomBookingId";
 
