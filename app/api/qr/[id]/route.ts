@@ -31,9 +31,10 @@ export async function POST(request: Request) {
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = (await params).slug;
+  const id = (await params).id;
+  console.log({ id });
   return Response.json(
     {
       data: encrypt(id),
