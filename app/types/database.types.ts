@@ -158,6 +158,7 @@ export type Database = {
           name: string
           pan_number: string
           phone_number: string
+          profile_complete: boolean
           slug: string
           state: string
         }
@@ -175,6 +176,7 @@ export type Database = {
           name: string
           pan_number: string
           phone_number: string
+          profile_complete?: boolean
           slug: string
           state: string
         }
@@ -192,6 +194,7 @@ export type Database = {
           name?: string
           pan_number?: string
           phone_number?: string
+          profile_complete?: boolean
           slug?: string
           state?: string
         }

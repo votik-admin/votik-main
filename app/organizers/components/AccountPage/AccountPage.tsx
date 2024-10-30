@@ -6,14 +6,14 @@ import Avatar from "@app/shared/Avatar/Avatar";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import Input from "@app/shared/Input/Input";
 import Select from "@app/shared/Select/Select";
-import Textarea from "@app/shared/Textarea/Textarea";
 import CommonLayout from "./CommonLayout";
-import { Database } from "@app/types/database.types";
+import { Tables } from "@app/types/database.types";
 import supabase from "@app/lib/supabase";
 import toast, { Toaster } from "react-hot-toast";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { GENDER, STATES } from "@app/types/enums";
 import { SessionContext } from "@app/contexts/SessionContext";
+import { OrganizerContext } from "@app/contexts/OrganizerContext";
 
 export interface AccountPageProps {
   className?: string;
@@ -24,14 +24,51 @@ function isPhoneNumber(number: string): boolean {
   return /^\+[1-9]\d{1,14}$/.test(number);
 }
 
-type UserDetailsForm = Database["public"]["Tables"]["users"]["Row"];
+type OrganizerDetailsForm = Tables<"organizers">;
+
+function isValidGSTIN(gstin: string): boolean {
+  const gstinRegex = /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}$/;
+
+  // First, check if GSTIN matches the required pattern
+  if (!gstinRegex.test(gstin)) {
+    return false;
+  }
+
+  // Checksum calculation
+  const a = 65,
+    b = 55,
+    c = 36;
+  let checksum = 0;
+
+  for (let k = 0; k < gstin.length; k++) {
+    const char = gstin[k];
+    let value =
+      char.charCodeAt(0) < a ? parseInt(char) : char.charCodeAt(0) - b;
+    value *= (k % 2) + 1;
+    value = value > c ? 1 + (value - c) : value;
+    checksum += k < 14 ? value : 0;
+  }
+
+  const checkChar = gstin[14];
+  const computedCheckChar =
+    c - (checksum % c) < 10
+      ? String(c - (checksum % c))
+      : String.fromCharCode(c - (checksum % c) + b);
+
+  // Validate checksum character
+  return checkChar === computedCheckChar;
+}
 
 const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
-  const { user: u } = useContext(SessionContext);
+  const { organizer: o } = useContext(OrganizerContext);
 
-  const user = u!;
+  const organizer = o!;
 
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(user.avatar_url);
+  console.log({ organizer });
+
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(
+    organizer.avatar_url
+  );
 
   const [otp, setOtp] = useState<string | null>(null);
 
@@ -43,36 +80,39 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
     phoneNumber: string;
     isVerified: boolean;
   }>({
-    phoneNumber: user.phone_number ?? "",
+    phoneNumber: organizer.phone_number ?? "",
     isVerified: true,
   });
 
-  const { register, handleSubmit, watch, setValue } = useForm<UserDetailsForm>({
-    defaultValues: user,
-  });
+  const { register, handleSubmit, watch, setValue, formState } =
+    useForm<OrganizerDetailsForm>({
+      defaultValues: organizer,
+    });
 
   useEffect(() => {
     if (phoneNumberData.isVerified)
       setValue("phone_number", phoneNumberData.phoneNumber);
   }, [phoneNumberData]);
 
-  const handleUserUpdate = async (data: UserDetailsForm) => {
+  const handleUserUpdate = async (data: OrganizerDetailsForm) => {
     // handle user update
     const toastId = toast.loading("Updating user...");
-    // Remove all the fields that are empty
-    Object.keys(data).forEach((key) => {
-      // @ts-expect-error - data is of type UserDetailsForm
-      if (data[key] === "") {
-        // @ts-expect-error - data is of type UserDetailsForm
-        delete data[key];
-      }
-    });
+    // Check for the errors in the form
+    if (formState.errors) {
+      // Show all the errors
+      Object.entries(formState.errors).forEach(([key, value]) => {
+        // @ts-expect-error - value is a string
+        toast.error(value.message, { id: toastId });
+      });
+    }
+
     const { error } = await supabase
-      .from("users")
+      .from("organizers")
       .update({
         ...data,
+        profile_complete: true,
       })
-      .eq("id", user.id);
+      .eq("id", organizer.id);
 
     if (error) {
       toast.error("Error updating user", { id: toastId });
@@ -134,9 +174,9 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
 
     // Update the phone number
     const { error: updateError } = await supabase
-      .from("users")
+      .from("organizers")
       .update({ phone_number: phoneNumberData.phoneNumber })
-      .eq("id", user.id);
+      .eq("id", organizer.id);
 
     if (updateError) {
       toast.error("Error updating phone number", { id: otpToast });
@@ -186,9 +226,9 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
 
     // Update the user avatar
     const { error: updateError } = await supabase
-      .from("users")
+      .from("organizers")
       .update({ avatar_url: publicUrl })
-      .eq("id", user.id);
+      .eq("id", organizer.id);
 
     if (updateError) {
       // Delete the uploaded image
@@ -217,7 +257,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                 <Avatar
                   sizeClass="w-32 h-32"
                   imgUrl={avatarUrl ?? undefined}
-                  userName={user.username}
+                  userName={organizer.name}
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center text-neutral-50 cursor-pointer">
                   <svg
@@ -247,66 +287,46 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
               </div>
             </div>
             <div className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6">
-              {/* First name and last name */}
-              <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2">
-                <div>
-                  <Label>First name</Label>
-                  <Input className="mt-1.5" {...register("first_name")} />
-                </div>
-                <div>
-                  <Label>Last name</Label>
-                  <Input className="mt-1.5" {...register("last_name")} />
-                </div>
-              </div>
-              {/* ---- */}
+              {/* name */}
               <div>
-                <Label>Gender</Label>
-                <Select
+                <Label>Name</Label>
+                <Input
                   className="mt-1.5"
-                  value={watch("gender") ?? GENDER[0]}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                    setValue(
-                      "gender",
-                      e.target.value as (typeof GENDER)[number]
-                    );
-                  }}
-                >
-                  {GENDER.map((item) => (
-                    <option key={item} value={item}>
-                      {item}
-                    </option>
-                  ))}
-                </Select>
+                  {...register("name", {
+                    required: "Name is required",
+                  })}
+                />
               </div>
-              {/* ---- */}
+              {/* Slug */}
               <div>
-                <Label>Username</Label>
-                <Input className="mt-1.5" {...register("username")} />
+                <Label>username</Label>
+                <Input
+                  className="mt-1.5"
+                  {...register("slug", {
+                    required: "Username is required",
+                  })}
+                />
               </div>
               {/* ---- */}
               <div>
                 <Label>Email</Label>
-                <Input disabled className="mt-1.5" {...register("email")} />
-              </div>
-              {/* ---- */}
-              <div>
-                <Label>Date of birth</Label>
                 <Input
+                  disabled
                   className="mt-1.5"
-                  type="date"
-                  {...register("birthday")}
+                  {...register("email", {
+                    required: "Email is required",
+                  })}
                 />
               </div>
-              {/* Address field 1 and 2 */}
-              <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2">
-                <div>
-                  <Label>Address 1</Label>
-                  <Input className="mt-1.5" {...register("address_1")} />
-                </div>
-                <div>
-                  <Label>Address 2</Label>
-                  <Input className="mt-1.5" {...register("address_2")} />
-                </div>
+              {/* Address field */}
+              <div>
+                <Label>Address 1</Label>
+                <Input
+                  className="mt-1.5"
+                  {...register("addr", {
+                    required: "Address is required",
+                  })}
+                />
               </div>
               {/* Phone number field when changed asks for otp and verifies */}
               <div className="flex flex-col gap-2">
@@ -320,7 +340,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                         setPhoneNumberData({
                           phoneNumber: e.target.value,
                           isVerified:
-                            e.target.value === (user.phone_number ?? ""),
+                            e.target.value === (organizer.phone_number ?? ""),
                         })
                       }
                     />
@@ -368,44 +388,95 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                     </ButtonPrimary>
                   ))}
               </div>
-              {/* Landmark and pincode */}
+              {/* PAN and GSTIN */}
               <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2">
                 <div>
-                  <Label>Landmark</Label>
-                  <Input className="mt-1.5" {...register("landmark")} />
+                  <Label>PAN</Label>
+                  <Input
+                    className="mt-1.5"
+                    {...register("pan_number", {
+                      required: "PAN number is required",
+                      pattern: {
+                        value:
+                          /[A-Z]{3}[ABCFGHLJPTF]{1}[A-Z]{1}[0-9]{4}[A-Z]{1}/,
+                        message: "Invalid PAN number",
+                      },
+                    })}
+                  />
                 </div>
                 <div>
-                  <Label>Pincode</Label>
-                  <Input className="mt-1.5" {...register("pincode")} />
+                  <Label>GSTIN</Label>
+                  <Input
+                    className="mt-1.5"
+                    {...register("gstin_number", {
+                      validate: (value) =>
+                        (value !== null && isValidGSTIN(value)) ||
+                        "Invalid GSTIN",
+                      required: "GSTIN is required",
+                    })}
+                  />
                 </div>
               </div>
-              {/* City and state */}
-              <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2">
-                <div>
-                  <Label>City</Label>
-                  <Input className="mt-1.5" {...register("city")} />
-                </div>
-                <div>
-                  <Label>State</Label>
-                  <Select
-                    className="mt-1.5"
-                    value={watch("state") ?? STATES[0]}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                      setValue(
-                        "state",
-                        e.target.value as (typeof STATES)[number]
-                      );
-                    }}
-                  >
-                    {STATES.map((item) => (
-                      <option key={item} value={item}>
-                        {item
-                          .toLocaleLowerCase()
-                          .replace(/^\w/, (c) => c.toUpperCase())}
-                      </option>
-                    ))}
-                  </Select>
-                </div>
+              {/* State */}
+              <div>
+                <Label>State</Label>
+                <Select
+                  className="mt-1.5"
+                  value={watch("state") ?? STATES[0]}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                    setValue(
+                      "state",
+                      e.target.value as (typeof STATES)[number]
+                    );
+                  }}
+                >
+                  {STATES.map((item) => (
+                    <option key={item} value={item}>
+                      {item
+                        .toLocaleLowerCase()
+                        .replace(/^\w/, (c) => c.toUpperCase())}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+              {/* Bank details */}
+              <div>
+                <Label>Bank Account Type</Label>
+                <Input
+                  className="mt-1.5"
+                  {...register("bank_acc_type", {
+                    required: "Bank Account Type is required",
+                  })}
+                />
+              </div>
+              <div>
+                <Label>Bank Account Number</Label>
+                <Input
+                  className="mt-1.5"
+                  {...register("bank_acc_number", {
+                    required: "Bank Account Number is required",
+                    pattern: /^\d{9,18}$/,
+                  })}
+                />
+              </div>
+              <div>
+                <Label>Bank IFSC</Label>
+                <Input
+                  className="mt-1.5"
+                  {...register("bank_acc_ifsc", {
+                    required: "Bank IFSC is required",
+                    pattern: /^[A-Za-z]{4}\d{7}$/,
+                  })}
+                />
+              </div>
+              <div>
+                <Label>Bank Account Beneficiary Name</Label>
+                <Input
+                  className="mt-1.5"
+                  {...register("bank_acc_beneficiary_name", {
+                    required: "Bank Account Beneficiary Name is required",
+                  })}
+                />
               </div>
               <div className="pt-2">
                 <ButtonPrimary onClick={handleSubmit(handleUserUpdate)}>
