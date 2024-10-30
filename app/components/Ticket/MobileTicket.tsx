@@ -80,16 +80,16 @@ export default function MobileTicket({
       </div>
       <div className="flex flex-col gap-4 pt-10">
         <div className="flex justify-between px-5">
-          <p className="font-medium">Total (3)</p>
-          <p>Rs. 1500.00</p>
+          <p className="font-medium">Total ({ticket.count})</p>
+          <p>Rs. {ticket.price.toFixed(2)}</p>
         </div>
         <div className="flex justify-between px-5">
           <p>Convenience Fee</p>
-          <p>Rs. 25.00</p>
+          <p>Rs. {ticket.convenienceFree.toFixed(2)}</p>
         </div>
         <div className="flex justify-between font-bold bg-[#542290] p-5 rounded-md text-sm rounded-t-none">
           <p>Amount Paid</p>
-          <p>Rs. 1525.00</p>
+          <p>Rs. {ticket.amount.toFixed(2)}</p>
         </div>
       </div>
     </div>

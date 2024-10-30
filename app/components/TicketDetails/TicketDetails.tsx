@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import NcImage from "@app/shared/NcImage/NcImage";
 import Link from "next/link";
 import { Tables } from "@app/types/database.types";
@@ -27,6 +27,29 @@ const TicketDetails: FC<TicketDetailsProps> = ({
   const href = `/events/${slug}`;
 
   const [open, setOpen] = useState(false);
+
+  const [bookingHash, setBookingHash] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBookingHash = async () => {
+      setLoading(true);
+      const response = await fetch(`/api/qr/${taxonomy.id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setBookingHash(data.data);
+      }
+      setLoading(false);
+    };
+
+    fetchBookingHash();
+  }, []);
 
   return (
     <div className="rounded-2xl overflow-hidden">
@@ -113,36 +136,51 @@ const TicketDetails: FC<TicketDetailsProps> = ({
 
                   {/* For larger screens */}
                   <div className="hidden md:block">
-                    <Ticket
-                      ticket={{
-                        name,
-                        date: formatDate(start_time),
-                        venue: (location ? location + ", " : "") + city,
-                        price: taxonomy.tickets.price,
-                        convenienceFree: 0,
-                        amount: taxonomy.tickets.price,
-                        bookingId: generateBookingId(taxonomy.id),
-                        count: taxonomy.booked_count,
-                        imgSrc: primary_img,
-                      }}
-                    />
+                    {loading || !bookingHash ? (
+                      <NcImage className="animate-pulse" src="" />
+                    ) : (
+                      <Ticket
+                        ticket={{
+                          name,
+                          date: formatDate(start_time),
+                          venue: (location ? location + ", " : "") + city,
+                          price: taxonomy.tickets.price,
+                          convenienceFree: 0,
+                          amount: taxonomy.tickets.price,
+                          bookingId: bookingHash,
+                          count: taxonomy.booked_count,
+                          imgSrc: primary_img,
+                        }}
+                      />
+                    )}
                   </div>
 
                   {/* For smaller screens */}
                   <div className="md:hidden">
-                    <MobileTicket
-                      ticket={{
-                        name,
-                        date: formatDate(start_time),
-                        venue: (location ? location + ", " : "") + city,
-                        price: taxonomy.tickets.price,
-                        convenienceFree: 0,
-                        amount: taxonomy.tickets.price,
-                        bookingId: generateBookingId(taxonomy.id),
-                        count: taxonomy.booked_count,
-                        imgSrc: primary_img,
-                      }}
-                    />
+                    {
+                      // If loading, show a loading animation
+                      loading || !bookingHash ? (
+                        <NcImage
+                          className="animate-pulse"
+                          src=""
+                          alt="loading"
+                        />
+                      ) : (
+                        <MobileTicket
+                          ticket={{
+                            name,
+                            date: formatDate(start_time),
+                            venue: (location ? location + ", " : "") + city,
+                            price: taxonomy.tickets.price,
+                            convenienceFree: 0,
+                            amount: taxonomy.tickets.price,
+                            bookingId: bookingHash,
+                            count: taxonomy.booked_count,
+                            imgSrc: primary_img,
+                          }}
+                        />
+                      )
+                    }
                   </div>
                 </div>
               </Transition.Child>
