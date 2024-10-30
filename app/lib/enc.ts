@@ -87,13 +87,13 @@ const encrypt = (plaintext: string, key: string = KEY): string => {
   const base32Encoded = base32Encode(encrypted).toUpperCase();
 
   // Return the formatted string
-  return `VOTIK{${base32Encoded.slice(0, 10)}}`;
+  return `VOTIK${base32Encoded.slice(0, 10)}`;
 };
 
 // Function to decrypt the encrypted text
 const decrypt = (encryptedText: string, key: string = KEY): string => {
   const aesKey = scryptSync(key, "salt", 16);
-  const base32Data = encryptedText.slice(6, -1); // Remove VOTIK{}
+  const base32Data = encryptedText.slice(7, -1); // Remove VOTIK
   const decodedBuffer = base32Decode(base32Data);
 
   const decipher = createDecipheriv("aes-128-ecb", aesKey, null);
