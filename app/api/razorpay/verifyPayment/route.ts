@@ -1,6 +1,7 @@
 import { createClient } from "@app/lib/supabase/server";
 import { createServiceClient } from "@app/lib/supabase/serverAdmin";
 import { Database } from "@app/types/database.types";
+import sendTemplateEmail from "@app/utils/sendEmail";
 import crypto from "crypto";
 
 const generatedSignature = (
@@ -78,6 +79,29 @@ export async function POST(request: Request) {
       .from("ticket_bookings")
       .upsert(upsertData);
     if (error) throw new Error(error.message);
+
+    const { data: dynamicDatas } = await supabaseServerClient
+      .from("ticket_bookings")
+      .select(
+        `booked_count,
+        users(first_name, last_name, email, phone_number),
+        tickets(id, name, description, price),
+        events(name, category, primary_img, start_time, location, 
+          venues(name, address, latitude, longitude)
+        )`
+      )
+      .eq("razorpay_order_id", orderCreationId);
+
+    if (dynamicDatas) {
+      for (const dynamicData of dynamicDatas) {
+        const toEmail = dynamicData.users?.email;
+        if (toEmail) {
+          // do not await
+          // sending emails is asynchronous
+          sendTemplateEmail({ toEmail, dynamicData });
+        }
+      }
+    }
 
     return Response.json(
       { data, message: "Payment verified!", error: null },

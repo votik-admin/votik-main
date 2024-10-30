@@ -136,3 +136,5 @@ const ListingStayDetailPage = async ({
 };
 
 export default ListingStayDetailPage;
+
+export const revalidate = 0;
