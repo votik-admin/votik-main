@@ -23,3 +23,7 @@
     focus:border-indigo-500 block w-full sm:text-sm text-neutral-900 dark:text-neutral-200;
   }
 }
+
+.qr-video {
+  transform: none !important;
+}

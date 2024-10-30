@@ -19,20 +19,20 @@ export default function QRImage({
     new QRCodeStyling({
       width: width ?? 300,
       height: height ?? 300,
-      image: logo.src,
+      // image: logo.src,
       backgroundOptions: {
         // Transparent background
-        color: "transparent",
+        color: "white",
       },
       dotsOptions: {
-        color: "#c3fd07",
+        color: "#000",
         type: "classy-rounded",
       },
       imageOptions: {
         crossOrigin: "anonymous",
         margin: 20,
       },
-      shape: "circle",
+      shape: "square",
       type: "svg",
     })
   );
