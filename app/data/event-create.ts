@@ -1,3 +1,5 @@
+import { Enums, Tables } from "@app/types/database.types";
+
 const EventTypes = {
   City: ["MUMBAI", "LUCKNOW", "DELHI", "OTHER"] as const,
   EventCategory: [
@@ -9,7 +11,8 @@ const EventTypes = {
     "SPORTS",
     "EXPERIENCES",
     "OTHER",
-  ] as const,
+    "NIGHTLIFE",
+  ] as Enums<"EventCategory">[],
   Gender: [
     "MALE",
     "FEMALE",
@@ -26,10 +29,20 @@ const EventTypes = {
     "OTHER",
     "UNSPECIFIED",
     "PREFER_NOT_TO_SAY",
-  ] as const,
-  IdentityStatus: ["VERIFIED", "PENDING", "REJECTED"] as const,
-  IdentityType: ["PAN", "GSTIN"] as const,
-  TicketStatus: ["BOOKED", "AVAILABLE"] as const,
+  ] as Enums<"Gender">[],
+  IdentityStatus: [
+    "VERIFIED",
+    "PENDING",
+    "REJECTED",
+  ] as Enums<"IdentityStatus">[],
+  IdentityType: ["PAN", "GSTIN"] as Enums<"IdentityType">[],
+  TicketStatus: [
+    "BOOKED",
+    "CANCELED",
+    "EXPIRED",
+    "INITIATED",
+    "USED",
+  ] as Enums<"TicketStatus">[],
 };
 
 export const CityLatLngMap: {

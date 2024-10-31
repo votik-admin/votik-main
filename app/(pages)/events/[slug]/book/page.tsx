@@ -99,7 +99,7 @@ const ListingStayDetailPage = async ({
         {/* CONTENT */}
         <div className="w-full lg:w-3/5 xl:w-1/2 space-y-8 lg:space-y-10 lg:pr-10">
           <NcImage
-            src={event.primary_img}
+            src={event.primary_img!}
             className="rounded-2xl aspect-[1/1] object-cover"
           />
           {renderSection1()}

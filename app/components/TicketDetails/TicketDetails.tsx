@@ -60,7 +60,7 @@ const TicketDetails: FC<TicketDetailsProps> = ({
         }}
       >
         <NcImage
-          src={primary_img}
+          src={primary_img!}
           className="object-cover w-full aspect-[1/1] origin-top object-top"
         />
         <span className="opacity-0 group-hover:opacity-100 absolute inset-0 bg-black bg-opacity-10 transition-opacity"></span>
@@ -141,7 +141,7 @@ const TicketDetails: FC<TicketDetailsProps> = ({
                     ) : (
                       <Ticket
                         ticket={{
-                          name,
+                          name: name!,
                           date: formatDate(start_time),
                           venue: (location ? location + ", " : "") + city,
                           price: taxonomy.tickets.price,
@@ -149,7 +149,7 @@ const TicketDetails: FC<TicketDetailsProps> = ({
                           amount: taxonomy.tickets.price,
                           bookingId: bookingHash,
                           count: taxonomy.booked_count,
-                          imgSrc: primary_img,
+                          imgSrc: primary_img!,
                         }}
                       />
                     )}
@@ -168,7 +168,7 @@ const TicketDetails: FC<TicketDetailsProps> = ({
                       ) : (
                         <MobileTicket
                           ticket={{
-                            name,
+                            name: name!,
                             date: formatDate(start_time),
                             venue: (location ? location + ", " : "") + city,
                             price: taxonomy.tickets.price,
@@ -176,7 +176,7 @@ const TicketDetails: FC<TicketDetailsProps> = ({
                             amount: taxonomy.tickets.price,
                             bookingId: bookingHash,
                             count: taxonomy.booked_count,
-                            imgSrc: primary_img,
+                            imgSrc: primary_img!,
                           }}
                         />
                       )

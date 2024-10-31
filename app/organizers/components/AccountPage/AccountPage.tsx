@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { GENDER, STATES } from "@app/types/enums";
 import { SessionContext } from "@app/contexts/SessionContext";
 import { OrganizerContext } from "@app/contexts/OrganizerContext";
+import { ErrorMessage } from "@hookform/error-message";
 
 export interface AccountPageProps {
   className?: string;
@@ -257,7 +258,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                 <Avatar
                   sizeClass="w-32 h-32"
                   imgUrl={avatarUrl ?? undefined}
-                  userName={organizer.name}
+                  userName={organizer.name ?? ""}
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center text-neutral-50 cursor-pointer">
                   <svg
@@ -296,6 +297,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                     required: "Name is required",
                   })}
                 />
+                <ErrorMessage errors={formState.errors} name="name" />
               </div>
               {/* Slug */}
               <div>
@@ -306,6 +308,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                     required: "Username is required",
                   })}
                 />
+                <ErrorMessage errors={formState.errors} name="slug" />
               </div>
               {/* ---- */}
               <div>
@@ -317,6 +320,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                     required: "Email is required",
                   })}
                 />
+                <ErrorMessage errors={formState.errors} name="email" />
               </div>
               {/* Address field */}
               <div>
@@ -327,6 +331,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                     required: "Address is required",
                   })}
                 />
+                <ErrorMessage errors={formState.errors} name="addr" />
               </div>
               {/* Phone number field when changed asks for otp and verifies */}
               <div className="flex flex-col gap-2">
@@ -403,6 +408,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                       },
                     })}
                   />
+                  <ErrorMessage errors={formState.errors} name="pan_number" />
                 </div>
                 <div>
                   <Label>GSTIN</Label>
@@ -415,6 +421,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                       required: "GSTIN is required",
                     })}
                   />
+                  <ErrorMessage errors={formState.errors} name="gstin_number" />
                 </div>
               </div>
               {/* State */}
@@ -448,6 +455,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                     required: "Bank Account Type is required",
                   })}
                 />
+                <ErrorMessage errors={formState.errors} name="bank_acc_type" />
               </div>
               <div>
                 <Label>Bank Account Number</Label>
@@ -457,6 +465,10 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                     required: "Bank Account Number is required",
                     pattern: /^\d{9,18}$/,
                   })}
+                />
+                <ErrorMessage
+                  errors={formState.errors}
+                  name="bank_acc_number"
                 />
               </div>
               <div>
@@ -468,6 +480,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                     pattern: /^[A-Za-z]{4}\d{7}$/,
                   })}
                 />
+                <ErrorMessage errors={formState.errors} name="bank_acc_ifsc" />
               </div>
               <div>
                 <Label>Bank Account Beneficiary Name</Label>
@@ -476,6 +489,10 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                   {...register("bank_acc_beneficiary_name", {
                     required: "Bank Account Beneficiary Name is required",
                   })}
+                />
+                <ErrorMessage
+                  errors={formState.errors}
+                  name="bank_acc_beneficiary_name"
                 />
               </div>
               <div className="pt-2">

@@ -9,7 +9,11 @@ export interface PageAddListing1Props {}
 
 const EventListing1: FC<PageAddListing1Props> = () => {
   return (
-    <CommonLayout index="01" backtHref="/add-event/1" nextHref="/add-event/2">
+    <CommonLayout
+      index="01"
+      backtHref="/organizer/add-event/1"
+      nextHref="/organizer/add-event/2"
+    >
       <>
         <h2 className="text-2xl font-semibold">Basic information</h2>
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>

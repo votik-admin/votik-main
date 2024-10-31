@@ -31,7 +31,7 @@ const CardCategoryCustom: FC<CardCategoryCustomProps> = ({
       >
         <div className={`flex-shrink-0 relative group`}>
           <NcImage
-            src={primary_img}
+            src={primary_img!}
             // 💡 image is expected to be a square
             // 💡 otherwise it is cropped from top to
             // 💡 ensure imp info stays

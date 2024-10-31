@@ -1,4 +1,5 @@
 import { encrypt } from "@app/lib/enc";
+import { Tables } from "@app/types/database.types";
 import sgMail from "@sendgrid/mail";
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
@@ -11,44 +12,8 @@ interface EmailResponse {
 
 interface EmailData {
   toEmail: string;
-  dynamicData?: {
-    booked_count: number;
-    users: {
-      first_name: string | null;
-      last_name: string | null;
-      email: string | null;
-      phone_number: string | null;
-    } | null;
-    tickets: {
-      id: number;
-      friendlyCode?: string;
-      name: string;
-      description: string | null;
-      price: number;
-    } | null;
-    events: {
-      name: string;
-      category:
-        | "ACTIVITIES"
-        | "COMEDY"
-        | "CULTURE"
-        | "MUSIC"
-        | "WORKSHOPS"
-        | "SPORTS"
-        | "EXPERIENCES"
-        | "OTHER"
-        | "NIGHTLIFE";
-      primary_img: string;
-      start_time: string;
-      location: string | null;
-      venues: {
-        name: string;
-        address: string;
-        latitude: number;
-        longitude: number;
-      } | null;
-    } | null;
-  };
+  // MF Prince go die u and your ts
+  dynamicData: Record<string, any>;
 }
 
 const sendTemplateEmail = async (
@@ -59,7 +24,7 @@ const sendTemplateEmail = async (
   // add friendly code
   if (dynamicData?.tickets?.id)
     dynamicData["tickets"]["friendlyCode"] = encrypt(
-      dynamicData["tickets"]["id"].toString()
+      dynamicData["tickets"]["id"]
     );
 
   // TODO: fix: add friendly code

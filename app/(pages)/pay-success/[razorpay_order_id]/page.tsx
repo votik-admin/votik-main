@@ -43,7 +43,7 @@ const PayPage = async ({
           <div className="flex flex-col sm:flex-row sm:items-center">
             <div className="flex-shrink-0 w-full sm:w-40">
               <div className=" aspect-w-4 aspect-h-3 sm:aspect-h-4 rounded-2xl overflow-hidden">
-                <NcImage src={event?.primary_img} />
+                <NcImage src={event?.primary_img || ""} />
               </div>
             </div>
             <div className="pt-5  sm:pb-5 sm:px-5 space-y-3">

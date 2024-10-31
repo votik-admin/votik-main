@@ -1,4 +1,7 @@
-function formatDate(isoDate: string): string {
+function formatDate(isoDate: string | null): string {
+  if (!isoDate) {
+    return "";
+  }
   const date = new Date(isoDate);
 
   // Get month name

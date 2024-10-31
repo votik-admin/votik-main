@@ -13,6 +13,7 @@
     "@glidejs/glide": "^3.6.2",
     "@headlessui/react": "^1.7.7",
     "@heroicons/react": "^2.1.5",
+    "@hookform/error-message": "^2.0.1",
     "@next/third-parties": "^15.0.1",
     "@sendgrid/mail": "^8.1.4",
     "@supabase/ssr": "^0.5.1",
