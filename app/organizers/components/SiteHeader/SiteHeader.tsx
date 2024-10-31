@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { Tables } from "@app/types/database.types";
 import { Session } from "@supabase/supabase-js";
 import OrganizerProvider from "@app/contexts/OrganizerContext";
+import { Toaster } from "react-hot-toast";
 
 export type SiteHeaders = "Header 1" | "Header 2" | "Header 3";
 
@@ -71,6 +72,7 @@ const SiteHeader = ({
 
   return (
     <OrganizerProvider initialSession={session} initialOrganizer={organizer}>
+      <Toaster position="top-center" />
       {renderHeader()}
       <div ref={anchorRef} className="h-1 absolute invisible"></div>
     </OrganizerProvider>

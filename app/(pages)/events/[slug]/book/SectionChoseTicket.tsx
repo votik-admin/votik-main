@@ -135,11 +135,9 @@ const SectionChoseTicket = ({
       setLoading(false);
     }
   };
-
   return (
     <div className="listingSection__wrap !space-y-6">
       {/* HEADING */}
-      <Toaster position="bottom-center" />
       <div>
         <h2 className="text-2xl font-semibold">Confirm your details</h2>
       </div>
@@ -190,7 +188,7 @@ const SectionChoseTicket = ({
         <div>
           <Label>Phone Number</Label>
           <Input
-            type="text"
+            type="tel"
             className="mt-1.5"
             {...register("phoneNumber", {
               required: "Phone number is required",

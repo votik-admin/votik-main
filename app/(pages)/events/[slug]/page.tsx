@@ -48,7 +48,7 @@ const ListingStayDetailPage = async ({
             href={href}
             color={color}
           />
-          <LikeSaveBtns />
+          <LikeSaveBtns event={event} />
         </div>
 
         {/* 2 */}

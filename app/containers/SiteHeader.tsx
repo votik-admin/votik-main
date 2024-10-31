@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { Database } from "@app/types/database.types";
 import SessionProvider from "@app/contexts/SessionContext";
 import { Session } from "@supabase/supabase-js";
+import { Toaster } from "react-hot-toast";
 
 export type SiteHeaders = "Header 1" | "Header 2" | "Header 3";
 
@@ -71,6 +72,7 @@ const SiteHeader = ({
 
   return (
     <SessionProvider initialSession={session} initialUser={user}>
+      <Toaster position="top-center" />
       {renderHeader()}
       <div ref={anchorRef} className="h-1 absolute invisible"></div>
     </SessionProvider>

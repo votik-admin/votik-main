@@ -13,7 +13,6 @@ const CommonLayout: FC<CommonLayoutProps> = ({ index = "01", children }) => {
       className={`nc-PageAddListing1 px-4 max-w-3xl mx-auto pb-24 pt-14 sm:py-24 lg:pb-32`}
       data-nc-id="PageAddListing1"
     >
-      <Toaster />
       <div className="space-y-11">
         <div>
           <span className="text-4xl font-semibold">{index}</span>{" "}

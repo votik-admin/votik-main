@@ -51,7 +51,6 @@ const AccountPass = () => {
   return (
     <div>
       <CommonLayout>
-        <Toaster />
         <div className="space-y-6 sm:space-y-8">
           {/* HEADING */}
           <h2 className="text-3xl font-semibold">Update your password</h2>

@@ -247,7 +247,6 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
   return (
     <div className={`nc-AccountPage ${className}`} data-nc-id="AccountPage">
       <CommonLayout>
-        <Toaster />
         <div className="space-y-6 sm:space-y-8">
           {/* HEADING */}
           <h2 className="text-3xl font-semibold">Account information</h2>
