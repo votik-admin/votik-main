@@ -303,7 +303,7 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
           <span className="block text-center text-neutral-700 dark:text-neutral-300">
             New user? {` `}
             <Link
-              href="/auth/signup"
+              href="/organizer/auth/signup"
               className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
             >
               Create an account
