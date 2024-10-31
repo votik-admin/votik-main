@@ -21,7 +21,7 @@ const ListingStayDetailPage = async ({
   };
 }) => {
   const { user, session, error: authError } = await getSessionAndUser();
-  if (authError && !user) {
+  if (authError || !user) {
     redirect("/auth/login");
   }
 

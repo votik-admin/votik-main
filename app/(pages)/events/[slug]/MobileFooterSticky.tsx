@@ -42,7 +42,7 @@ const MobileFooterSticky = ({
                 const { data: authData, error: authError } =
                   await getUserFromAuthTable();
                 const user = authData.user;
-                if (authError && !user) {
+                if (authError || !user) {
                   router.push("/auth/login");
                   return;
                 }
