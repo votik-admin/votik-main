@@ -60,7 +60,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
 
         toast.success("Confirmation mail sent to mail!", { id: toastId });
 
-        router.push("/organize/auth/login");
+        router.push("/organizer/auth/login");
       } else {
         const { data, error } = await supabase.auth.signUp({
           email: d.email,

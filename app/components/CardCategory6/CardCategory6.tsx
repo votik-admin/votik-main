@@ -27,7 +27,9 @@ const CardCategory6: FC<CardCategory6Props> = ({
       />
       <div className="absolute bottom-0 inset-x-0 p-4 sm:p-6 text-white">
         <span className="absolute inset-0 bg-gradient-to-t from-black/60"></span>
-        <h2 className={`relative text-lg lg:text-xl font-semibold`}>{name}</h2>
+        <h2 className={`relative text-2xl lg:text-4xl font-semibold`}>
+          {name}
+        </h2>
         {/* <span className={`relative block mt-1.5 text-sm text-neutral-100`}>
           {convertNumbThousand(count)} events
         </span> */}

@@ -260,8 +260,7 @@ const SectionChoseTicket = ({
             onClick={handleSubmit(processPayment)}
             loading={loading}
           >
-            <span className="block md:hidden">CHECK OUT</span>
-            <span className="hidden md:block">PROCEED TO CHECK OUT</span>
+            PROCEED TO CHECK OUT
           </ButtonCustom>
         </div>
       )}

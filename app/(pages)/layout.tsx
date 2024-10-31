@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Bebas_Neue } from "next/font/google";
 
 import "react-dates/lib/css/_datepicker.css";
 import "rc-slider/assets/index.css";
@@ -17,15 +17,10 @@ import NextTopLoader from "nextjs-toploader";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
 
-const geistSans = localFont({
-  src: "../fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "../fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const bebasNeue = Bebas_Neue({
+  subsets: ["latin"],
+  variable: "--font-bebas-neue",
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -48,9 +43,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className="dark">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${bebasNeue.variable}`}>
         <NextTopLoader
           showSpinner={false}
           color={"#c4fd07"}

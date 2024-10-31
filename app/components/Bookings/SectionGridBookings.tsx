@@ -8,7 +8,7 @@ import { getAllEvents } from "@app/queries";
 import { Database } from "@app/types/database.types";
 import CardCategoryCustom from "@app/components/CardCategoryCustom/CardCategoryCustom";
 import CardCategoryCustomSkeleton from "@app/components/CardCategoryCustom/CardCategoryCustomSkeleton";
-import { EVENTS, MAP_TO_EVENT } from "@app/types/hardcoded";
+import { EVENTS, ENUM_MAP } from "@app/types/hardcoded";
 import HeaderFilter from "@app/(pages)/HeaderFilter";
 
 // OTHER DEMO WILL PASS PROPS
@@ -47,10 +47,10 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
         tabActive={currentTab}
         subHeading={subHeading}
         tabs={tabs}
-        prettyPrintTabsMap={MAP_TO_EVENT}
+        prettyPrintTabsMap={ENUM_MAP}
         heading={heading}
         onClickTab={(tab) => {
-          setCurrentTab(tab as keyof typeof MAP_TO_EVENT);
+          setCurrentTab(tab as keyof typeof ENUM_MAP);
         }}
       />
       <div

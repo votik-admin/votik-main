@@ -37,6 +37,7 @@ module.exports = {
     fontFamily: {
       display: ["var(--font-display)", ...defaultTheme.fontFamily.sans],
       body: ["var(--font-body)", ...defaultTheme.fontFamily.sans],
+      bebasNeue: ["var(--font-bebas-neue)"],
     },
 
     extend: {

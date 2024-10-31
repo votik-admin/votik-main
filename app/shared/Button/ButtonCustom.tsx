@@ -40,7 +40,7 @@ const ButtonCustom = ({ children, loading, ...args }: ButtonCustomProps) => {
   return (
     <button
       disabled={loading}
-      className={`flex items-center justify-center bg-[#430D7F] text-[#C3FD07] font-semibold px-4 py-2 rounded-lg hover:shadow ${
+      className={`font-bebasNeue text-[22px] flex items-center justify-center bg-[#430D7F] text-[#C3FD07] px-4 py-2 rounded-lg hover:shadow ${
         loading ? "opacity-75" : ""
       } ${clsName}`}
       {...args}
