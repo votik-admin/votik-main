@@ -1,3 +1,4 @@
+import { TwMainColor } from "@app/data/types";
 import { Database } from "./database.types";
 
 const EVENTS = [
@@ -11,15 +12,18 @@ const EVENTS = [
   "OTHER",
 ] as Database["public"]["Enums"]["EventCategory"][];
 
-const MAP_TO_EVENT = {
-  COMEDY: "Comedy",
-  ACTIVITIES: "Activities",
-  CULTURE: "Culture",
-  MUSIC: "Music",
-  WORKSHOPS: "Workshops",
-  SPORTS: "Sports",
-  EXPERIENCES: "Experiences",
-  OTHER: "Other",
-};
+const ENUM_MAP = {
+  COMEDY: { name: "Comedy", slug: "comedy", color: "blue" },
+  ACTIVITIES: { name: "Activities", slug: "activities", color: "pink" },
+  CULTURE: { name: "Culture", slug: "culture", color: "red" },
+  MUSIC: { name: "Music", slug: "music", color: "purple" },
+  WORKSHOPS: { name: "Workshops", slug: "workshops", color: "yellow" },
+  SPORTS: { name: "Sports", slug: "sports", color: "green" },
+  EXPERIENCES: { name: "Experiences", slug: "experiences", color: "indigo" },
+  OTHER: { name: "Other", slug: "other", color: "gray" },
+} as Record<
+  Database["public"]["Enums"]["EventCategory"],
+  { name: string; slug: string; color: TwMainColor }
+>;
 
-export { EVENTS, MAP_TO_EVENT };
+export { EVENTS, ENUM_MAP };

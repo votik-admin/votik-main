@@ -52,7 +52,8 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextTopLoader
-          color={"#c4fd078b"}
+          showSpinner={false}
+          color={"#c4fd07"}
           // color={"#430D7F"}
         />
         <div className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">

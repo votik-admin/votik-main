@@ -10,7 +10,7 @@ import { ReactNode } from "react";
 export interface HeaderFilterProps {
   tabActive: string;
   tabs: string[];
-  prettyPrintTabsMap?: Record<string, string>;
+  prettyPrintTabsMap?: Record<string, Record<string, string>>;
   heading: ReactNode;
   subHeading?: ReactNode;
   onClickTab: (item: string) => void;
@@ -49,7 +49,7 @@ const HeaderFilter: FC<HeaderFilterProps> = ({
               isActive={tabActiveState === item}
               onClick={() => handleClickTab(item)}
             >
-              {prettyPrintTabsMap ? prettyPrintTabsMap[item] : item}
+              {prettyPrintTabsMap ? prettyPrintTabsMap[item].name : item}
             </NavItem>
           ))}
         </Nav>

@@ -10,7 +10,7 @@ import GoogleMap from "./GoogleMap";
 import { getEventFromSlug } from "@app/queries";
 import { notFound } from "next/navigation";
 import formatDate from "@app/utils/formatDate";
-import { MAP_TO_EVENT } from "@app/types/hardcoded";
+import { ENUM_MAP } from "@app/types/hardcoded";
 import ButtonCustom from "@app/shared/Button/ButtonCustom";
 import NcImage from "@app/shared/NcImage/NcImage";
 import SectionSliderHighlights from "@app/components/SectionSliderHighlights/SectionSliderHighlights";
@@ -34,12 +34,19 @@ const ListingStayDetailPage = async ({
   }
 
   const renderSection1 = () => {
+    const category = event.category as keyof typeof ENUM_MAP;
+    const name = ENUM_MAP[category].name;
+    const href = `/events/category/${ENUM_MAP[category].slug}`;
+    const color = ENUM_MAP[category].color;
     return (
       <div className="listingSection__wrap !space-y-6">
         {/* 1 */}
         <div className="flex justify-between items-center">
           <Badge
-            name={MAP_TO_EVENT[event.category as keyof typeof MAP_TO_EVENT]}
+            // TODO: proper slug instead of toLowerCase
+            name={name}
+            href={href}
+            color={color}
           />
           <LikeSaveBtns />
         </div>

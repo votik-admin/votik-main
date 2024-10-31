@@ -23,7 +23,12 @@ const generatedSignature = (
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { orderCreationId, razorpayPaymentId, razorpaySignature } = body;
+  const {
+    orderCreationId,
+    razorpayPaymentId,
+    razorpaySignature,
+    accountDetails,
+  } = body;
 
   const supabaseServerClient = createClient();
   const supabaseServiceServerClient = createServiceClient();
@@ -84,7 +89,6 @@ export async function POST(request: Request) {
       .from("ticket_bookings")
       .select(
         `booked_count,
-        users(first_name, last_name, email, phone_number),
         tickets(id, name, description, price),
         events(name, category, primary_img, start_time, location, 
           venues(name, address, latitude, longitude)
@@ -94,11 +98,23 @@ export async function POST(request: Request) {
 
     if (dynamicDatas) {
       for (const dynamicData of dynamicDatas) {
-        const toEmail = dynamicData.users?.email;
+        const toEmail = accountDetails.email;
         if (toEmail) {
           // do not await
           // sending emails is asynchronous
-          sendTemplateEmail({ toEmail, dynamicData });
+          sendTemplateEmail({
+            toEmail,
+            dynamicData: {
+              ...dynamicData,
+              // override users details with form submitted at checkout
+              users: {
+                first_name: accountDetails.firstName,
+                last_name: accountDetails.lastName,
+                email: accountDetails.email,
+                phone_number: accountDetails.phone_number,
+              },
+            },
+          });
         }
       }
     }

@@ -1,12 +1,22 @@
 "use client";
+import Label from "@app/components/Label/Label";
 import NcInputNumber from "@app/components/NcInputNumber/NcInputNumber";
 import ButtonCustom from "@app/shared/Button/ButtonCustom";
+import Input from "@app/shared/Input/Input";
 import { Tables } from "@app/types/database.types";
 import convertNumbThousand from "@app/utils/convertNumbThousand";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
+
+type ConfirmAccountDetailsForm = {
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
+  phoneNumber: string | null;
+};
 
 const SectionChoseTicket = ({
   tickets,
@@ -27,6 +37,19 @@ const SectionChoseTicket = ({
   );
 
   const [loading, setLoading] = useState(false);
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<ConfirmAccountDetailsForm>({
+    defaultValues: {
+      firstName: user.first_name,
+      lastName: user.last_name,
+      email: user.email,
+      phoneNumber: user.phone_number,
+    },
+  });
 
   const createOrderId = async () => {
     const amount = Object.values(price).reduce((a, b) => a + b, 0);
@@ -50,11 +73,7 @@ const SectionChoseTicket = ({
     return json.data.orderId;
   };
 
-  const processPayment = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.preventDefault();
-    const amount = Object.values(price).reduce((a, b) => a + b, 0);
+  const processPayment = async (formData: ConfirmAccountDetailsForm) => {
     setLoading(true);
     try {
       const orderId: string = await createOrderId();
@@ -64,11 +83,11 @@ const SectionChoseTicket = ({
         return;
       }
 
+      const amount = Object.values(price).reduce((a, b) => a + b, 0);
       const paymentObject = new window.Razorpay({
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: amount * 100,
         currency: "INR",
-        // TODO
         name: "Votik",
         description: "Ticket Payment",
         order_id: orderId,
@@ -76,8 +95,9 @@ const SectionChoseTicket = ({
           const data = {
             orderCreationId: orderId, // Retrieve the order_id from your server. Do not use the razorpay_order_id returned by Checkout.
             razorpayPaymentId: response.razorpay_payment_id,
-            razorpayOrderId: response.razorpay_order_id,
+            // razorpayOrderId: response.razorpay_order_id,
             razorpaySignature: response.razorpay_signature,
+            accountDetails: formData,
           };
           const toastId = toast.loading("Verifying your payment...");
           const result = await fetch("/api/razorpay/verifyPayment", {
@@ -120,6 +140,69 @@ const SectionChoseTicket = ({
     <div className="listingSection__wrap !space-y-6">
       {/* HEADING */}
       <Toaster position="bottom-center" />
+      <div>
+        <h2 className="text-2xl font-semibold">Confirm your details</h2>
+      </div>
+      <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
+      <div className="space-y-4">
+        <div>
+          <div className="flex justify-between space-x-2">
+            <div className="w-full">
+              <Label>First Name</Label>
+              <Input
+                type="text"
+                className="mt-1.5 w-full"
+                {...register("firstName", {
+                  required: "First name is required",
+                })}
+              />
+            </div>
+            <div className="w-full">
+              <Label>Last Name</Label>
+              <Input
+                type="text"
+                className="mt-1.5 w-full"
+                {...register("lastName")}
+              />
+            </div>
+          </div>
+          {errors.firstName && (
+            <p className="text-red-500 mt-2 text-sm">
+              {errors.firstName.message}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <Label>Email</Label>
+          <Input
+            type="email"
+            placeholder="Tickets will be sent to this email"
+            className="mt-1.5"
+            {...register("email", {
+              required: "Email is required",
+            })}
+          />
+          {errors.email && (
+            <p className="text-red-500 mt-2 text-sm">{errors.email.message}</p>
+          )}
+        </div>
+        <div>
+          <Label>Phone Number</Label>
+          <Input
+            type="text"
+            className="mt-1.5"
+            {...register("phoneNumber", {
+              required: "Phone number is required",
+            })}
+          />
+          {errors.phoneNumber && (
+            <p className="text-red-500 mt-2 text-sm">
+              {errors.phoneNumber.message}
+            </p>
+          )}
+        </div>
+      </div>
       <div>
         <h2 className="text-2xl font-semibold">Chose Tickets</h2>
       </div>
@@ -174,10 +257,11 @@ const SectionChoseTicket = ({
           </div>
           <ButtonCustom
             id="rzp-button1"
-            onClick={(e) => processPayment(e)}
+            onClick={handleSubmit(processPayment)}
             loading={loading}
           >
-            PROCEED TO CHECK OUT
+            <span className="block md:hidden">CHECK OUT</span>
+            <span className="hidden md:block">PROCEED TO CHECK OUT</span>
           </ButtonCustom>
         </div>
       )}

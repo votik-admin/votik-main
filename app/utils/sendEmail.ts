@@ -22,13 +22,27 @@ const sendTemplateEmail = async (
   let { toEmail, dynamicData } = emailData;
 
   // add friendly code
-  if (dynamicData?.tickets?.id)
-    dynamicData["tickets"]["friendlyCode"] = encrypt(
-      dynamicData["tickets"]["id"]
-    );
+  if (dynamicData?.tickets?.id) {
+    const code = encrypt(dynamicData["tickets"]["id"]);
+    const url = `${process.env.NEXT_PUBLIC_APP_URL}/api/qr/gen/${code}`;
 
-  // TODO: fix: add friendly code
-  // TODO: add: dynamic qr link
+    dynamicData["tickets"]["friendly_code"] = code;
+    dynamicData["tickets"]["qr_code_url"] = url;
+  }
+
+  const date = new Date(dynamicData["events"]["start_time"]);
+  const formattedDate = date.toLocaleDateString("en-GB", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  const formattedTime = date.toLocaleTimeString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+  dynamicData["events"]["start_date"] = formattedDate;
+  dynamicData["events"]["start_time"] = formattedTime;
 
   const msg = {
     to: toEmail,
@@ -39,7 +53,6 @@ const sendTemplateEmail = async (
 
   try {
     const res = await sgMail.send(msg);
-    console.log(res);
     const succes = res[0].statusCode === 202;
 
     if (succes) {

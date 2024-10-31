@@ -25,7 +25,7 @@ export interface SectionGridFeaturePlacesProps {
   tabs?: string[];
 }
 
-import { EVENTS, MAP_TO_EVENT } from "../types/hardcoded";
+import { EVENTS, ENUM_MAP } from "../types/hardcoded";
 
 const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
   stayListings = DEMO_DATA,
@@ -50,10 +50,10 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
         tabActive={currentTab}
         subHeading={subHeading}
         tabs={tabs}
-        prettyPrintTabsMap={MAP_TO_EVENT}
+        prettyPrintTabsMap={ENUM_MAP}
         heading={heading}
         onClickTab={(tab) => {
-          setCurrentTab(tab as keyof typeof MAP_TO_EVENT);
+          setCurrentTab(tab as keyof typeof ENUM_MAP);
         }}
       />
       <div
