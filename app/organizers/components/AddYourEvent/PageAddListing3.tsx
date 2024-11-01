@@ -70,7 +70,9 @@ const PageAddListing3: FC<PageAddListing3Props> = ({ event }) => {
     }
 
     if (error) {
-      toast.error("Error uploading image", { id: uploaderToast });
+      toast.error(`Error uploading the image: ${error.message}`, {
+        id: uploaderToast,
+      });
       setLayoutLoading(false);
       return;
     }

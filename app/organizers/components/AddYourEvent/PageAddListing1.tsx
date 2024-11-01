@@ -59,7 +59,7 @@ const EventListing1: FC<PageAddListing1Props> = ({ event }) => {
       router.push(`/organizer/event/${eventId}/edit/2`);
     } catch (error) {
       console.error("Error creating event", error);
-      toast.error("Error creating event", { id: toastId });
+      toast.error("Error creating an event", { id: toastId });
     } finally {
       setLoading(false);
     }

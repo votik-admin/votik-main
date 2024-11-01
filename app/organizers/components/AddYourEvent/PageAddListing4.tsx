@@ -70,7 +70,9 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
 
     if (error) {
       console.error("Error uploading image", error);
-      toast.error("Error uploading image", { id: uploaderToast });
+      toast.error(`Error uploading the image: ${error.message}`, {
+        id: uploaderToast,
+      });
       setPrimaryImageLoading(false);
       return;
     }
@@ -110,7 +112,9 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
 
       if (error) {
         console.error("Error uploading image", error);
-        toast.error("Error uploading image", { id: uploaderToast });
+        toast.error(`Error uploading the image: ${error.message}`, {
+          id: uploaderToast,
+        });
         setSecondaryImageLoading(false);
         return;
       }

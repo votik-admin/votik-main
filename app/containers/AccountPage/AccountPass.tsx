@@ -8,6 +8,7 @@ import CommonLayout from "./CommonLayout";
 import { FieldErrors, useForm } from "react-hook-form";
 import supabase from "@app/lib/supabase";
 import toast, { Toaster } from "react-hot-toast";
+import { ErrorMessage } from "@hookform/error-message";
 
 type PasswordForm = {
   currentPassword: string;
@@ -65,6 +66,7 @@ const AccountPass = () => {
                   required: "Current password is required",
                 })}
               />
+              <ErrorMessage errors={formState.errors} name="currentPassword" />
             </div>
             <div>
               <Label>New password</Label>
@@ -78,6 +80,7 @@ const AccountPass = () => {
                   required: "New password is required",
                 })}
               />
+              <ErrorMessage errors={formState.errors} name="newPassword" />
             </div>
             <div>
               <Label>Confirm password</Label>
@@ -89,23 +92,10 @@ const AccountPass = () => {
                   required: "Confirm password is required",
                 })}
               />
+              <ErrorMessage errors={formState.errors} name="confirmPassword" />
             </div>
             <div className="pt-2">
-              <ButtonPrimary
-                onClick={() => {
-                  if (formState.errors) {
-                    let flag = false;
-                    for (const key in formState.errors) {
-                      // @ts-expect-error Just to avoid the error
-                      // TODO: Fix this
-                      toast.error(formState.errors[key].message);
-                      flag = true;
-                    }
-                    if (flag) return;
-                  }
-                  handleSubmit(handlePasswordChange)();
-                }}
-              >
+              <ButtonPrimary onClick={handleSubmit(handlePasswordChange)}>
                 Update password
               </ButtonPrimary>
             </div>
