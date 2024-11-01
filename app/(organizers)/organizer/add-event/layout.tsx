@@ -10,7 +10,7 @@ export default async function layout({
   const { session, organizer, error } = await getSessionAndOrganizer();
 
   if (!session || !organizer || error) {
-    redirect("/organizer/auth/login");
+    redirect("/auth/login");
   }
 
   if (organizer.profile_complete === false) {

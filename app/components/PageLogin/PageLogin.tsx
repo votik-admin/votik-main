@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { toast, Toaster } from "react-hot-toast";
 import { redirect, useRouter } from "next/navigation";
 import { SignInWithOAuthCredentials } from "@supabase/supabase-js";
+import { ErrorMessage } from "@hookform/error-message";
 
 export interface PageLoginProps {
   className?: string;
@@ -235,11 +236,14 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
                   className="mt-1"
                   {...register("phone", {
                     required: "Phone number is required",
+                    // Should start with +91
+                    pattern: {
+                      value: /^(\+91[\d]{10})$/,
+                      message: "Invalid phone number, should start with +91",
+                    },
                   })}
                 />
-                {errors.phone && (
-                  <p className="text-red-500">{errors.phone.message}</p>
-                )}
+                <ErrorMessage errors={errors} name="phone" />
                 {otpSent && (
                   <label className="flex flex-col gap-4">
                     <span className="text-neutral-800 dark:text-neutral-200">
@@ -252,9 +256,8 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
                       className="mt-1"
                       {...register("otp", { required: "OTP is required" })}
                     />
-                    {errors.otp && (
-                      <p className="text-red-500">{errors.otp.message}</p>
-                    )}
+
+                    <ErrorMessage errors={errors} name="otp" />
                     <p className="text-neutral-500 dark:text-neutral-400">
                       OTP expires in {otpTimerValue} seconds
                     </p>
@@ -294,11 +297,12 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
                   autoComplete="email webauthn"
                   placeholder="example@example.com"
                   className="mt-1"
-                  {...register("email", { required: "Email is required" })}
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: { value: /^\S+@\S+$/i, message: "Invalid email" },
+                  })}
                 />
-                {errors.email && (
-                  <p className="text-red-500">{errors.email.message}</p>
-                )}
+                <ErrorMessage errors={errors} name="email" />
               </label>
             )}
             {!otpSent && (
@@ -339,6 +343,7 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
                     className="mt-1"
                     {...register("password", { required: true })}
                   />
+                  <ErrorMessage errors={errors} name="password" />
                 </label>
                 <ButtonPrimary type="submit">Continue</ButtonPrimary>
               </>

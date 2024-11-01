@@ -195,7 +195,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
                 {organizer ? (
                   <AvatarDropdown organizer={organizer} />
                 ) : (
-                  <ButtonPrimary href="/organizer/auth/signup">
+                  <ButtonPrimary href="/auth/signup">
                     Organizer sign up
                   </ButtonPrimary>
                 )}

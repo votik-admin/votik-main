@@ -14,6 +14,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { set, useForm } from "react-hook-form";
 import { GENDER, STATES } from "@app/types/enums";
 import { SessionContext } from "@app/contexts/SessionContext";
+import { ErrorMessage } from "@hookform/error-message";
 
 export interface AccountPageProps {
   className?: string;
@@ -47,7 +48,13 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
     isVerified: true,
   });
 
-  const { register, handleSubmit, watch, setValue } = useForm<UserDetailsForm>({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<UserDetailsForm>({
     defaultValues: user,
   });
 
@@ -250,11 +257,18 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
               <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2">
                 <div>
                   <Label>First name</Label>
-                  <Input className="mt-1.5" {...register("first_name")} />
+                  <Input
+                    className="mt-1.5"
+                    {...register("first_name", {
+                      required: "First name is required",
+                    })}
+                  />
+                  <ErrorMessage errors={errors} name="first_name" />
                 </div>
                 <div>
                   <Label>Last name</Label>
                   <Input className="mt-1.5" {...register("last_name")} />
+                  <ErrorMessage errors={errors} name="last_name" />
                 </div>
               </div>
               {/* ---- */}
@@ -280,12 +294,30 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
               {/* ---- */}
               <div>
                 <Label>Username</Label>
-                <Input className="mt-1.5" {...register("username")} />
+                <Input
+                  className="mt-1.5"
+                  {...register("username", {
+                    required: "Username is required",
+                    maxLength: { value: 20, message: "Username is too long" },
+                  })}
+                />
+                <ErrorMessage errors={errors} name="username" />
               </div>
               {/* ---- */}
               <div>
                 <Label>Email</Label>
-                <Input disabled className="mt-1.5" {...register("email")} />
+                <Input
+                  disabled
+                  className="mt-1.5"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /\S+@\S+\.\S+/,
+                      message: "Invalid email",
+                    },
+                  })}
+                />
+                <ErrorMessage errors={errors} name="email" />
               </div>
               {/* ---- */}
               <div>
@@ -293,18 +325,28 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                 <Input
                   className="mt-1.5"
                   type="date"
-                  {...register("birthday")}
+                  {...register("birthday", {
+                    required: "Date of birth is required",
+                  })}
                 />
+                <ErrorMessage errors={errors} name="birthday" />
               </div>
               {/* Address field 1 and 2 */}
               <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2">
                 <div>
                   <Label>Address 1</Label>
-                  <Input className="mt-1.5" {...register("address_1")} />
+                  <Input
+                    className="mt-1.5"
+                    {...register("address_1", {
+                      required: "Address is required",
+                    })}
+                  />
+                  <ErrorMessage errors={errors} name="address_1" />
                 </div>
                 <div>
                   <Label>Address 2</Label>
                   <Input className="mt-1.5" {...register("address_2")} />
+                  <ErrorMessage errors={errors} name="address_2" />
                 </div>
               </div>
               {/* Phone number field when changed asks for otp and verifies */}
@@ -315,13 +357,13 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                     <Input
                       className="mt-1.5"
                       value={phoneNumberData.phoneNumber}
-                      onChange={(e) =>
+                      onChange={(e) => {
                         setPhoneNumberData({
                           phoneNumber: e.target.value,
                           isVerified:
                             e.target.value === (user.phone_number ?? ""),
-                        })
-                      }
+                        });
+                      }}
                     />
                     {/* Put the tick symbol if the phone number is verified */}
                     {phoneNumberData.isVerified &&
@@ -375,14 +417,29 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                 </div>
                 <div>
                   <Label>Pincode</Label>
-                  <Input className="mt-1.5" {...register("pincode")} />
+                  <Input
+                    className="mt-1.5"
+                    {...register("pincode", {
+                      pattern: {
+                        value: /^\d{6}$/,
+                        message: "Invalid pincode",
+                      },
+                    })}
+                  />
+                  <ErrorMessage errors={errors} name="pincode" />
                 </div>
               </div>
               {/* City and state */}
               <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2">
                 <div>
                   <Label>City</Label>
-                  <Input className="mt-1.5" {...register("city")} />
+                  <Input
+                    className="mt-1.5"
+                    {...register("city", {
+                      required: "City is required",
+                    })}
+                  />
+                  <ErrorMessage errors={errors} name="city" />
                 </div>
                 <div>
                   <Label>State</Label>

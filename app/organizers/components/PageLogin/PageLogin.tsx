@@ -278,7 +278,7 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
 
                           toast.success("Reset email sent!", { id: toastId });
 
-                          router.push("/organizer/auth/forgot-pass-mail");
+                          router.push("/auth/forgot-pass-mail");
                         } catch (error: any) {
                           toast.error(error.message, { id: toastId });
                         }
@@ -302,7 +302,7 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
           <span className="block text-center text-neutral-700 dark:text-neutral-300">
             New user? {` `}
             <Link
-              href="/organizer/auth/signup"
+              href="/auth/signup"
               className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
             >
               Create an account

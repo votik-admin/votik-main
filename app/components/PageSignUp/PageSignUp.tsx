@@ -14,6 +14,7 @@ import supabase from "@app/lib/supabase";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { SignInWithOAuthCredentials } from "@supabase/supabase-js";
+import { ErrorMessage } from "@hookform/error-message";
 
 export interface PageSignUpProps {
   className?: string;
@@ -178,11 +179,14 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                   className="mt-1"
                   {...register("phone", {
                     required: "Phone number is required",
+                    // Should start with 91 and contain 10 digits
+                    pattern: {
+                      value: /^91[0-9]{10}$/,
+                      message: "Invalid phone number",
+                    },
                   })}
                 />
-                {errors.phone && (
-                  <p className="text-red-500">{errors.phone.message}</p>
-                )}
+                <ErrorMessage errors={errors} name="phone" />
               </label>
             ) : (
               <label className="block">
@@ -194,11 +198,15 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                   autoComplete="email webauthn"
                   placeholder="example@example.com"
                   className="mt-1"
-                  {...register("email", { required: "Email is required" })}
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /\S+@\S+\.\S+/,
+                      message: "Invalid email",
+                    },
+                  })}
                 />
-                {errors.email && (
-                  <p className="text-red-500">{errors.email.message}</p>
-                )}
+                <ErrorMessage errors={errors} name="email" />
               </label>
             )}
             <label className="block">
@@ -211,9 +219,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                 className="mt-1"
                 {...register("password", { required: "Password is required" })}
               />
-              {errors.password && (
-                <p className="text-red-500">{errors.password.message}</p>
-              )}
+              <ErrorMessage errors={errors} name="password" />
             </label>
             <label className="block">
               <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
@@ -229,9 +235,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                     value === watch("password") || "Passwords do not match",
                 })}
               />
-              {errors.confirmPassword && (
-                <p className="text-red-500">{errors.confirmPassword.message}</p>
-              )}
+              <ErrorMessage errors={errors} name="confirmPassword" />
             </label>
             <ButtonPrimary type="submit">Continue</ButtonPrimary>
           </form>

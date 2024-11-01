@@ -59,6 +59,11 @@ const OrganizerProvider = ({
         setLoading(false);
       })();
     } else {
+      // check the current url
+      const currentUrl = window.location.pathname;
+      if (currentUrl.includes("/organizer")) {
+        window.location.href = "/";
+      }
       setOrganizer(null);
     }
   }, [session]);

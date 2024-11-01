@@ -7,7 +7,7 @@ export default async function Page() {
   const { session, organizer, error } = await getSessionAndOrganizer();
 
   if (!session || !organizer || error) {
-    redirect("/organizer/auth/login");
+    redirect("/auth/login");
   }
 
   return (

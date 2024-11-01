@@ -29,8 +29,16 @@ export default function UserSignupOrganizer({
         })
         .select("*");
 
-      if (error) {
-        throw new Error(error.message);
+      const { data: userData, error: userError } = await supabase
+        .from("users")
+        .update({ is_organizer: true })
+        .eq("id", user.id)
+        .single();
+
+      if (error || userError) {
+        throw new Error(
+          error?.message ?? userError?.message ?? "Unknown error"
+        );
       }
 
       toast.success("Signed up as organizer", { id: toastId });

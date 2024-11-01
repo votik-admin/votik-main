@@ -22,11 +22,6 @@ const solutions = [
     href: "/account",
     icon: UserCircleIcon,
   },
-  // {
-  //   name: "Messages",
-  //   href: "##",
-  //   icon: ChatBubbleBottomCenterTextIcon,
-  // },
   {
     name: "Bookings",
     href: "/account/bookings",
@@ -97,6 +92,45 @@ export default function AvatarDropdown({
                         </div>
                       </Link>
                     ))}
+                    {/* Organizer part */}
+                    {/* A border */}
+                    <hr className="h-[1px] border-t border-neutral-300 dark:border-neutral-700" />
+                    {user.is_organizer ? (
+                      <Link
+                        href="/organizer/dashboard"
+                        className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
+                      >
+                        <div className="flex items-center justify-center flex-shrink-0 text-neutral-500 dark:text-neutral-300">
+                          <LifebuoyIcon
+                            aria-hidden="true"
+                            className="w-6 h-6"
+                          />
+                        </div>
+                        <div className="ml-4">
+                          <p className="text-sm font-medium ">
+                            Organizer Dashboard
+                          </p>
+                        </div>
+                      </Link>
+                    ) : (
+                      // Sign up as organizer
+                      <Link
+                        href="/organizer/signup"
+                        className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
+                      >
+                        <div className="flex items-center justify-center flex-shrink-0 text-neutral-500 dark:text-neutral-300">
+                          <LifebuoyIcon
+                            aria-hidden="true"
+                            className="w-6 h-6"
+                          />
+                        </div>
+                        <div className="ml-4">
+                          <p className="text-sm font-medium ">
+                            Sign up as organizer
+                          </p>
+                        </div>
+                      </Link>
+                    )}
                   </div>
                   <hr className="h-[1px] border-t border-neutral-300 dark:border-neutral-700" />
                   <div className="relative grid gap-6 bg-white dark:bg-neutral-800 p-7">

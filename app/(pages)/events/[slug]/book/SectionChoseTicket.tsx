@@ -5,6 +5,7 @@ import ButtonCustom from "@app/shared/Button/ButtonCustom";
 import Input from "@app/shared/Input/Input";
 import { Tables } from "@app/types/database.types";
 import convertNumbThousand from "@app/utils/convertNumbThousand";
+import { ErrorMessage } from "@hookform/error-message";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -154,6 +155,7 @@ const SectionChoseTicket = ({
                   required: "First name is required",
                 })}
               />
+              <ErrorMessage errors={errors} name="firstName" />
             </div>
             <div className="w-full">
               <Label>Last Name</Label>
@@ -162,6 +164,7 @@ const SectionChoseTicket = ({
                 className="mt-1.5 w-full"
                 {...register("lastName")}
               />
+              <ErrorMessage errors={errors} name="lastName" />
             </div>
           </div>
           {errors.firstName && (
@@ -181,9 +184,7 @@ const SectionChoseTicket = ({
               required: "Email is required",
             })}
           />
-          {errors.email && (
-            <p className="text-red-500 mt-2 text-sm">{errors.email.message}</p>
-          )}
+          <ErrorMessage errors={errors} name="email" />
         </div>
         <div>
           <Label>Phone Number</Label>
@@ -194,11 +195,7 @@ const SectionChoseTicket = ({
               required: "Phone number is required",
             })}
           />
-          {errors.phoneNumber && (
-            <p className="text-red-500 mt-2 text-sm">
-              {errors.phoneNumber.message}
-            </p>
-          )}
+          <ErrorMessage errors={errors} name="phoneNumber" />
         </div>
       </div>
       <div>

@@ -59,6 +59,10 @@ const SessionProvider = ({
         setLoading(false);
       })();
     } else {
+      const currentUrl = window.location.pathname;
+      if (currentUrl.includes("/user")) {
+        window.location.href = "/";
+      }
       setUser(null);
     }
   }, [session]);

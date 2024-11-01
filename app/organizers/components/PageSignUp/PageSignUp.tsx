@@ -60,7 +60,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
 
         toast.success("Confirmation mail sent to mail!", { id: toastId });
 
-        router.push("/organizer/auth/login");
+        router.push("/auth/login");
       } else {
         const { data, error } = await supabase.auth.signUp({
           email: d.email,
@@ -78,7 +78,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
           throw new Error(error.message);
         }
         toast.success("Signed up successfully!", { id: toastId });
-        router.push("/organizer/auth/login");
+        router.push("/auth/login");
       }
     } catch (err: any) {
       toast.error(err.message, { id: toastId });
@@ -193,7 +193,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
           <span className="block text-center text-neutral-700 dark:text-neutral-300">
             Already have an account? {` `}
             <Link
-              href="/organizer/auth/login"
+              href="/auth/login"
               className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
             >
               Sign in

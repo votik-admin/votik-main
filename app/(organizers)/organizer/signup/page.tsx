@@ -23,9 +23,5 @@ export default async function Login() {
     return <UserSignupOrganizer initialUser={user} />;
   }
 
-  return (
-    <OrganizerProvider initialSession={session} initialOrganizer={organizer}>
-      <PageSignUp />
-    </OrganizerProvider>
-  );
+  redirect("/auth/login");
 }
