@@ -8,7 +8,7 @@ import Input from "@app/shared/Input/Input";
 import Select from "@app/shared/Select/Select";
 import Textarea from "@app/shared/Textarea/Textarea";
 import CommonLayout from "./CommonLayout";
-import { Database } from "@app/types/database.types";
+import { Database, Tables } from "@app/types/database.types";
 import supabase from "@app/lib/supabase";
 import toast, { Toaster } from "react-hot-toast";
 import { set, useForm } from "react-hook-form";
@@ -20,12 +20,23 @@ export interface AccountPageProps {
   className?: string;
 }
 
-function isPhoneNumber(number: string): boolean {
+function isPhoneNumber(number: unknown): boolean {
+  if (typeof number !== "string") {
+    return false;
+  }
   // Check if the phone number is valid: (+\d{1,3}\d{10})
-  return /^\+[1-9]\d{1,14}$/.test(number);
+  return /^\+91\d{10}$/.test(number);
 }
 
-type UserDetailsForm = Database["public"]["Tables"]["users"]["Row"];
+function isEmail(email: unknown): boolean {
+  if (typeof email !== "string") {
+    return false;
+  }
+  // Check if the email is valid
+  return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+}
+
+type UserDetailsForm = Tables<"users">;
 
 const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
   const { user: u } = useContext(SessionContext);
@@ -34,19 +45,174 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
 
   const [avatarUrl, setAvatarUrl] = useState<string | null>(user.avatar_url);
 
-  const [otp, setOtp] = useState<string | null>(null);
+  const [email, setEmail] = useState(user.email ?? "");
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(true);
 
-  const [otpSent, setOtpSent] = useState<boolean>(false);
-  const [sendingOtp, setSendingOtp] = useState<boolean>(false);
+  const otpTimer = React.useRef<NodeJS.Timeout | null>(null);
+  const [otpTimerValue, setOtpTimerValue] = React.useState(60);
+  const [otpSent, setOtpSent] = React.useState(false);
+  const [otp, setOtp] = React.useState("");
+  const [otpExpired, setOtpExpired] = React.useState(false);
+  const [phoneVerified, setPhoneVerified] = React.useState(true);
+  const [phone, setPhone] = React.useState(
+    user.phone_number ? `+${user.phone_number}` : ""
+  );
 
-  // By default, the phone number is verified
-  const [phoneNumberData, setPhoneNumberData] = useState<{
-    phoneNumber: string;
-    isVerified: boolean;
-  }>({
-    phoneNumber: user.phone_number ?? "",
-    isVerified: true,
-  });
+  // listen to mail change event
+  useEffect(() => {
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "USER_UPDATED") {
+        if (session?.user?.email) {
+          if (session.user.email !== email) {
+            setEmailVerified(false);
+          } else {
+            setEmailVerified(true);
+            setValue("email", email);
+          }
+        }
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    const updateEmail = async () => {
+      const toastId = toast.loading("Updating user...");
+
+      const { error } = await supabase
+        .from("organizers")
+        .update({
+          email: email,
+        })
+        .eq("id", user.id);
+
+      if (error) {
+        toast.error(`Error updating user: ${error.message}`, { id: toastId });
+        return;
+      }
+
+      toast.success("User updated successfully", { id: toastId });
+    };
+    if (emailVerified) updateEmail();
+  }, [emailVerified]);
+
+  const verifyOtp = async () => {
+    const toastId = toast.loading("Verifying OTP...");
+    try {
+      if (phone === null || /^\+91\d{10}$/.test(phone) === false) {
+        throw new Error("Invalid phone number");
+      }
+      const { data, error } = await supabase.auth.verifyOtp({
+        phone,
+        token: otp,
+        type: "phone_change",
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      toast.success("OTP verified successfully!", { id: toastId });
+      setPhoneVerified(true);
+      setValue("phone_number", phone);
+      const toastUId = toast.loading("Updating user...");
+
+      const { error: updateError } = await supabase
+        .from("organizers")
+        .update({
+          phone_number: phone,
+        })
+        .eq("id", user.id);
+
+      if (updateError) {
+        toast.error(`Error updating user: ${updateError.message}`, {
+          id: toastUId,
+        });
+        return;
+      }
+
+      toast.success("User updated successfully", { id: toastUId });
+    } catch (error: any) {
+      toast.error(`OTP verification failed: ${error.message}`, {
+        id: toastId,
+      });
+    }
+  };
+  const resendOtp = async () => {
+    const toastId = toast.loading("Resending OTP...");
+    try {
+      if (phone === null || /^\+91\d{10}$/.test(phone) === false) {
+        throw new Error("Invalid phone number");
+      }
+      const { data, error } = await supabase.auth.resend({
+        phone,
+        type: "phone_change",
+      });
+
+      otpTimer.current = setInterval(() => {
+        setOtpTimerValue((prev) => {
+          if (prev <= 0) {
+            clearInterval(otpTimer.current!);
+            setOtpExpired(true);
+            setOtpSent(false);
+            return 60;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      setOtpExpired(false);
+      setOtpSent(true);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      toast.success("OTP sent successfully!", { id: toastId });
+    } catch (error: any) {
+      toast.error(`OTP resend failed: ${error.message}`, { id: toastId });
+    }
+  };
+
+  const emailChange = async () => {
+    const toastId = toast.loading("Sending verification email...");
+    try {
+      const { data, error } = await supabase.auth.updateUser({
+        email,
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      toast.success("Verification email sent successfully!", { id: toastId });
+      setEmailSent(true);
+    } catch (error: any) {
+      toast.error(`Email verification failed: ${error.message}`, {
+        id: toastId,
+      });
+    }
+  };
+
+  const resendEmail = async () => {
+    const toastId = toast.loading("Resending verification email...");
+    try {
+      const { data, error } = await supabase.auth.resend({
+        email,
+        type: "email_change",
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      toast.success("Verification email sent successfully!", { id: toastId });
+    } catch (error: any) {
+      toast.error(`Email verification failed: ${error.message}`, {
+        id: toastId,
+      });
+    }
+  };
 
   const {
     register,
@@ -58,12 +224,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
     defaultValues: user,
   });
 
-  useEffect(() => {
-    if (phoneNumberData.isVerified)
-      setValue("phone_number", phoneNumberData.phoneNumber);
-  }, [phoneNumberData]);
-
-  const handleUserUpdate = async (data: UserDetailsForm) => {
+  const handleUserUpdate = async (data: Partial<UserDetailsForm>) => {
     // handle user update
     const toastId = toast.loading("Updating user...");
     // Remove all the fields that are empty
@@ -74,6 +235,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
         delete data[key];
       }
     });
+
     const { error } = await supabase
       .from("users")
       .update({
@@ -87,70 +249,6 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
     }
 
     toast.success("User updated successfully", { id: toastId });
-  };
-
-  const handleOtpSend = async () => {
-    // handle otp send
-    if (!isPhoneNumber(phoneNumberData.phoneNumber)) {
-      toast.error("Invalid phone number");
-      return;
-    }
-
-    // Send OTP
-    console.log("Sending OTP to", phoneNumberData.phoneNumber);
-    const otpToast = toast.loading(
-      `Sending OTP to ${phoneNumberData.phoneNumber}`
-    );
-    setSendingOtp(true);
-
-    const { data, error } = await supabase.auth.updateUser({
-      phone: phoneNumberData.phoneNumber,
-    });
-
-    //
-
-    if (error) {
-      setSendingOtp(false);
-      toast.error(error.message, { id: otpToast });
-      return;
-    }
-    setSendingOtp(false);
-    setOtpSent(true);
-    toast.success("OTP sent successfully", { id: otpToast });
-  };
-
-  const handleVerifyOtp = async () => {
-    if (!otp) {
-      toast.error("Please enter OTP");
-      return;
-    }
-    const otpToast = toast.loading("Verifying OTP...");
-    const { data, error } = await supabase.auth.verifyOtp({
-      phone: phoneNumberData.phoneNumber,
-      token: otp,
-      type: "sms",
-    });
-
-    if (error) {
-      toast.error(error.message, { id: otpToast });
-      return;
-    }
-
-    setPhoneNumberData({ ...phoneNumberData, isVerified: true });
-    toast.success("OTP verified successfully", { id: otpToast });
-
-    // Update the phone number
-    const { error: updateError } = await supabase
-      .from("users")
-      .update({ phone_number: phoneNumberData.phoneNumber })
-      .eq("id", user.id);
-
-    if (updateError) {
-      toast.error(updateError.message, { id: otpToast });
-      return;
-    }
-
-    toast.success("Phone number updated successfully", { id: otpToast });
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -210,6 +308,18 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
     toast.success("Image uploaded successfully", { id: uploaderToast });
   };
 
+  const phone_number = watch("phone_number") ? `+${watch("phone_number")}` : "";
+
+  useEffect(() => {
+    setOtpSent(false);
+    setOtpExpired(false);
+    setPhoneVerified(phone === phone_number);
+  }, [phone, phone_number]);
+
+  useEffect(() => {
+    setEmailSent(false);
+    setEmailVerified(email === (watch("email") ?? ""));
+  }, [email]);
   return (
     <div className={`nc-AccountPage ${className}`} data-nc-id="AccountPage">
       <CommonLayout>
@@ -307,17 +417,30 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
               <div>
                 <Label>Email</Label>
                 <Input
-                  disabled
                   className="mt-1.5"
-                  {...register("email", {
-                    required: "Email is required",
-                    pattern: {
-                      value: /\S+@\S+\.\S+/,
-                      message: "Invalid email",
-                    },
-                  })}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <ErrorMessage errors={errors} name="email" />
+                {email !== watch("email") &&
+                  (emailSent ? (
+                    <>
+                      <p className="text-green-500">Email sent</p>
+                      <ButtonPrimary
+                        onClick={resendEmail}
+                        disabled={!isEmail(email)}
+                      >
+                        Resend verification email
+                      </ButtonPrimary>
+                    </>
+                  ) : (
+                    <ButtonPrimary
+                      onClick={emailChange}
+                      disabled={!isEmail(email)}
+                    >
+                      Send verification email
+                    </ButtonPrimary>
+                  ))}
               </div>
               {/* ---- */}
               <div>
@@ -356,37 +479,42 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                   <div className="relative">
                     <Input
                       className="mt-1.5"
-                      value={phoneNumberData.phoneNumber}
+                      value={phone}
                       onChange={(e) => {
-                        setPhoneNumberData({
-                          phoneNumber: e.target.value,
-                          isVerified:
-                            e.target.value === (user.phone_number ?? ""),
-                        });
+                        setPhone(e.target.value);
                       }}
                     />
+                    <ErrorMessage errors={errors} name="phone_number" />
                     {/* Put the tick symbol if the phone number is verified */}
-                    {phoneNumberData.isVerified &&
-                      isPhoneNumber(phoneNumberData.phoneNumber) && (
-                        <span className="text-green-500 absolute top-1/2 right-4 transform -translate-y-1/2">
-                          <svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M9.5 17L5.5 13L4 14.5L9.5 20L21 8.5L19.5 7L9.5 17Z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
-                      )}
+                    {phoneVerified && isPhoneNumber(phone) && (
+                      <span className="text-green-500 absolute top-1/2 right-4 transform -translate-y-1/2">
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M9.5 17L5.5 13L4 14.5L9.5 20L21 8.5L19.5 7L9.5 17Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </span>
+                    )}
                   </div>
                 </div>
-                {!phoneNumberData.isVerified &&
-                  (otpSent ? (
+                {otpSent &&
+                  (otpExpired ? (
+                    <>
+                      <p className="text-red-500">
+                        OTP expired. Please try again.
+                      </p>
+                      <ButtonPrimary type="button" onClick={resendOtp}>
+                        Resend OTP
+                      </ButtonPrimary>
+                    </>
+                  ) : (
                     <div className="flex items-center gap-2">
                       <Input
                         className="mt-1.5"
@@ -396,18 +524,20 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                           setOtp(e.target.value);
                         }}
                       />
-                      <ButtonPrimary onClick={handleVerifyOtp}>
-                        Verify
-                      </ButtonPrimary>
+                      <p className="text-neutral-500 dark:text-neutral-400">
+                        OTP expires in {otpTimerValue} seconds
+                      </p>
+                      <ButtonPrimary onClick={verifyOtp}>Verify</ButtonPrimary>
                     </div>
-                  ) : (
-                    <ButtonPrimary
-                      disabled={!isPhoneNumber(phoneNumberData.phoneNumber)}
-                      onClick={handleOtpSend}
-                    >
-                      Send OTP
-                    </ButtonPrimary>
                   ))}
+                {isPhoneNumber(phone) && phone !== phone_number && (
+                  <ButtonPrimary
+                    disabled={!isPhoneNumber(phone)}
+                    onClick={resendOtp}
+                  >
+                    Send OTP
+                  </ButtonPrimary>
+                )}
               </div>
               {/* Landmark and pincode */}
               <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2">

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import facebookSvg from "@app/images/Facebook.svg";
 import twitterSvg from "@app/images/Twitter.svg";
 import googleSvg from "@app/images/Google.svg";
@@ -68,6 +68,11 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
         const { data, error } = await supabase.auth.signInWithOtp({
           phone: formData.phone,
         });
+
+        if (error) {
+          throw new Error(error.message);
+        }
+
         otpTimer.current = setInterval(() => {
           setOtpTimerValue((prev) => {
             if (prev <= 0) {
@@ -81,10 +86,6 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
         }, 1000);
         setOtpExpired(false);
         setOtpSent(true);
-
-        if (error) {
-          throw new Error(error.message);
-        }
 
         toast.success("OTP sent successfully!", { id: toastId });
       } else {
@@ -157,6 +158,13 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
   };
 
   const email = watch("email");
+
+  useEffect(() => {
+    if (!phoneLogin) {
+      setOtpSent(false);
+      setOtpExpired(false);
+    }
+  }, [phoneLogin]);
 
   return (
     <div className={`nc-PageLogin ${className}`} data-nc-id="PageLogin">

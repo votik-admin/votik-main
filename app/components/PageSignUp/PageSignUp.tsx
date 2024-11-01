@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import facebookSvg from "@app/images/Facebook.svg";
 import twitterSvg from "@app/images/Twitter.svg";
@@ -25,6 +25,7 @@ type FormValues = {
   phone: string;
   password: string;
   confirmPassword: string;
+  otp: string;
 };
 
 const loginSocials: {
@@ -44,6 +45,11 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
 
   const [phoneLogin, setPhoneLogin] = React.useState(false);
 
+  const otpTimer = React.useRef<NodeJS.Timeout | null>(null);
+  const [otpTimerValue, setOtpTimerValue] = React.useState(60);
+  const [otpSent, setOtpSent] = React.useState(false);
+  const [otpExpired, setOtpExpired] = React.useState(false);
+
   const {
     register,
     handleSubmit,
@@ -51,57 +57,116 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
     watch,
   } = useForm<FormValues>();
 
-  const onSubmit: SubmitHandler<FormValues> = async (d) => {
+  const onSubmit = async (data: FormValues) => {
     const toastId = toast.loading("Signing up...");
     try {
       if (phoneLogin) {
         const { data, error } = await supabase.auth.signUp({
-          phone: d.phone,
-          password: d.password,
-          options: {
-            channel: "sms",
-            data: {
-              email: "",
-              username: d.phone,
-              phone_number: d.phone,
-            },
-          },
+          phone: watch("phone"),
+          password: watch("password"),
         });
 
         if (error) {
           throw new Error(error.message);
         }
 
-        toast.success("Signed up successfully!", { id: toastId });
+        otpTimer.current = setInterval(() => {
+          setOtpTimerValue((prev) => {
+            if (prev === 0) {
+              clearInterval(otpTimer.current!);
+              setOtpExpired(true);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+        setOtpExpired(false);
+        setOtpSent(true);
 
-        router.push("/auth/login");
+        toast.success("OTP sent successfully!", { id: toastId });
       } else {
         const { data, error } = await supabase.auth.signUp({
-          email: d.email,
-          password: d.password,
-          options: {
-            data: {
-              username: d.email,
-              phone_number: "",
-              email: d.email,
-            },
-          },
+          email: watch("email"),
+          password: watch("password"),
         });
+
         if (error) {
           throw new Error(error.message);
         }
-        toast.success("Signed up successfully!", { id: toastId });
+
+        toast.success("Sent verification email!", { id: toastId });
         router.push("/auth/login");
       }
     } catch (err: any) {
-      toast.error(err.message, { id: toastId });
+      toast.error(`Signup failed: ${err.message}`, { id: toastId });
     }
   };
+
+  const verifyOtp = async (otp: string) => {
+    const toastId = toast.loading("Verifying OTP...");
+    try {
+      const { data, error } = await supabase.auth.verifyOtp({
+        phone: watch("phone"),
+        token: otp,
+        type: "sms",
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      toast.success("OTP verified successfully!", { id: toastId });
+      router.push("/user/account");
+    } catch (error: any) {
+      toast.error(`OTP verification failed: ${error.message}`, {
+        id: toastId,
+      });
+    }
+  };
+
+  const resendOtp = async () => {
+    const toastId = toast.loading("Resending OTP...");
+    try {
+      const { data, error } = await supabase.auth.signInWithOtp({
+        phone: watch("phone"),
+      });
+
+      otpTimer.current = setInterval(() => {
+        setOtpTimerValue((prev) => {
+          if (prev <= 0) {
+            clearInterval(otpTimer.current!);
+            setOtpExpired(true);
+            setOtpSent(false);
+            return 60;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      setOtpExpired(false);
+      setOtpSent(true);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      toast.success("OTP sent successfully!", { id: toastId });
+    } catch (error: any) {
+      toast.error(`OTP resend failed: ${error.message}`, { id: toastId });
+    }
+  };
+
+  useEffect(() => {
+    if (!phoneLogin) {
+      setOtpExpired(false);
+      setOtpSent(false);
+    }
+  }, [phoneLogin]);
 
   return (
     <div className={`nc-PageSignUp  ${className}`} data-nc-id="PageSignUp">
       <Helmet>
-        <title>Sign up || Booking React Template</title>
+        <title>Sign up</title>
       </Helmet>
       <div className="container mb-24 lg:mb-32">
         <h2 className="my-20 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
@@ -187,6 +252,48 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                   })}
                 />
                 <ErrorMessage errors={errors} name="phone" />
+                {otpSent && (
+                  <label className="flex flex-col gap-4">
+                    <span className="text-neutral-800 dark:text-neutral-200">
+                      OTP
+                    </span>
+                    <Input
+                      type="text"
+                      autoComplete="one-time-code"
+                      placeholder="OTP"
+                      className="mt-1"
+                      {...register("otp", { required: "OTP is required" })}
+                    />
+
+                    <ErrorMessage errors={errors} name="otp" />
+                    <p className="text-neutral-500 dark:text-neutral-400">
+                      OTP expires in {otpTimerValue} seconds
+                    </p>
+                    <ButtonPrimary
+                      type="button"
+                      onClick={async () => {
+                        await verifyOtp(watch("otp"));
+                      }}
+                    >
+                      Verify OTP
+                    </ButtonPrimary>
+                  </label>
+                )}
+                {otpExpired && (
+                  <>
+                    <p className="text-red-500">
+                      OTP expired. Please try again.
+                    </p>
+                    <ButtonPrimary
+                      type="button"
+                      onClick={() => {
+                        resendOtp();
+                      }}
+                    >
+                      Resend OTP
+                    </ButtonPrimary>
+                  </>
+                )}
               </label>
             ) : (
               <label className="block">
@@ -209,35 +316,41 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                 <ErrorMessage errors={errors} name="email" />
               </label>
             )}
-            <label className="block">
-              <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
-                Password
-              </span>
-              <Input
-                type="password"
-                autoComplete="new-password webauthn"
-                className="mt-1"
-                {...register("password", { required: "Password is required" })}
-              />
-              <ErrorMessage errors={errors} name="password" />
-            </label>
-            <label className="block">
-              <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
-                Confirm Password
-              </span>
-              <Input
-                type="password"
-                autoComplete="new-password webauthn"
-                className="mt-1"
-                {...register("confirmPassword", {
-                  required: "Confirm password is required",
-                  validate: (value) =>
-                    value === watch("password") || "Passwords do not match",
-                })}
-              />
-              <ErrorMessage errors={errors} name="confirmPassword" />
-            </label>
-            <ButtonPrimary type="submit">Continue</ButtonPrimary>
+            {!otpSent && (
+              <>
+                <label className="block">
+                  <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
+                    Password
+                  </span>
+                  <Input
+                    type="password"
+                    autoComplete="new-password webauthn"
+                    className="mt-1"
+                    {...register("password", {
+                      required: "Password is required",
+                    })}
+                  />
+                  <ErrorMessage errors={errors} name="password" />
+                </label>
+                <label className="block">
+                  <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
+                    Confirm Password
+                  </span>
+                  <Input
+                    type="password"
+                    autoComplete="new-password webauthn"
+                    className="mt-1"
+                    {...register("confirmPassword", {
+                      required: "Confirm password is required",
+                      validate: (value) =>
+                        value === watch("password") || "Passwords do not match",
+                    })}
+                  />
+                  <ErrorMessage errors={errors} name="confirmPassword" />
+                </label>
+                <ButtonPrimary type="submit">Continue</ButtonPrimary>
+              </>
+            )}
           </form>
 
           {/* ==== */}
