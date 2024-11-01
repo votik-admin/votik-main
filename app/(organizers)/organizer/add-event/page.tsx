@@ -11,7 +11,11 @@ export default async function AddEvent() {
   }
 
   return (
-    <OrganizerProvider initialOrganizer={organizer} initialSession={session}>
+    <OrganizerProvider
+      initialOrganizer={organizer}
+      initialSession={session}
+      onLogoutBlock={true}
+    >
       <MainPage />
     </OrganizerProvider>
   );
