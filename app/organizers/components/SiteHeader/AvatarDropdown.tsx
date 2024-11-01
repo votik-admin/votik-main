@@ -29,14 +29,16 @@ export default function AvatarDropdown({
   const solutionsFoot = [
     {
       name: "Logout",
-      onClick: async () => {
-        const { error } = await supabase.auth.signOut();
-        if (error) {
-          toast.error(error.message);
-          return;
-        }
+      onClick: () => {
+        supabase.auth.signOut().then(({ error }) => {
+          if (error) {
+            toast.error(error.message);
+            return;
+          }
+        });
         toast.success("Logged out successfully!");
         router.push("/");
+        router.refresh();
       },
       icon: ArrowRightOnRectangleIcon,
     },

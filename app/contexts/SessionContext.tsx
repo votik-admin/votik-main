@@ -15,10 +15,12 @@ const SessionProvider = ({
   children,
   initialSession = null,
   initialUser = null,
+  onLogoutBlock = false,
 }: {
   children: React.ReactNode;
   initialSession: Session | null;
   initialUser: Database["public"]["Tables"]["users"]["Row"] | null;
+  onLogoutBlock?: boolean;
 }) => {
   const [session, setSession] = React.useState<Session | null>(
     initialSession ?? null
@@ -59,13 +61,13 @@ const SessionProvider = ({
         setLoading(false);
       })();
     } else {
-      const currentUrl = window.location.pathname;
-      if (currentUrl.includes("/user")) {
-        window.location.href = "/";
-      }
       setUser(null);
     }
   }, [session]);
+
+  if (onLogoutBlock && !session) {
+    return null;
+  }
 
   return (
     <SessionContext.Provider

@@ -179,9 +179,9 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                   className="mt-1"
                   {...register("phone", {
                     required: "Phone number is required",
-                    // Should start with 91 and contain 10 digits
+                    // Should start with +91 and contain 10 digits
                     pattern: {
-                      value: /^91[0-9]{10}$/,
+                      value: /^\+91[0-9]{10}$/,
                       message: "Invalid phone number",
                     },
                   })}

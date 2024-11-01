@@ -19,12 +19,12 @@ import { useRouter } from "next/navigation";
 const solutions = [
   {
     name: "Account",
-    href: "/account",
+    href: "/user/account",
     icon: UserCircleIcon,
   },
   {
     name: "Bookings",
-    href: "/account/bookings",
+    href: "/user/account/bookings",
     icon: CalendarIcon,
   },
 ];
@@ -40,13 +40,15 @@ export default function AvatarDropdown({
     {
       name: "Logout",
       onClick: async () => {
-        const { error } = await supabase.auth.signOut();
-        if (error) {
-          toast.error(error.message);
-          return;
-        }
+        supabase.auth.signOut().then(({ error }) => {
+          if (error) {
+            toast.error(error.message);
+            return;
+          }
+        });
         toast.success("Logged out successfully!");
         router.push("/");
+        router.refresh();
       },
       icon: ArrowRightOnRectangleIcon,
     },

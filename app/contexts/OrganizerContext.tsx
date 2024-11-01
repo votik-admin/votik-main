@@ -15,10 +15,12 @@ const OrganizerProvider = ({
   children,
   initialSession = null,
   initialOrganizer = null,
+  onLogoutBlock = false,
 }: {
   children: React.ReactNode;
   initialSession: Session | null;
   initialOrganizer: Tables<"organizers"> | null;
+  onLogoutBlock?: boolean;
 }) => {
   const [session, setSession] = React.useState<Session | null>(
     initialSession ?? null
@@ -59,14 +61,13 @@ const OrganizerProvider = ({
         setLoading(false);
       })();
     } else {
-      // check the current url
-      const currentUrl = window.location.pathname;
-      if (currentUrl.includes("/organizer")) {
-        window.location.href = "/";
-      }
       setOrganizer(null);
     }
   }, [session]);
+
+  if (onLogoutBlock && !session) {
+    return null;
+  }
 
   return (
     <OrganizerContext.Provider

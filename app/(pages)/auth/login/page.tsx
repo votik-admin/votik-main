@@ -9,7 +9,7 @@ export default async function Login() {
   const { session, user, error } = await getSessionAndUser();
 
   if (!error && user && session) {
-    redirect("/account");
+    redirect("/user/account");
   }
 
   return (

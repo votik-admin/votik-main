@@ -22,7 +22,7 @@ export interface AccountPageProps {
 
 function isPhoneNumber(number: string): boolean {
   // Check if the phone number is valid: (+\d{1,3}\d{10})
-  return /^\+[1-9]\d{1,14}$/.test(number);
+  return /^\+91[0-9]{10}$/.test(number);
 }
 
 type OrganizerDetailsForm = Tables<"organizers">;

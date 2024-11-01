@@ -11,7 +11,11 @@ export default async function Page() {
   }
 
   return (
-    <OrganizerProvider initialOrganizer={organizer} initialSession={session}>
+    <OrganizerProvider
+      initialOrganizer={organizer}
+      initialSession={session}
+      onLogoutBlock={true}
+    >
       <AccountPage />
     </OrganizerProvider>
   );

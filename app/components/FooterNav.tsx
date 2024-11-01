@@ -26,12 +26,12 @@ const NAV: NavItem[] = [
   },
   {
     name: "Wishlists",
-    link: "/account-savelists",
+    link: "/user/account-savelists",
     icon: HeartIcon,
   },
   {
     name: "Log in",
-    link: "/account",
+    link: "/user/account",
     icon: UserCircleIcon,
   },
   {

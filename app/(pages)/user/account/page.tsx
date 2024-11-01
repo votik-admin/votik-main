@@ -11,7 +11,11 @@ export default async function Page() {
   }
 
   return (
-    <SessionProvider initialSession={session} initialUser={user}>
+    <SessionProvider
+      initialSession={session}
+      initialUser={user}
+      onLogoutBlock={true}
+    >
       <AccountPage />
     </SessionProvider>
   );

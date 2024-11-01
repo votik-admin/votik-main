@@ -31,9 +31,9 @@ export interface LocationStates {
   "/checkout"?: {};
   "/pay-done"?: {};
   //
-  "/account-savelists"?: {};
-  "/account-password"?: {};
-  "/account-billing"?: {};
+  "/user/account-savelists"?: {};
+  "/user/account-password"?: {};
+  "/user/account-billing"?: {};
   //
   "/blog"?: {};
   "/blog-single"?: {};
@@ -49,7 +49,7 @@ export interface LocationStates {
   "/add-event/9"?: {};
   "/add-event/10"?: {};
   //
-  "/account"?: {};
+  "/user/account"?: {};
   "/search"?: {};
   "/about"?: {};
   "/contact"?: {};
