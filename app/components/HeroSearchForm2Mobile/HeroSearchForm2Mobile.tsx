@@ -28,12 +28,15 @@ const HeroSearchForm2Mobile = () => {
     return (
       <button
         onClick={openModal}
+        id="open_search_modal_mobile"
         className="relative flex items-center w-full border border-neutral-200 dark:border-neutral-6000 px-4 py-2 pr-11 rounded-full shadow-lg"
       >
         <MagnifyingGlassIcon className="flex-shrink-0 w-5 h-5" />
 
         <div className="ml-3 flex-1 text-left overflow-hidden">
-          <span className="block font-medium text-sm">Where to?</span>
+          <span className="block font-medium text-sm">
+            What do you want to see live?
+          </span>
           <span className="block mt-0.5 text-xs font-light text-neutral-500 dark:text-neutral-400 line-clamp-1">
             Anywhere • Any week • Any event
           </span>
