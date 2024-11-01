@@ -103,6 +103,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
         </div>
 
         <div
+          id="open_search_modal_desktop"
           className="flex-shrink-0 ml-auto pr-2 cursor-pointer"
           onClick={() => setShowHeroSearch("location")}
         >
