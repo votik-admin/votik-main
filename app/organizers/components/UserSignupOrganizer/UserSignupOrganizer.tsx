@@ -3,6 +3,7 @@
 import supabase from "@app/lib/supabase";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import { Tables } from "@app/types/database.types";
+import mergeStrings from "@app/utils/mergeStrings";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -21,7 +22,7 @@ export default function UserSignupOrganizer({
         .insert({
           id: user.id,
           email: user.email,
-          name: `${user.first_name} ${user.last_name}`.trim(),
+          name: mergeStrings([user.first_name, user.last_name]),
           phone_number: user.phone_number,
           addr: user.address_1,
           avatar_url: user.avatar_url,

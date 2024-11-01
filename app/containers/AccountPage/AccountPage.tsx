@@ -93,7 +93,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
 
       toast.success("User updated successfully", { id: toastId });
     };
-    if (emailVerified) updateEmail();
+    if (emailVerified && email !== watch("email")) updateEmail();
   }, [emailVerified]);
 
   const verifyOtp = async () => {
@@ -138,16 +138,21 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
       });
     }
   };
-  const resendOtp = async () => {
+  const resendOtp = async (resend: boolean = true) => {
     const toastId = toast.loading("Resending OTP...");
     try {
       if (phone === null || /^\+91\d{10}$/.test(phone) === false) {
         throw new Error("Invalid phone number");
       }
-      const { data, error } = await supabase.auth.resend({
-        phone,
-        type: "phone_change",
-      });
+
+      const { data, error } = resend
+        ? await supabase.auth.resend({
+            phone,
+            type: "phone_change",
+          })
+        : await supabase.auth.updateUser({
+            phone,
+          });
 
       otpTimer.current = setInterval(() => {
         setOtpTimerValue((prev) => {
@@ -533,7 +538,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                 {isPhoneNumber(phone) && phone !== phone_number && (
                   <ButtonPrimary
                     disabled={!isPhoneNumber(phone)}
-                    onClick={resendOtp}
+                    onClick={() => resendOtp(false)}
                   >
                     Send OTP
                   </ButtonPrimary>
