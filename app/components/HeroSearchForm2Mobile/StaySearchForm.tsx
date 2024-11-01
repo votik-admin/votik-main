@@ -52,90 +52,9 @@ const StaySearchForm = () => {
     );
   };
 
-  const renderInputDates = () => {
-    const isActive = fieldNameShow === "dates";
-    const startDateString = dateRangeValue.startDate?.format("MMM DD");
-    const endDateString =
-      dateRangeValue.endDate?.get("month") !==
-      dateRangeValue.startDate?.get("month")
-        ? dateRangeValue.endDate?.format("MMM DD")
-        : dateRangeValue.endDate?.format("DD");
-    const dateSelected =
-      startDateString && endDateString
-        ? `${startDateString} - ${endDateString}`
-        : `${startDateString || endDateString || ""}`;
-    return (
-      <div
-        className={`w-full bg-white dark:bg-neutral-800 overflow-hidden ${
-          isActive
-            ? "rounded-2xl shadow-lg"
-            : "rounded-xl shadow-[0px_2px_2px_0px_rgba(0,0,0,0.25)]"
-        }`}
-      >
-        {!isActive ? (
-          <button
-            className={`w-full flex justify-between text-sm font-medium p-4  `}
-            onClick={() => setFieldNameShow("dates")}
-          >
-            <span className="text-neutral-400">When</span>
-            <span>{dateSelected || "Add date"}</span>
-          </button>
-        ) : (
-          <StayDatesRangeInput
-            defaultValue={dateRangeValue}
-            onChange={setDateRangeValue}
-          />
-        )}
-      </div>
-    );
-  };
-
-  const renderInputGuests = () => {
-    const isActive = fieldNameShow === "guests";
-    let guestSelected = "";
-    if (guestInput.guestAdults || guestInput.guestChildren) {
-      const guest =
-        (guestInput.guestAdults || 0) + (guestInput.guestChildren || 0);
-      guestSelected += `${guest} guests`;
-    }
-
-    if (guestInput.guestInfants) {
-      guestSelected += `, ${guestInput.guestInfants} infants`;
-    }
-
-    return (
-      <div
-        className={`w-full bg-white dark:bg-neutral-800 overflow-hidden ${
-          isActive
-            ? "rounded-2xl shadow-lg"
-            : "rounded-xl shadow-[0px_2px_2px_0px_rgba(0,0,0,0.25)]"
-        }`}
-      >
-        {!isActive ? (
-          <button
-            className={`w-full flex justify-between text-sm font-medium p-4`}
-            onClick={() => setFieldNameShow("guests")}
-          >
-            <span className="text-neutral-400">Who</span>
-            <span>{guestSelected || `Add guests`}</span>
-          </button>
-        ) : (
-          <GuestsInput defaultValue={guestInput} onChange={setGuestInput} />
-        )}
-      </div>
-    );
-  };
-
   return (
     <div>
-      <div className="w-full space-y-5">
-        {/*  */}
-        {renderInputLocation()}
-        {/*  */}
-        {renderInputDates()}
-        {/*  */}
-        {renderInputGuests()}
-      </div>
+      <div className="w-full space-y-5">{renderInputLocation()}</div>
     </div>
   );
 };

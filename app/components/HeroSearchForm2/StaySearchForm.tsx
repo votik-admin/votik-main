@@ -76,22 +76,6 @@ const StaySearchForm: FC<StaySearchFormProps> = ({
           className="flex-[1.5]"
           autoFocus={defaultFieldFocus === "location"}
         />
-        <StayDatesRangeInput
-          defaultValue={dateRangeValue}
-          defaultFocus={dateFocused}
-          onChange={(data) => {
-            setDateRangeValue(data);
-          }}
-          className="flex-[2]"
-        />
-
-        <GuestsInput
-          defaultValue={guestValue}
-          onChange={(data) => setGuestValue(data)}
-          className="flex-[1.2]"
-          autoFocus={defaultFieldFocus === "guests"}
-          submitLink="/listing-stay"
-        />
       </form>
     );
   };

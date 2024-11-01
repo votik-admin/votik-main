@@ -60,17 +60,6 @@ const StaySearchForm: FC<StaySearchFormProps> = ({
           onInputDone={() => setDateFocused("startDate")}
           className="flex-[1.5]"
         />
-        <StayDatesRangeInput
-          defaultValue={dateRangeValue}
-          defaultFocus={dateFocused}
-          onChange={(data) => setDateRangeValue(data)}
-          className="flex-[2]"
-        />
-        <GuestsInput
-          defaultValue={guestValue}
-          onChange={(data) => setGuestValue(data)}
-          className="flex-[1.2]"
-        />
       </form>
     );
   };

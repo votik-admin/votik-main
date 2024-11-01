@@ -35,7 +35,7 @@ const HeroSearchForm2Mobile = () => {
         <div className="ml-3 flex-1 text-left overflow-hidden">
           <span className="block font-medium text-sm">Where to?</span>
           <span className="block mt-0.5 text-xs font-light text-neutral-500 dark:text-neutral-400 line-clamp-1">
-            Anywhere • Any week • Add guests
+            Anywhere • Any week • Any event
           </span>
         </div>
 
@@ -85,28 +85,24 @@ const HeroSearchForm2Mobile = () => {
                       </div>
 
                       <Tab.List className="pt-12 flex w-full justify-center font-semibold text-sm sm:text-base text-neutral-500 dark:text-neutral-400 space-x-6 sm:space-x-8">
-                        {["Stay", "Experiences", "Cars", "Flights"].map(
-                          (item, index) => (
-                            <Tab key={index} as={Fragment}>
-                              {({ selected }) => (
-                                <div className="relative focus:outline-none focus-visible:ring-0 outline-none select-none">
-                                  <div
-                                    className={`${
-                                      selected
-                                        ? "text-black dark:text-white"
-                                        : ""
-                                    }  `}
-                                  >
-                                    {item}
-                                  </div>
-                                  {selected && (
-                                    <span className="absolute inset-x-0 top-full border-b-2 border-black dark:border-white"></span>
-                                  )}
+                        {["Search"].map((item, index) => (
+                          <Tab key={index} as={Fragment}>
+                            {({ selected }) => (
+                              <div className="relative focus:outline-none focus-visible:ring-0 outline-none select-none">
+                                <div
+                                  className={`${
+                                    selected ? "text-black dark:text-white" : ""
+                                  }  `}
+                                >
+                                  {item}
                                 </div>
-                              )}
-                            </Tab>
-                          )
-                        )}
+                                {selected && (
+                                  <span className="absolute inset-x-0 top-full border-b-2 border-black dark:border-white"></span>
+                                )}
+                              </div>
+                            )}
+                          </Tab>
+                        ))}
                       </Tab.List>
                       <div className="flex-1 pt-3 px-1 flex overflow-hidden">
                         <Tab.Panels className="flex-1 overflow-y-auto py-4">
@@ -115,39 +111,7 @@ const HeroSearchForm2Mobile = () => {
                               <StaySearchForm />
                             </div>
                           </Tab.Panel>
-                          <Tab.Panel>
-                            <div className="transition-opacity animate-[myblur_0.4s_ease-in-out]">
-                              <ExperiencesSearchForm />
-                            </div>
-                          </Tab.Panel>
-                          <Tab.Panel>
-                            <div className="transition-opacity animate-[myblur_0.4s_ease-in-out]">
-                              <CarsSearchForm />
-                            </div>
-                          </Tab.Panel>
-                          <Tab.Panel>
-                            <div className="transition-opacity animate-[myblur_0.4s_ease-in-out]">
-                              <FlightSearchForm />
-                            </div>
-                          </Tab.Panel>
                         </Tab.Panels>
-                      </div>
-                      <div className="px-4 py-3 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-700 flex justify-between">
-                        <button
-                          type="button"
-                          className="underline font-semibold flex-shrink-0"
-                          onClick={() => {
-                            setShowDialog(false);
-                            resetIsShowingDialog();
-                          }}
-                        >
-                          Clear all
-                        </button>
-                        <ButtonSubmit
-                          onClick={() => {
-                            closeModal();
-                          }}
-                        />
                       </div>
                     </Tab.Group>
                   )}

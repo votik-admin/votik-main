@@ -29,11 +29,11 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
   const [showHeroSearch, setShowHeroSearch] =
     useState<StaySearchFormFields | null>();
 
-  const [currentTab, setCurrentTab] = useState<SearchTab>("Stays");
+  const [currentTab, setCurrentTab] = useState<SearchTab>("Search");
 
   useOutsideAlerter(headerInnerRef, () => {
     setShowHeroSearch(null);
-    setCurrentTab("Stays");
+    setCurrentTab("Search");
   });
 
   useEffect(() => {
@@ -98,23 +98,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
             onClick={() => setShowHeroSearch("location")}
             className="block pl-5 pr-4 cursor-pointer py-3"
           >
-            Location
-          </span>
-          <span className="h-5 w-[1px] bg-neutral-300 dark:bg-neutral-700"></span>
-          <span
-            onClick={() => setShowHeroSearch("dates")}
-            className="block px-4 cursor-pointer py-3 "
-          >
-            Check In
-          </span>
-          <span className="h-5 w-[1px] bg-neutral-300 dark:bg-neutral-700"></span>
-          <span
-            onClick={() => {
-              setShowHeroSearch("guests");
-            }}
-            className="block px-4 cursor-pointer font-normal py-3"
-          >
-            Add guests
+            Search events, venues, artists and more
           </span>
         </div>
 
@@ -150,13 +134,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
         <div
           className={`bg-white dark:bg-neutral-900 absolute h-full inset-x-0 top-0 transition-transform will-change-[transform,opacity]
           ${showHeroSearch ? "duration-75" : ""} 
-          ${
-            showHeroSearch
-              ? currentTab === "Cars" || currentTab === "Flights"
-                ? "scale-y-[4.4]"
-                : "scale-y-[3.4]"
-              : ""
-          }`}
+          ${showHeroSearch ? "scale-y-[3.4]" : ""}`}
         ></div>
         <div className="relative px-4 lg:container h-[88px] flex">
           <div className="flex-1 flex items-center justify-between">
@@ -166,9 +144,11 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
             </div>
 
             <div className="flex-[2] lg:flex-none mx-auto">
+              {/* DESKTOP */}
               <div className="hidden lg:block">
                 {renderButtonOpenHeroSearch()}
               </div>
+              {/* MOBILE */}
               <div className="lg:hidden w-full max-w-lg mx-auto">
                 <HeroSearchForm2MobileFactory />
               </div>
