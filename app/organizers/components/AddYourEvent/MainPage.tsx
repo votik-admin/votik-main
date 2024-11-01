@@ -27,7 +27,9 @@ export default function MainPage() {
 
     if (error || !data || !data[0]) {
       console.error("Error creating new event", error);
-      toast.error("Error creating new event", { id: toastId });
+      toast.error(`Error creating new event`, {
+        id: toastId,
+      });
       setLoading(false);
       return;
     }

@@ -75,7 +75,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
       .eq("id", user.id);
 
     if (error) {
-      toast.error("Error updating user", { id: toastId });
+      toast.error(error.message, { id: toastId });
       return;
     }
 
@@ -104,7 +104,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
 
     if (error) {
       setSendingOtp(false);
-      toast.error("Error sending OTP", { id: otpToast });
+      toast.error(error.message, { id: otpToast });
       return;
     }
     setSendingOtp(false);
@@ -125,7 +125,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
     });
 
     if (error) {
-      toast.error("Error verifying OTP", { id: otpToast });
+      toast.error(error.message, { id: otpToast });
       return;
     }
 
@@ -139,7 +139,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
       .eq("id", user.id);
 
     if (updateError) {
-      toast.error("Error updating phone number", { id: otpToast });
+      toast.error(updateError.message, { id: otpToast });
       return;
     }
 
@@ -173,7 +173,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
     }
 
     if (error) {
-      toast.error("Error uploading image", { id: uploaderToast });
+      toast.error(error.message, { id: uploaderToast });
       return;
     }
 
@@ -196,7 +196,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
         .from("images")
         .remove([`avatars/${avatarFile.name}`]);
 
-      toast.error("Error updating avatar", { id: uploaderToast });
+      toast.error(updateError.message, { id: uploaderToast });
       return;
     }
     setAvatarUrl(publicUrl);

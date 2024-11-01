@@ -98,14 +98,6 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
   const handleUserUpdate = async (data: OrganizerDetailsForm) => {
     // handle user update
     const toastId = toast.loading("Updating user...");
-    // Check for the errors in the form
-    if (formState.errors) {
-      // Show all the errors
-      Object.entries(formState.errors).forEach(([key, value]) => {
-        // @ts-expect-error - value is a string
-        toast.error(value.message, { id: toastId });
-      });
-    }
 
     const { error } = await supabase
       .from("organizers")
@@ -116,7 +108,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
       .eq("id", organizer.id);
 
     if (error) {
-      toast.error("Error updating user", { id: toastId });
+      toast.error(`Error updating user: ${error.message}`, { id: toastId });
       return;
     }
 
@@ -145,7 +137,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
 
     if (error) {
       setSendingOtp(false);
-      toast.error("Error sending OTP", { id: otpToast });
+      toast.error(`Error sending OTP: ${error.message}`, { id: otpToast });
       return;
     }
     setSendingOtp(false);
@@ -166,7 +158,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
     });
 
     if (error) {
-      toast.error("Error verifying OTP", { id: otpToast });
+      toast.error(`Error verifying OTP: ${error.message}`, { id: otpToast });
       return;
     }
 
@@ -180,7 +172,9 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
       .eq("id", organizer.id);
 
     if (updateError) {
-      toast.error("Error updating phone number", { id: otpToast });
+      toast.error(`Error updating phone number: ${updateError.message}`, {
+        id: otpToast,
+      });
       return;
     }
 
@@ -214,7 +208,9 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
     }
 
     if (error) {
-      toast.error("Error uploading image", { id: uploaderToast });
+      toast.error(`Error uploading image: ${error.message}`, {
+        id: uploaderToast,
+      });
       return;
     }
 
@@ -237,7 +233,9 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
         .from("images")
         .remove([`avatars/${avatarFile.name}`]);
 
-      toast.error("Error updating avatar", { id: uploaderToast });
+      toast.error(`Error updating avatar: ${updateError.message}`, {
+        id: uploaderToast,
+      });
       return;
     }
     setAvatarUrl(publicUrl);
