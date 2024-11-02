@@ -98,7 +98,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
             onClick={() => setShowHeroSearch("location")}
             className="block pl-5 pr-4 cursor-pointer py-3"
           >
-            Search events, venues, artists and more
+            What do you want to see live?
           </span>
         </div>
 

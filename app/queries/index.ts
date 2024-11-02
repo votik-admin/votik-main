@@ -1,9 +1,14 @@
 import supabase from "@app/lib/supabase";
 import { Database, Tables } from "@app/types/database.types";
 
-const getAllEvents = () => supabase.from("events").select("*, tickets(price)");
+const getAllEvents = () =>
+  supabase
+    .from("events")
+    .select("*, tickets(price)")
+    .order("created_at", { ascending: false });
 
-const getAllVenues = () => supabase.from("venues").select("*");
+const getAllVenues = () =>
+  supabase.from("venues").select("*").order("created_at", { ascending: false });
 
 const getEventFromSlug = (slug: string) =>
   supabase
@@ -19,7 +24,11 @@ const getUserFromUserTable = (id: string) =>
 const getEventsFromCategory = (
   category: Database["public"]["Enums"]["EventCategory"]
 ) =>
-  supabase.from("events").select("*, tickets(price)").eq("category", category);
+  supabase
+    .from("events")
+    .select("*, tickets(price)")
+    .eq("category", category)
+    .order("created_at", { ascending: false });
 
 const getCategoryFromSlug = (slug: string) =>
   supabase.from("event_categories").select("*").eq("slug", slug).single();
