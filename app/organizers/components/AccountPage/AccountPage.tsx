@@ -125,7 +125,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
 
       toast.success("User updated successfully", { id: toastId });
     };
-    if (emailVerified) updateEmail();
+    if (email !== watch("email") && emailVerified) updateEmail();
   }, [emailVerified]);
 
   const verifyOtp = async () => {
@@ -171,16 +171,20 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
     }
   };
 
-  const resendOtp = async () => {
+  const resendOtp = async (resend: boolean = true) => {
     const toastId = toast.loading("Resending OTP...");
     try {
       if (phone === null || /^\+91\d{10}$/.test(phone) === false) {
         throw new Error("Invalid phone number");
       }
-      const { data, error } = await supabase.auth.resend({
-        phone,
-        type: "phone_change",
-      });
+      const { data, error } = resend
+        ? await supabase.auth.resend({
+            phone,
+            type: "phone_change",
+          })
+        : await supabase.auth.updateUser({
+            phone,
+          });
 
       otpTimer.current = setInterval(() => {
         setOtpTimerValue((prev) => {
@@ -255,14 +259,11 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
   const handleUserUpdate = async (data: Partial<OrganizerDetailsForm>) => {
     // handle user update
     const toastId = toast.loading("Updating user...");
-    // Remove all the fields that are empty
-    Object.keys(data).forEach((key) => {
-      // @ts-expect-error - data is of type UserDetailsForm
-      if (data[key] === "") {
-        // @ts-expect-error - data is of type UserDetailsForm
-        delete data[key];
-      }
-    });
+
+    if (!data.phone_number && !data.email) {
+      toast.error("Please enter a phone number or email", { id: toastId });
+      return;
+    }
 
     const { error } = await supabase
       .from("organizers")
@@ -523,7 +524,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                 ) : (
                   <ButtonPrimary
                     disabled={!isPhoneNumber(phone)}
-                    onClick={resendOtp}
+                    onClick={() => resendOtp(false)}
                   >
                     Send OTP
                   </ButtonPrimary>

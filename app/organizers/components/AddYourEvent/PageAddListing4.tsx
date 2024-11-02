@@ -86,6 +86,28 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
     setPrimaryImageLoading(false);
   };
 
+  const handleImageDelete = async (url: string) => {
+    const fileName = url.split("/").pop();
+    const toastId = toast.loading("Deleting image...");
+    if (!fileName) {
+      toast.error("Invalid image URL", { id: toastId });
+      return;
+    }
+    const { data, error } = await supabase.storage
+      .from("images")
+      .remove([`events/${fileName}`]);
+
+    if (error) {
+      console.error("Error deleting image", error);
+      toast.error(`Error deleting the image: ${error.message}`, {
+        id: toastId,
+      });
+      return;
+    }
+
+    toast.success("Image deleted successfully", { id: toastId });
+  };
+
   const handleSecondaryImagesUpload = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -173,38 +195,143 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
             />
             <ErrorMessage errors={formState.errors} name="slug" />
           </FormItem>
-          <FormItem label="Primary Image">
-            <div className="flex items-center gap-3">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handlePrimaryImageUpload}
-              />
-              <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                Upload a primary image for your event
-              </span>
+          <div>
+            <span className="text-lg font-semibold">Cover image</span>
+            <div className="mt-5 ">
+              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-neutral-300 dark:border-neutral-6000 border-dashed rounded-md">
+                <div className="space-y-1 text-center">
+                  <svg
+                    className="mx-auto h-12 w-12 text-neutral-400"
+                    stroke="currentColor"
+                    fill="none"
+                    viewBox="0 0 48 48"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    ></path>
+                  </svg>
+                  <div className="flex text-sm text-neutral-6000 dark:text-neutral-300">
+                    <label
+                      htmlFor="file-upload"
+                      className="relative cursor-pointer  rounded-md font-medium text-primary-6000 hover:text-primary-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500"
+                    >
+                      <span>Upload a file</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handlePrimaryImageUpload}
+                      />
+                    </label>
+                    <p className="pl-1">or drag and drop</p>
+                  </div>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    PNG, JPG, GIF up to 10MB
+                  </p>
+                </div>
+              </div>
             </div>
-          </FormItem>
+          </div>
           {primaryImageUrl && (
-            <div className="w-1/2">
+            <div className="w-1/2 m-auto relative">
               <img src={primaryImageUrl} alt="Primary Image" />
+              <button
+                onClick={() => {
+                  handleImageDelete(primaryImageUrl);
+                  setPrimaryImageUrl("");
+                  setValue("primary_img", "");
+                }}
+                className="absolute top-2 right-2 p-1 bg-white rounded-full"
+              >
+                <svg
+                  fill="#000000"
+                  width="24px"
+                  height="24px"
+                  viewBox="0 0 30.72 30.72"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="m20.922 22.776 1.854 -1.854L17.214 15.36l5.562 -5.562 -1.854 -1.854L15.36 13.506 9.798 7.944l-1.854 1.854L13.506 15.36 7.944 20.922l1.854 1.854L15.36 17.214z" />
+                </svg>
+              </button>
             </div>
           )}
           {/* ITEM */}
-          <FormItem label="Secondary Images">
-            <div className="flex items-center gap-3">
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleSecondaryImagesUpload}
-              />
-              <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                Upload secondary images for your event (select multiple images
-                at once)
-              </span>
+          <div>
+            <span className="text-lg font-semibold">Pictures of the place</span>
+            <div className="mt-5 ">
+              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-neutral-300 dark:border-neutral-6000 border-dashed rounded-md">
+                <div className="space-y-1 text-center">
+                  <svg
+                    className="mx-auto h-12 w-12 text-neutral-400"
+                    stroke="currentColor"
+                    fill="none"
+                    viewBox="0 0 48 48"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    ></path>
+                  </svg>
+                  <div className="flex text-sm text-neutral-6000 dark:text-neutral-300">
+                    <label
+                      htmlFor="file-upload-2"
+                      className="relative cursor-pointer  rounded-md font-medium text-primary-6000 hover:text-primary-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500"
+                    >
+                      <span>Upload files</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleSecondaryImagesUpload}
+                      />
+                    </label>
+                    <p className="pl-1">or drag and drop</p>
+                  </div>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    PNG, JPG, GIF up to 10MB
+                  </p>
+                </div>
+              </div>
             </div>
-          </FormItem>
+          </div>
+          {secondaryImageUrls.length > 0 && (
+            <div className="grid grid-cols-3 gap-4">
+              {secondaryImageUrls.map((url, index) => (
+                <div key={index} className="relative">
+                  <img src={url} alt={`Secondary Image ${index}`} />
+                  <button
+                    onClick={() => {
+                      handleImageDelete(url);
+                      setValue(
+                        "secondary_imgs",
+                        secondaryImageUrls.filter((u) => u !== url)
+                      );
+                      setSecondaryImageUrls(
+                        secondaryImageUrls.filter((u) => u !== url)
+                      );
+                    }}
+                    className="absolute top-2 right-2 p-1 bg-white rounded-full"
+                  >
+                    <svg
+                      fill="#000000"
+                      width="24px"
+                      height="24px"
+                      viewBox="0 0 30.72 30.72"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="m20.922 22.776 1.854 -1.854L17.214 15.36l5.562 -5.562 -1.854 -1.854L15.36 13.506 9.798 7.944l-1.854 1.854L13.506 15.36 7.944 20.922l1.854 1.854L15.36 17.214z" />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         <div className="flex justify-end space-x-5">
           <ButtonSecondary href={`/organizer/event/${eventId}/edit/3`}>
