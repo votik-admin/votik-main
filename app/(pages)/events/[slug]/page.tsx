@@ -299,7 +299,7 @@ const ListingStayDetailPage = async ({
               heading="Explore trending events"
               subHeading=""
               categoryCardType="card5"
-              itemPerRow={5}
+              itemPerRow={4}
               sliderStyle="style2"
               uniqueClassName={"ListingStayDetailPage1"}
             />

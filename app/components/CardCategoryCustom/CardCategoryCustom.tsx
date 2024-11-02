@@ -23,7 +23,7 @@ const CardCategoryCustom: FC<CardCategoryCustomProps> = ({
   const href = `/events/${slug}`;
 
   return (
-    <div className="rounded-2xl overflow-hidden">
+    <div className="rounded-2xl overflow-hidden flex flex-col">
       <Link
         href={href}
         className={`nc-CardCategory3 flex flex-col ${className}`}
@@ -33,29 +33,31 @@ const CardCategoryCustom: FC<CardCategoryCustomProps> = ({
           <NcImage
             src={primary_img!}
             // 💡 image is expected to be a square
-            // 💡 otherwise it is cropped from top to
-            // 💡 ensure imp info stays
+            // 💡 otherwise it is cropped from top
+            // 💡 to ensure imp info stays
             className="object-cover w-full aspect-[1/1] origin-top object-top"
           />
           <span className="opacity-0 group-hover:opacity-100 absolute inset-0 bg-black bg-opacity-10 transition-opacity"></span>
         </div>
       </Link>
 
-      <div className="truncate bg-white p-4">
-        <Link href={href}>
-          <h2
-            className={`text-base sm:text-lg text-neutral-900 font-semibold truncate line-clamp-2 text-wrap hover:underline decoration-dashed decoration-slate-400 underline-offset-4`}
-          >
-            {name}
-          </h2>
-        </Link>
-        <span className={`block mt-2 text-sm text-neutral-6000`}>
-          {formatDate(start_time)}
-        </span>
-        <span className={`block text-sm text-neutral-6000 truncate`}>
-          {location}
-        </span>
-        <div className="mt-4 flex items-center justify-between">
+      <div className="h-full flex flex-col justify-between truncate bg-white p-4">
+        <div className="">
+          <Link href={href}>
+            <h2
+              className={`text-base sm:text-lg text-neutral-900 font-semibold truncate line-clamp-2 text-wrap hover:underline decoration-dashed decoration-slate-400 underline-offset-4`}
+            >
+              {name}
+            </h2>
+          </Link>
+          <span className={`block mt-2 text-sm text-neutral-6000`}>
+            {formatDate(start_time)}
+          </span>
+          <span className={`block text-sm text-neutral-6000 truncate`}>
+            {location}
+          </span>
+        </div>
+        <div className="mt-4 flex place-items-end items-center justify-between">
           <h2
             className={`text-sm sm:text-sm text-neutral-900 font-semibold truncate line-clamp-2 text-wrap`}
           >
