@@ -378,12 +378,28 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                       required: "First name is required",
                     })}
                   />
-                  <ErrorMessage errors={errors} name="first_name" />
+                  <ErrorMessage
+                    render={(data) => (
+                      <p className="text-red-500 mt-2 text-sm">
+                        {data.message}
+                      </p>
+                    )}
+                    errors={errors}
+                    name="first_name"
+                  />
                 </div>
                 <div>
                   <Label>Last name</Label>
                   <Input className="mt-1.5" {...register("last_name")} />
-                  <ErrorMessage errors={errors} name="last_name" />
+                  <ErrorMessage
+                    render={(data) => (
+                      <p className="text-red-500 mt-2 text-sm">
+                        {data.message}
+                      </p>
+                    )}
+                    errors={errors}
+                    name="last_name"
+                  />
                 </div>
               </div>
               {/* ---- */}
@@ -416,7 +432,13 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                     maxLength: { value: 20, message: "Username is too long" },
                   })}
                 />
-                <ErrorMessage errors={errors} name="username" />
+                <ErrorMessage
+                  render={(data) => (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  )}
+                  errors={errors}
+                  name="username"
+                />
               </div>
               {/* ---- */}
               <div>
@@ -426,7 +448,13 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-                <ErrorMessage errors={errors} name="email" />
+                <ErrorMessage
+                  render={(data) => (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  )}
+                  errors={errors}
+                  name="email"
+                />
                 {email !== watch("email") &&
                   (emailSent ? (
                     <>
@@ -457,7 +485,13 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                     required: "Date of birth is required",
                   })}
                 />
-                <ErrorMessage errors={errors} name="birthday" />
+                <ErrorMessage
+                  render={(data) => (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  )}
+                  errors={errors}
+                  name="birthday"
+                />
               </div>
               {/* Address field 1 and 2 */}
               <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2">
@@ -469,12 +503,28 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                       required: "Address is required",
                     })}
                   />
-                  <ErrorMessage errors={errors} name="address_1" />
+                  <ErrorMessage
+                    render={(data) => (
+                      <p className="text-red-500 mt-2 text-sm">
+                        {data.message}
+                      </p>
+                    )}
+                    errors={errors}
+                    name="address_1"
+                  />
                 </div>
                 <div>
                   <Label>Address 2</Label>
                   <Input className="mt-1.5" {...register("address_2")} />
-                  <ErrorMessage errors={errors} name="address_2" />
+                  <ErrorMessage
+                    render={(data) => (
+                      <p className="text-red-500 mt-2 text-sm">
+                        {data.message}
+                      </p>
+                    )}
+                    errors={errors}
+                    name="address_2"
+                  />
                 </div>
               </div>
               {/* Phone number field when changed asks for otp and verifies */}
@@ -489,7 +539,15 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                         setPhone(e.target.value);
                       }}
                     />
-                    <ErrorMessage errors={errors} name="phone_number" />
+                    <ErrorMessage
+                      render={(data) => (
+                        <p className="text-red-500 mt-2 text-sm">
+                          {data.message}
+                        </p>
+                      )}
+                      errors={errors}
+                      name="phone_number"
+                    />
                     {/* Put the tick symbol if the phone number is verified */}
                     {phoneVerified && isPhoneNumber(phone) && (
                       <span className="text-green-500 absolute top-1/2 right-4 transform -translate-y-1/2">
@@ -561,7 +619,15 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                       },
                     })}
                   />
-                  <ErrorMessage errors={errors} name="pincode" />
+                  <ErrorMessage
+                    render={(data) => (
+                      <p className="text-red-500 mt-2 text-sm">
+                        {data.message}
+                      </p>
+                    )}
+                    errors={errors}
+                    name="pincode"
+                  />
                 </div>
               </div>
               {/* City and state */}
@@ -574,7 +640,15 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                       required: "City is required",
                     })}
                   />
-                  <ErrorMessage errors={errors} name="city" />
+                  <ErrorMessage
+                    render={(data) => (
+                      <p className="text-red-500 mt-2 text-sm">
+                        {data.message}
+                      </p>
+                    )}
+                    errors={errors}
+                    name="city"
+                  />
                 </div>
                 <div>
                   <Label>State</Label>

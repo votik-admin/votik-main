@@ -93,7 +93,7 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event }) => {
           {watch("tickets").map((_, index) => (
             <div
               key={index}
-              className="border p-6 rounded-md shadow-md bg-white dark:bg-gray-800"
+              className="p-6 rounded-md shadow-md dark:bg-slate-800 bg-slate-100"
             >
               <h3 className="text-xl font-semibold mb-4">
                 Ticket #{index + 1}
@@ -124,17 +124,20 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event }) => {
               </FormItem>
               <div className="grid gap-4 sm:grid-cols-2 mt-4">
                 <FormItem label="Price">
-                  <input
-                    {...register(`tickets.${index}.price`, {
-                      required: "Ticket price is required",
-                      min: {
-                        value: 0,
-                        message: "Ticket price must be at least 0",
-                      },
-                    })}
-                    type="number"
-                    className="input-text w-full p-2 border border-neutral-300 rounded-md focus:outline-none focus:border-blue-500 transition"
-                  />
+                  <div className="flex flex-row gap-2 items-center">
+                    <span className="text-neutral-500 text-xl">₹ </span>
+                    <input
+                      {...register(`tickets.${index}.price`, {
+                        required: "Ticket price is required",
+                        min: {
+                          value: 0,
+                          message: "Ticket price must be at least 0",
+                        },
+                      })}
+                      type="number"
+                      className="input-text w-full p-2 border border-neutral-300 rounded-md focus:outline-none focus:border-blue-500 transition"
+                    />
+                  </div>
                   <ErrorMessage
                     name={`tickets.${index}.price`}
                     errors={errors}
@@ -144,14 +147,16 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event }) => {
                   />
                 </FormItem>
                 <FormItem label="Quantity">
-                  <NcInputNumber
-                    onChange={(value) => {
-                      if (value < 0) return;
-                      setValue(`tickets.${index}.quantity`, value);
-                    }}
-                    className="input-text w-full p-2 border border-neutral-300 rounded-md"
-                    min={0}
-                    max={1000}
+                  <input
+                    {...register(`tickets.${index}.quantity`, {
+                      required: "Ticket quantity is required",
+                      min: {
+                        value: 1,
+                        message: "Ticket quantity must be at least 1",
+                      },
+                    })}
+                    type="number"
+                    className="input-text w-full p-2 border border-neutral-300 rounded-md focus:outline-none focus:border-blue-500 transition"
                   />
                 </FormItem>
               </div>
@@ -200,7 +205,7 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event }) => {
           ))}
         </div>
         <div className="flex justify-end mt-8">
-          <button
+          <ButtonPrimary
             onClick={() => {
               const tickets = watch("tickets");
               const newTickets = [
@@ -214,10 +219,9 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event }) => {
               ];
               setValue("tickets", newTickets);
             }}
-            className="btn btn-sm btn-neutral"
           >
             Add Ticket
-          </button>
+          </ButtonPrimary>
         </div>
         <div className="flex justify-end space-x-5 mt-8">
           <ButtonSecondary href={`/organizer/event/${eventId}/edit/4`}>

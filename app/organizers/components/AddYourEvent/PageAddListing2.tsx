@@ -90,7 +90,13 @@ const PageAddListing2: FC<PageAddListing2Props> = ({ event }) => {
                 required: "Address is required",
               })}
             />
-            <ErrorMessage errors={formState.errors} name="address" />
+            <ErrorMessage
+              render={(data) => (
+                <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+              )}
+              errors={formState.errors}
+              name="address"
+            />
           </FormItem>
           <FormItem label="Postal code">
             <Input
@@ -102,7 +108,13 @@ const PageAddListing2: FC<PageAddListing2Props> = ({ event }) => {
                   value.toString().length === 6 || "Invalid postal code",
               })}
             />
-            <ErrorMessage errors={formState.errors} name="postalCode" />
+            <ErrorMessage
+              render={(data) => (
+                <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+              )}
+              errors={formState.errors}
+              name="postalCode"
+            />
           </FormItem>
           <FormItem label="City/Region">
             <Select

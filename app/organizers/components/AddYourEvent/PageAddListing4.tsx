@@ -193,7 +193,13 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
               placeholder="Enter a slug for your event"
               {...register("slug", { required: true })}
             />
-            <ErrorMessage errors={formState.errors} name="slug" />
+            <ErrorMessage
+              render={(data) => (
+                <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+              )}
+              errors={formState.errors}
+              name="slug"
+            />
           </FormItem>
           <div>
             <span className="text-lg font-semibold">Cover image</span>

@@ -251,7 +251,13 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
                     },
                   })}
                 />
-                <ErrorMessage errors={errors} name="phone" />
+                <ErrorMessage
+                  render={(data) => (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  )}
+                  errors={errors}
+                  name="phone"
+                />
                 {otpSent && (
                   <label className="flex flex-col gap-4">
                     <span className="text-neutral-800 dark:text-neutral-200">
@@ -265,7 +271,15 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
                       {...register("otp", { required: "OTP is required" })}
                     />
 
-                    <ErrorMessage errors={errors} name="otp" />
+                    <ErrorMessage
+                      render={(data) => (
+                        <p className="text-red-500 mt-2 text-sm">
+                          {data.message}
+                        </p>
+                      )}
+                      errors={errors}
+                      name="otp"
+                    />
                     <p className="text-neutral-500 dark:text-neutral-400">
                       OTP expires in {otpTimerValue} seconds
                     </p>
@@ -310,7 +324,13 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
                     pattern: { value: /^\S+@\S+$/i, message: "Invalid email" },
                   })}
                 />
-                <ErrorMessage errors={errors} name="email" />
+                <ErrorMessage
+                  render={(data) => (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  )}
+                  errors={errors}
+                  name="email"
+                />
               </label>
             )}
             {!otpSent && (
@@ -351,7 +371,15 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
                     className="mt-1"
                     {...register("password", { required: true })}
                   />
-                  <ErrorMessage errors={errors} name="password" />
+                  <ErrorMessage
+                    render={(data) => (
+                      <p className="text-red-500 mt-2 text-sm">
+                        {data.message}
+                      </p>
+                    )}
+                    errors={errors}
+                    name="password"
+                  />
                 </label>
                 <ButtonPrimary type="submit">Continue</ButtonPrimary>
               </>

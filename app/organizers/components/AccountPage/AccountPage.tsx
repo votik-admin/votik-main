@@ -407,18 +407,30 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                     required: "Name is required",
                   })}
                 />
-                <ErrorMessage errors={formState.errors} name="name" />
+                <ErrorMessage
+                  render={(data) => (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  )}
+                  errors={formState.errors}
+                  name="name"
+                />
               </div>
               {/* Slug */}
               <div>
-                <Label>username</Label>
+                <Label>Username</Label>
                 <Input
                   className="mt-1.5"
                   {...register("slug", {
                     required: "Username is required",
                   })}
                 />
-                <ErrorMessage errors={formState.errors} name="slug" />
+                <ErrorMessage
+                  render={(data) => (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  )}
+                  errors={formState.errors}
+                  name="slug"
+                />
               </div>
               {/* ---- */}
               <div>
@@ -428,7 +440,13 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-                <ErrorMessage errors={formState.errors} name="email" />
+                <ErrorMessage
+                  render={(data) => (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  )}
+                  errors={formState.errors}
+                  name="email"
+                />
                 {email !== watch("email") &&
                   (emailSent ? (
                     <>
@@ -458,7 +476,13 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                     required: "Address is required",
                   })}
                 />
-                <ErrorMessage errors={formState.errors} name="addr" />
+                <ErrorMessage
+                  render={(data) => (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  )}
+                  errors={formState.errors}
+                  name="addr"
+                />
               </div>
               {/* Phone number field when changed asks for otp and verifies */}
               <div className="flex flex-col gap-2">
@@ -473,6 +497,11 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                       }}
                     />
                     <ErrorMessage
+                      render={(data) => (
+                        <p className="text-red-500 mt-2 text-sm">
+                          {data.message}
+                        </p>
+                      )}
                       errors={formState.errors}
                       name="phone_number"
                     />
@@ -545,7 +574,15 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                       },
                     })}
                   />
-                  <ErrorMessage errors={formState.errors} name="pan_number" />
+                  <ErrorMessage
+                    render={(data) => (
+                      <p className="text-red-500 mt-2 text-sm">
+                        {data.message}
+                      </p>
+                    )}
+                    errors={formState.errors}
+                    name="pan_number"
+                  />
                 </div>
                 <div>
                   <Label>GSTIN</Label>
@@ -558,7 +595,15 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                       required: "GSTIN is required",
                     })}
                   />
-                  <ErrorMessage errors={formState.errors} name="gstin_number" />
+                  <ErrorMessage
+                    render={(data) => (
+                      <p className="text-red-500 mt-2 text-sm">
+                        {data.message}
+                      </p>
+                    )}
+                    errors={formState.errors}
+                    name="gstin_number"
+                  />
                 </div>
               </div>
               {/* State */}
@@ -592,7 +637,13 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                     required: "Bank Account Type is required",
                   })}
                 />
-                <ErrorMessage errors={formState.errors} name="bank_acc_type" />
+                <ErrorMessage
+                  render={(data) => (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  )}
+                  errors={formState.errors}
+                  name="bank_acc_type"
+                />
               </div>
               <div>
                 <Label>Bank Account Number</Label>
@@ -604,6 +655,9 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                   })}
                 />
                 <ErrorMessage
+                  render={(data) => (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  )}
                   errors={formState.errors}
                   name="bank_acc_number"
                 />
@@ -617,7 +671,13 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                     pattern: /^[A-Za-z]{4}\d{7}$/,
                   })}
                 />
-                <ErrorMessage errors={formState.errors} name="bank_acc_ifsc" />
+                <ErrorMessage
+                  render={(data) => (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  )}
+                  errors={formState.errors}
+                  name="bank_acc_ifsc"
+                />
               </div>
               <div>
                 <Label>Bank Account Beneficiary Name</Label>
@@ -628,6 +688,9 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                   })}
                 />
                 <ErrorMessage
+                  render={(data) => (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  )}
                   errors={formState.errors}
                   name="bank_acc_beneficiary_name"
                 />
