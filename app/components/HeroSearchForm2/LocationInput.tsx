@@ -21,7 +21,7 @@ const LocationInput: FC<LocationInputProps> = ({
   onChange,
   onInputDone,
   placeHolder = "Search events, venues, artists and more",
-  desc = "What do you want to see live?",
+  desc = "Anywhere • Any week • Any event",
   className = "nc-flex-1.5",
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
