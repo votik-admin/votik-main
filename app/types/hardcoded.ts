@@ -2,14 +2,15 @@ import { TwMainColor } from "@app/data/types";
 import { Database } from "./database.types";
 
 const EVENTS = [
-  "COMEDY",
-  "MUSIC",
   "ACTIVITIES",
+  "COMEDY",
   "CULTURE",
+  "MUSIC",
   "WORKSHOPS",
   "SPORTS",
   "EXPERIENCES",
   "OTHER",
+  "NIGHTLIFE",
 ] as Database["public"]["Enums"]["EventCategory"][];
 
 const ENUM_MAP = {
@@ -21,6 +22,7 @@ const ENUM_MAP = {
   SPORTS: { name: "Sports", slug: "sports", color: "green" },
   EXPERIENCES: { name: "Experiences", slug: "experiences", color: "indigo" },
   OTHER: { name: "Other", slug: "other", color: "gray" },
+  NIGHTLIFE: { name: "Nightlife", slug: "nightlife", color: "yellow" },
 } as Record<
   Database["public"]["Enums"]["EventCategory"],
   { name: string; slug: string; color: TwMainColor }
