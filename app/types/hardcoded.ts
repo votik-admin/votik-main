@@ -2,15 +2,15 @@ import { TwMainColor } from "@app/data/types";
 import { Database } from "./database.types";
 
 const EVENTS = [
-  "ACTIVITIES",
   "COMEDY",
-  "CULTURE",
   "MUSIC",
+  "NIGHTLIFE",
+  "ACTIVITIES",
+  "CULTURE",
   "WORKSHOPS",
   "SPORTS",
   "EXPERIENCES",
   "OTHER",
-  "NIGHTLIFE",
 ] as Database["public"]["Enums"]["EventCategory"][];
 
 const ENUM_MAP = {
