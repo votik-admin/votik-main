@@ -155,7 +155,18 @@ const SectionChoseTicket = ({
                   required: "First name is required",
                 })}
               />
-              <ErrorMessage errors={errors} name="firstName" />
+              <ErrorMessage
+                render={(data) => (
+                  <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                )}
+                errors={errors}
+                name="firstName"
+                render={(data) => {
+                  return (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  );
+                }}
+              />
             </div>
             <div className="w-full">
               <Label>Last Name</Label>
@@ -164,7 +175,13 @@ const SectionChoseTicket = ({
                 className="mt-1.5 w-full"
                 {...register("lastName")}
               />
-              <ErrorMessage errors={errors} name="lastName" />
+              <ErrorMessage
+                render={(data) => (
+                  <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                )}
+                errors={errors}
+                name="lastName"
+              />
             </div>
           </div>
           {errors.firstName && (
@@ -184,7 +201,13 @@ const SectionChoseTicket = ({
               required: "Email is required",
             })}
           />
-          <ErrorMessage errors={errors} name="email" />
+          <ErrorMessage
+            render={(data) => (
+              <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+            )}
+            errors={errors}
+            name="email"
+          />
         </div>
         <div>
           <Label>Phone Number</Label>
@@ -195,7 +218,13 @@ const SectionChoseTicket = ({
               required: "Phone number is required",
             })}
           />
-          <ErrorMessage errors={errors} name="phoneNumber" />
+          <ErrorMessage
+            render={(data) => (
+              <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+            )}
+            errors={errors}
+            name="phoneNumber"
+          />
         </div>
       </div>
       <div>

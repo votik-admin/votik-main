@@ -110,7 +110,13 @@ const EventListing1: FC<PageAddListing1Props> = ({ event }) => {
                 },
               })}
             />
-            <ErrorMessage errors={formState.errors} name="eventName" />
+            <ErrorMessage
+              render={(data) => (
+                <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+              )}
+              errors={formState.errors}
+              name="eventName"
+            />
           </FormItem>
           <FormItem
             label="Description"
@@ -130,7 +136,13 @@ const EventListing1: FC<PageAddListing1Props> = ({ event }) => {
                 },
               })}
             />
-            <ErrorMessage errors={formState.errors} name="description" />
+            <ErrorMessage
+              render={(data) => (
+                <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+              )}
+              errors={formState.errors}
+              name="description"
+            />
           </FormItem>
           <FormItem
             label="Expected number of attendees"
@@ -148,7 +160,13 @@ const EventListing1: FC<PageAddListing1Props> = ({ event }) => {
                 },
               })}
             />
-            <ErrorMessage errors={formState.errors} name="attendees" />
+            <ErrorMessage
+              render={(data) => (
+                <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+              )}
+              errors={formState.errors}
+              name="attendees"
+            />
           </FormItem>
         </div>
         <div className="flex justify-end space-x-5">

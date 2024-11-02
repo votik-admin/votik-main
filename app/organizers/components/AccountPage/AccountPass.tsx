@@ -66,7 +66,13 @@ const AccountPass = () => {
                   required: "Current password is required",
                 })}
               />
-              <ErrorMessage errors={formState.errors} name="currentPassword" />
+              <ErrorMessage
+                render={(data) => (
+                  <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                )}
+                errors={formState.errors}
+                name="currentPassword"
+              />
             </div>
             <div>
               <Label>New password</Label>
@@ -80,7 +86,13 @@ const AccountPass = () => {
                   required: "New password is required",
                 })}
               />
-              <ErrorMessage errors={formState.errors} name="newPassword" />
+              <ErrorMessage
+                render={(data) => (
+                  <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                )}
+                errors={formState.errors}
+                name="newPassword"
+              />
             </div>
             <div>
               <Label>Confirm password</Label>
@@ -92,7 +104,13 @@ const AccountPass = () => {
                   required: "Confirm password is required",
                 })}
               />
-              <ErrorMessage errors={formState.errors} name="confirmPassword" />
+              <ErrorMessage
+                render={(data) => (
+                  <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                )}
+                errors={formState.errors}
+                name="confirmPassword"
+              />
             </div>
             <div className="pt-2">
               <ButtonPrimary onClick={handleSubmit(handlePasswordChange)}>

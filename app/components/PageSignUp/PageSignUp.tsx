@@ -251,7 +251,13 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                     },
                   })}
                 />
-                <ErrorMessage errors={errors} name="phone" />
+                <ErrorMessage
+                  render={(data) => (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  )}
+                  errors={errors}
+                  name="phone"
+                />
                 {otpSent && (
                   <label className="flex flex-col gap-4">
                     <span className="text-neutral-800 dark:text-neutral-200">
@@ -265,7 +271,15 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                       {...register("otp", { required: "OTP is required" })}
                     />
 
-                    <ErrorMessage errors={errors} name="otp" />
+                    <ErrorMessage
+                      render={(data) => (
+                        <p className="text-red-500 mt-2 text-sm">
+                          {data.message}
+                        </p>
+                      )}
+                      errors={errors}
+                      name="otp"
+                    />
                     <p className="text-neutral-500 dark:text-neutral-400">
                       OTP expires in {otpTimerValue} seconds
                     </p>
@@ -313,7 +327,13 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                     },
                   })}
                 />
-                <ErrorMessage errors={errors} name="email" />
+                <ErrorMessage
+                  render={(data) => (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  )}
+                  errors={errors}
+                  name="email"
+                />
               </label>
             )}
             {!otpSent && (
@@ -330,7 +350,15 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                       required: "Password is required",
                     })}
                   />
-                  <ErrorMessage errors={errors} name="password" />
+                  <ErrorMessage
+                    render={(data) => (
+                      <p className="text-red-500 mt-2 text-sm">
+                        {data.message}
+                      </p>
+                    )}
+                    errors={errors}
+                    name="password"
+                  />
                 </label>
                 <label className="block">
                   <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
@@ -346,7 +374,15 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                         value === watch("password") || "Passwords do not match",
                     })}
                   />
-                  <ErrorMessage errors={errors} name="confirmPassword" />
+                  <ErrorMessage
+                    render={(data) => (
+                      <p className="text-red-500 mt-2 text-sm">
+                        {data.message}
+                      </p>
+                    )}
+                    errors={errors}
+                    name="confirmPassword"
+                  />
                 </label>
                 <ButtonPrimary type="submit">Continue</ButtonPrimary>
               </>
