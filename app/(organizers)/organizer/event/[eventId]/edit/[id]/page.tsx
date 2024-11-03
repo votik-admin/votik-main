@@ -54,5 +54,5 @@ export default async function AddListing({
     6: <AddEvent6 />,
   };
 
-  return FormMap[id] || <AddEvent1 event={data} />;
+  return FormMap[id] || <AddEvent1 event={data} revalidate={revalidate} />;
 }
