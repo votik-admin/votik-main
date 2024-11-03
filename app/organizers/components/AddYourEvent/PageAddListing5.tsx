@@ -86,7 +86,7 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event }) => {
     }
 
     toast.success("Tickets created successfully", { id: toastId });
-    router.push(`/organizer/event/${eventId}/edit/6`);
+    router.push(`/organizer/event/${eventId}/edit/6?r=true`);
   };
 
   return (
@@ -229,7 +229,10 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event }) => {
           </ButtonPrimary>
         </div>
         <div className="flex justify-end space-x-5 mt-8">
-          <ButtonSecondary href={`/organizer/event/${eventId}/edit/4`}>
+          <ButtonSecondary
+            href={`/organizer/event/${eventId}/edit/4?r=true`}
+            refresh
+          >
             Go back
           </ButtonSecondary>
           <ButtonPrimary onClick={handleSubmit(onSubmit)} loading={loading}>

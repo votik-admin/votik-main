@@ -134,7 +134,7 @@ const PageAddListing3: FC<PageAddListing3Props> = ({ event }) => {
       if (error) throw error;
 
       toast.success("Event updated successfully", { id: toastId });
-      router.push(`/organizer/event/${eventId}/edit/4`);
+      router.push(`/organizer/event/${eventId}/edit/4?r=true`);
     } catch (error: any) {
       console.error("Error creating event", error);
       toast.error(`Error creating an event ${error?.message}`, { id: toastId });
@@ -154,7 +154,7 @@ const PageAddListing3: FC<PageAddListing3Props> = ({ event }) => {
         setVenuesLoading(false);
         return;
       }
-      setValue("venueId", data[0].id);
+      if (!watch("venueId")) setValue("venueId", data[0].id);
       setVenuesLoading(false);
       setVenues(data);
       toast.success("Venues loaded successfully", { id: toastId });
@@ -162,6 +162,10 @@ const PageAddListing3: FC<PageAddListing3Props> = ({ event }) => {
 
     fetchVenues();
   }, []);
+
+  console.log({ venueId: watch("venueId") });
+
+  console.log(venues);
 
   return (
     <CommonLayout index="03">
@@ -181,6 +185,7 @@ const PageAddListing3: FC<PageAddListing3Props> = ({ event }) => {
                 onChange={(e) => {
                   setValue("venueId", e.target.value);
                 }}
+                value={watch("venueId")}
               >
                 {venues.map((item) => (
                   <option key={item.id} value={item.id}>
@@ -263,7 +268,10 @@ const PageAddListing3: FC<PageAddListing3Props> = ({ event }) => {
           </FormItem>
         </div>
         <div className="flex justify-end space-x-5">
-          <ButtonSecondary href={`/organizer/event/${eventId}/edit/2`}>
+          <ButtonSecondary
+            href={`/organizer/event/${eventId}/edit/2?r=true`}
+            refresh
+          >
             Go back
           </ButtonSecondary>
           <ButtonPrimary

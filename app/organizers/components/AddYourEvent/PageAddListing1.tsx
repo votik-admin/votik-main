@@ -78,7 +78,7 @@ const EventListing1: FC<PageAddListing1Props> = ({ event }) => {
 
       if (error) throw error;
       toast.success("Event updated successfully", { id: toastId });
-      router.push(`/organizer/event/${eventId}/edit/2`);
+      router.push(`/organizer/event/${eventId}/edit/2?r=true`);
     } catch (error: any) {
       console.error("Error creating event", error);
       toast.error(`Error creating an event ${error?.message}`, { id: toastId });
@@ -214,7 +214,9 @@ const EventListing1: FC<PageAddListing1Props> = ({ event }) => {
           </FormItem>
         </div>
         <div className="flex justify-end space-x-5">
-          <ButtonSecondary href="/organizer/dashboard">Cancel</ButtonSecondary>
+          <ButtonSecondary href="/organizer/dashboard" refresh>
+            Cancel
+          </ButtonSecondary>
           <ButtonPrimary onClick={handleSubmit(onSubmit)} loading={loading}>
             Continue
           </ButtonPrimary>

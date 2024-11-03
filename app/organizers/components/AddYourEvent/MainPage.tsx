@@ -38,7 +38,7 @@ export default function MainPage() {
       id: toastId,
     });
     setLoading(false);
-    router.push(`/organizer/event/${data[0].id}/edit/1`);
+    router.push(`/organizer/event/${data[0].id}/edit/1?r=true`);
   };
 
   return (

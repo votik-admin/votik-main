@@ -7,7 +7,12 @@ import AddEvent3 from "@app/organizers/components/AddYourEvent/PageAddListing3";
 import AddEvent4 from "@app/organizers/components/AddYourEvent/PageAddListing4";
 import AddEvent5 from "@app/organizers/components/AddYourEvent/PageAddListing5";
 import AddEvent6 from "@app/organizers/components/AddYourEvent/PageAddListing6";
+import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
+
+function SearchBarFallback() {
+  return <>placeholder</>;
+}
 
 export default async function AddListing({
   params: { eventId, id },

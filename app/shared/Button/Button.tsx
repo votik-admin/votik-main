@@ -16,6 +16,7 @@ export interface ButtonProps {
   targetBlank?: boolean;
   onClick?: () => void;
   children?: React.ReactNode;
+  refresh?: boolean;
 }
 
 const Button: FC<ButtonProps> = ({
@@ -30,6 +31,7 @@ const Button: FC<ButtonProps> = ({
   type,
   loading,
   onClick = () => {},
+  refresh = false,
 }) => {
   const CLASSES =
     `nc-Button relative h-auto inline-flex items-center justify-center rounded-full transition-colors ${fontSize} ${sizeClass} ${translate} ${className} ` +
@@ -61,17 +63,31 @@ const Button: FC<ButtonProps> = ({
   };
 
   if (!!href) {
-    return (
-      <Link
-        href={href}
-        target={targetBlank ? "_blank" : undefined}
-        className={`${CLASSES} `}
-        onClick={onClick}
-        rel="noopener noreferrer"
-      >
-        {children || `This is Link`}
-      </Link>
-    );
+    if (refresh) {
+      return (
+        <a
+          href={href as string}
+          target={targetBlank ? "_blank" : undefined}
+          className={`${CLASSES} `}
+          onClick={onClick}
+          rel="noopener noreferrer"
+        >
+          {children || `This is Link`}
+        </a>
+      );
+    } else {
+      return (
+        <Link
+          href={href}
+          target={targetBlank ? "_blank" : undefined}
+          className={`${CLASSES} `}
+          onClick={onClick}
+          rel="noopener noreferrer"
+        >
+          {children || `This is Link`}
+        </Link>
+      );
+    }
   }
 
   return (

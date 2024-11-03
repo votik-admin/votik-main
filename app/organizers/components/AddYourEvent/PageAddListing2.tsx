@@ -62,7 +62,7 @@ const PageAddListing2: FC<PageAddListing2Props> = ({ event }) => {
       if (error) throw error;
 
       toast.success("Event updated successfully", { id: toastId });
-      router.push(`/organizer/event/${eventId}/edit/3`);
+      router.push(`/organizer/event/${eventId}/edit/3?r=true`);
     } catch (error: any) {
       console.error("Error creating event", error);
       toast.error(`Error creating an event ${error?.message}`, { id: toastId });
@@ -98,7 +98,7 @@ const PageAddListing2: FC<PageAddListing2Props> = ({ event }) => {
               name="address"
             />
           </FormItem>
-          <FormItem label="Postal code">
+          {/* <FormItem label="Postal code">
             <Input
               placeholder="Postal code"
               type="number"
@@ -115,7 +115,7 @@ const PageAddListing2: FC<PageAddListing2Props> = ({ event }) => {
               errors={formState.errors}
               name="postalCode"
             />
-          </FormItem>
+          </FormItem> */}
           <FormItem label="City/Region">
             <Select
               onChange={(e: ChangeEvent<HTMLSelectElement>) => {
@@ -163,7 +163,10 @@ const PageAddListing2: FC<PageAddListing2Props> = ({ event }) => {
           </div>
         </div>
         <div className="flex justify-end space-x-5">
-          <ButtonSecondary href={`/organizer/event/${eventId}/edit/1`}>
+          <ButtonSecondary
+            href={`/organizer/event/${eventId}/edit/1?r=true`}
+            refresh
+          >
             Go back
           </ButtonSecondary>
           <ButtonPrimary onClick={handleSubmit(onSubmit)} loading={loading}>

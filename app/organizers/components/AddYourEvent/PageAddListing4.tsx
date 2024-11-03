@@ -183,7 +183,7 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
 
       toast.success("Event updated successfully", { id: toastId });
       // redirect to the next page
-      router.push(`/organizer/event/${eventId}/edit/5`);
+      router.push(`/organizer/event/${eventId}/edit/5?r=true`);
     } catch (error: any) {
       console.error("Error creating event", error);
       toast.error(`Error creating an event ${error?.message}`, { id: toastId });
@@ -368,7 +368,10 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
           )}
         </div>
         <div className="flex justify-end space-x-5">
-          <ButtonSecondary href={`/organizer/event/${eventId}/edit/3`}>
+          <ButtonSecondary
+            href={`/organizer/event/${eventId}/edit/3?r=true`}
+            refresh
+          >
             Go back
           </ButtonSecondary>
           <ButtonPrimary
