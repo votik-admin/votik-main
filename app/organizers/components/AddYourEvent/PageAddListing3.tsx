@@ -15,6 +15,7 @@ import { Tables } from "@app/types/database.types";
 
 export interface PageAddListing3Props {
   event: Tables<"events">;
+  revalidate: () => Promise<void>;
 }
 
 type Page3Form = {
@@ -22,13 +23,17 @@ type Page3Form = {
   venueLayout: string;
 };
 
-const PageAddListing3: FC<PageAddListing3Props> = ({ event }) => {
+const PageAddListing3: FC<PageAddListing3Props> = ({ event, revalidate }) => {
   const { eventId, id } = useParams();
   const [loading, setLoading] = useState(false);
   const [venuesLoading, setVenuesLoading] = useState(false);
   const [venues, setVenues] = useState<{ id: string; name: string }[]>([]);
   const [layoutLoading, setLayoutLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    revalidate();
+  }, []);
 
   const { register, setValue, formState, handleSubmit, watch } =
     useForm<Page3Form>({
@@ -134,7 +139,7 @@ const PageAddListing3: FC<PageAddListing3Props> = ({ event }) => {
       if (error) throw error;
 
       toast.success("Event updated successfully", { id: toastId });
-      router.push(`/organizer/event/${eventId}/edit/4?r=true`);
+      router.push(`/organizer/event/${eventId}/edit/4`);
     } catch (error: any) {
       console.error("Error creating event", error);
       toast.error(`Error creating an event ${error?.message}`, { id: toastId });
@@ -268,10 +273,7 @@ const PageAddListing3: FC<PageAddListing3Props> = ({ event }) => {
           </FormItem>
         </div>
         <div className="flex justify-end space-x-5">
-          <ButtonSecondary
-            href={`/organizer/event/${eventId}/edit/2?r=true`}
-            refresh
-          >
+          <ButtonSecondary href={`/organizer/event/${eventId}/edit/2`}>
             Go back
           </ButtonSecondary>
           <ButtonPrimary

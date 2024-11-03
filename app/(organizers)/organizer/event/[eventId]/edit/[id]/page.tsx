@@ -40,12 +40,17 @@ export default async function AddListing({
     notFound();
   }
 
+  const revalidate = async () => {
+    "use server";
+    revalidatePath("(organizers)/organizer/event/[eventId]/edit/[id]", "page");
+  };
+
   const FormMap: { [x: string]: React.ReactNode } = {
-    1: <AddEvent1 event={data} />,
-    2: <AddEvent2 event={data} />,
-    3: <AddEvent3 event={data} />,
-    4: <AddEvent4 event={data} />,
-    5: <AddEvent5 event={data} />,
+    1: <AddEvent1 event={data} revalidate={revalidate} />,
+    2: <AddEvent2 event={data} revalidate={revalidate} />,
+    3: <AddEvent3 event={data} revalidate={revalidate} />,
+    4: <AddEvent4 event={data} revalidate={revalidate} />,
+    5: <AddEvent5 event={data} revalidate={revalidate} />,
     6: <AddEvent6 />,
   };
 

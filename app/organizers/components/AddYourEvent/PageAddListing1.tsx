@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import Input from "@app/shared/Input/Input";
 import Select from "@app/shared/Select/Select";
 import CommonLayout from "./CommonLayout";
@@ -18,6 +18,7 @@ import Textarea from "@app/shared/Textarea/Textarea";
 
 export interface PageAddListing1Props {
   event: Tables<"events">;
+  revalidate: () => Promise<void>;
 }
 
 type Page1Form = {
@@ -45,10 +46,14 @@ const formatTimeStringToLibrary = (time: string) => {
   }`;
 };
 
-const EventListing1: FC<PageAddListing1Props> = ({ event }) => {
+const EventListing1: FC<PageAddListing1Props> = ({ event, revalidate }) => {
   const router = useRouter();
   const { eventId, id } = useParams();
   const [loading, setLoading] = React.useState(false);
+
+  useEffect(() => {
+    revalidate();
+  }, []);
 
   const { register, setValue, formState, handleSubmit, watch } =
     useForm<Page1Form>({
@@ -78,7 +83,7 @@ const EventListing1: FC<PageAddListing1Props> = ({ event }) => {
 
       if (error) throw error;
       toast.success("Event updated successfully", { id: toastId });
-      router.push(`/organizer/event/${eventId}/edit/2?r=true`);
+      router.push(`/organizer/event/${eventId}/edit/2`);
     } catch (error: any) {
       console.error("Error creating event", error);
       toast.error(`Error creating an event ${error?.message}`, { id: toastId });
@@ -214,9 +219,7 @@ const EventListing1: FC<PageAddListing1Props> = ({ event }) => {
           </FormItem>
         </div>
         <div className="flex justify-end space-x-5">
-          <ButtonSecondary href="/organizer/dashboard" refresh>
-            Cancel
-          </ButtonSecondary>
+          <ButtonSecondary href="/organizer/dashboard">Cancel</ButtonSecondary>
           <ButtonPrimary onClick={handleSubmit(onSubmit)} loading={loading}>
             Continue
           </ButtonPrimary>

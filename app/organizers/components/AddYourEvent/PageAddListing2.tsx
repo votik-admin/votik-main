@@ -4,7 +4,7 @@ import { MapPinIcon } from "@heroicons/react/24/solid";
 import LocationMarker from "@app/components/AnyReactComponent/LocationMarker";
 import Label from "@app/components/Label/Label";
 import GoogleMapReact from "google-map-react";
-import React, { ChangeEvent, FC } from "react";
+import React, { ChangeEvent, FC, useEffect } from "react";
 import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
 import Input from "@app/shared/Input/Input";
 import Select from "@app/shared/Select/Select";
@@ -21,6 +21,7 @@ import { Tables } from "@app/types/database.types";
 
 export interface PageAddListing2Props {
   event: Tables<"events">;
+  revalidate: () => Promise<void>;
 }
 
 type Page2Form = {
@@ -31,10 +32,14 @@ type Page2Form = {
   longitude: number;
 };
 
-const PageAddListing2: FC<PageAddListing2Props> = ({ event }) => {
+const PageAddListing2: FC<PageAddListing2Props> = ({ event, revalidate }) => {
   const { eventId, id } = useParams();
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    revalidate();
+  }, []);
 
   const { register, setValue, formState, handleSubmit, watch } =
     useForm<Page2Form>({
@@ -62,7 +67,7 @@ const PageAddListing2: FC<PageAddListing2Props> = ({ event }) => {
       if (error) throw error;
 
       toast.success("Event updated successfully", { id: toastId });
-      router.push(`/organizer/event/${eventId}/edit/3?r=true`);
+      router.push(`/organizer/event/${eventId}/edit/3`);
     } catch (error: any) {
       console.error("Error creating event", error);
       toast.error(`Error creating an event ${error?.message}`, { id: toastId });
@@ -163,10 +168,7 @@ const PageAddListing2: FC<PageAddListing2Props> = ({ event }) => {
           </div>
         </div>
         <div className="flex justify-end space-x-5">
-          <ButtonSecondary
-            href={`/organizer/event/${eventId}/edit/1?r=true`}
-            refresh
-          >
+          <ButtonSecondary href={`/organizer/event/${eventId}/edit/1`}>
             Go back
           </ButtonSecondary>
           <ButtonPrimary onClick={handleSubmit(onSubmit)} loading={loading}>

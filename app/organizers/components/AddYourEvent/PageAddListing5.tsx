@@ -1,7 +1,7 @@
 "use client";
 
 import NcInputNumber from "@app/organizers/components/NumberInput/NumberInput";
-import React, { FC, useContext, useState } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import Select from "@app/shared/Select/Select";
 import CommonLayout from "./CommonLayout";
 import FormItem from "./FormItem";
@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 
 export interface PageAddListing5Props {
   event: Tables<"events">;
+  revalidate: () => Promise<void>;
 }
 
 type Page5Form = {
@@ -28,7 +29,7 @@ type Page5Form = {
   }[];
 };
 
-const PageAddListing5: FC<PageAddListing5Props> = ({ event }) => {
+const PageAddListing5: FC<PageAddListing5Props> = ({ event, revalidate }) => {
   const { eventId, id } = useParams();
   const router = useRouter();
 
@@ -38,6 +39,10 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event }) => {
   }
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    revalidate();
+  }, []);
 
   const {
     register,
@@ -86,7 +91,7 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event }) => {
     }
 
     toast.success("Tickets created successfully", { id: toastId });
-    router.push(`/organizer/event/${eventId}/edit/6?r=true`);
+    router.push(`/organizer/event/${eventId}/edit/6`);
   };
 
   return (
@@ -229,10 +234,7 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event }) => {
           </ButtonPrimary>
         </div>
         <div className="flex justify-end space-x-5 mt-8">
-          <ButtonSecondary
-            href={`/organizer/event/${eventId}/edit/4?r=true`}
-            refresh
-          >
+          <ButtonSecondary href={`/organizer/event/${eventId}/edit/4`}>
             Go back
           </ButtonSecondary>
           <ButtonPrimary onClick={handleSubmit(onSubmit)} loading={loading}>

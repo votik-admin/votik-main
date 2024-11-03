@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
 import CommonLayout from "./CommonLayout";
@@ -15,6 +15,7 @@ import { slugify } from "@app/utils/slug";
 
 export interface PageAddListing4Props {
   event: Tables<"events">;
+  revalidate: () => Promise<void>;
 }
 
 type Page4Form = {
@@ -23,7 +24,7 @@ type Page4Form = {
   secondary_imgs: string[];
 };
 
-const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
+const PageAddListing4: FC<PageAddListing4Props> = ({ event, revalidate }) => {
   const { eventId, id } = useParams();
   const [primaryImageLoading, setPrimaryImageLoading] = React.useState(false);
   const [secondaryImageLoading, setSecondaryImageLoading] =
@@ -31,6 +32,10 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
   const [loading, setLoading] = React.useState(false);
 
   const router = useRouter();
+
+  useEffect(() => {
+    revalidate();
+  }, []);
 
   const { register, setValue, formState, handleSubmit, watch } =
     useForm<Page4Form>({
@@ -183,7 +188,7 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
 
       toast.success("Event updated successfully", { id: toastId });
       // redirect to the next page
-      router.push(`/organizer/event/${eventId}/edit/5?r=true`);
+      router.push(`/organizer/event/${eventId}/edit/5`);
     } catch (error: any) {
       console.error("Error creating event", error);
       toast.error(`Error creating an event ${error?.message}`, { id: toastId });
@@ -368,10 +373,7 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
           )}
         </div>
         <div className="flex justify-end space-x-5">
-          <ButtonSecondary
-            href={`/organizer/event/${eventId}/edit/3?r=true`}
-            refresh
-          >
+          <ButtonSecondary href={`/organizer/event/${eventId}/edit/3`}>
             Go back
           </ButtonSecondary>
           <ButtonPrimary
