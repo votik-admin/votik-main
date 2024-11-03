@@ -63,9 +63,9 @@ const PageAddListing2: FC<PageAddListing2Props> = ({ event }) => {
 
       toast.success("Event updated successfully", { id: toastId });
       router.push(`/organizer/event/${eventId}/edit/3`);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating event", error);
-      toast.error("Error creating event", { id: toastId });
+      toast.error(`Error creating an event ${error?.message}`, { id: toastId });
     } finally {
       setLoading(false);
     }

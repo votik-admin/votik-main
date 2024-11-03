@@ -59,6 +59,11 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event }) => {
   });
 
   const onSubmit = async (d: Page5Form) => {
+    if (d.tickets.length === 0) {
+      toast.error("Please add at least one ticket type");
+      return;
+    }
+
     const ticketTypes = d.tickets;
 
     const toastId = toast.loading("Updating event...");

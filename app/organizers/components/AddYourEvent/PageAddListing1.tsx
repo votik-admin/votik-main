@@ -14,6 +14,7 @@ import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import { useParams, useRouter } from "next/navigation";
 import { Tables } from "@app/types/database.types";
+import Textarea from "@app/shared/Textarea/Textarea";
 
 export interface PageAddListing1Props {
   event: Tables<"events">;
@@ -23,7 +24,25 @@ type Page1Form = {
   eventCategory: (typeof EventTypes.EventCategory)[number];
   eventName: string;
   description: string;
+  startTime: string;
   attendees: number;
+};
+
+const formatTimeStringToLibrary = (time: string) => {
+  // console.log({ to: time });
+  if (time === "") return "";
+  // 2024-11-21T14:57:00+00:00 to yyyy-MM-ddThh:mm:ss
+  const date = new Date(time);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  return `${year}-${month < 10 ? "0" + month : month}-${
+    day < 10 ? "0" + day : day
+  }T${hours < 10 ? "0" + hours : hours}:${
+    minutes < 10 ? "0" + minutes : minutes
+  }`;
 };
 
 const EventListing1: FC<PageAddListing1Props> = ({ event }) => {
@@ -31,14 +50,16 @@ const EventListing1: FC<PageAddListing1Props> = ({ event }) => {
   const { eventId, id } = useParams();
   const [loading, setLoading] = React.useState(false);
 
-  const { register, setValue, formState, handleSubmit } = useForm<Page1Form>({
-    defaultValues: {
-      eventCategory: event.category || "MUSIC",
-      eventName: event.name || "",
-      description: event.description || "",
-      attendees: event.expected_footfall || 0,
-    },
-  });
+  const { register, setValue, formState, handleSubmit, watch } =
+    useForm<Page1Form>({
+      defaultValues: {
+        eventCategory: event.category || "MUSIC",
+        eventName: event.name || "",
+        description: event.description || "",
+        attendees: event.expected_footfall || 0,
+        startTime: formatTimeStringToLibrary(event.start_time || ""),
+      },
+    });
 
   const onSubmit = async (d: Page1Form) => {
     setLoading(true);
@@ -51,15 +72,16 @@ const EventListing1: FC<PageAddListing1Props> = ({ event }) => {
           name: d.eventName,
           description: d.description,
           expected_footfall: d.attendees,
+          start_time: new Date(d.startTime).toISOString(),
         })
         .eq("id", eventId);
 
       if (error) throw error;
       toast.success("Event updated successfully", { id: toastId });
       router.push(`/organizer/event/${eventId}/edit/2`);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating event", error);
-      toast.error("Error creating an event", { id: toastId });
+      toast.error(`Error creating an event ${error?.message}`, { id: toastId });
     } finally {
       setLoading(false);
     }
@@ -122,7 +144,7 @@ const EventListing1: FC<PageAddListing1Props> = ({ event }) => {
             label="Description"
             desc="Write a short description of your event"
           >
-            <Input
+            <Textarea
               placeholder="Description"
               {...register("description", {
                 required: "Description is required",
@@ -142,6 +164,28 @@ const EventListing1: FC<PageAddListing1Props> = ({ event }) => {
               )}
               errors={formState.errors}
               name="description"
+            />
+          </FormItem>
+          <FormItem label="Start time" desc="When will your event start?">
+            <Input
+              type="datetime-local"
+              {...register("startTime", {
+                required: "Start time is required",
+                validate: (value) => {
+                  const date = new Date(value);
+                  if (date < new Date()) {
+                    return "Start time must be in the future";
+                  }
+                  return true;
+                },
+              })}
+            />
+            <ErrorMessage
+              render={(data) => (
+                <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+              )}
+              errors={formState.errors}
+              name="startTime"
             />
           </FormItem>
           <FormItem

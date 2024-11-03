@@ -15,6 +15,7 @@ import { GENDER, STATES } from "@app/types/enums";
 import { SessionContext } from "@app/contexts/SessionContext";
 import { OrganizerContext } from "@app/contexts/OrganizerContext";
 import { ErrorMessage } from "@hookform/error-message";
+import { isValidSlug } from "@app/utils/slug";
 
 export interface AccountPageProps {
   className?: string;
@@ -422,6 +423,8 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                   className="mt-1.5"
                   {...register("slug", {
                     required: "Username is required",
+                    validate: (value) =>
+                      (value && isValidSlug(value)) || "Invalid username",
                   })}
                 />
                 <ErrorMessage

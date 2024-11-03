@@ -11,6 +11,7 @@ import FormItem from "./FormItem";
 import { useParams, useRouter } from "next/navigation";
 import { ErrorMessage } from "@hookform/error-message";
 import { Tables } from "@app/types/database.types";
+import { slugify } from "@app/utils/slug";
 
 export interface PageAddListing4Props {
   event: Tables<"events">;
@@ -34,7 +35,7 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
   const { register, setValue, formState, handleSubmit, watch } =
     useForm<Page4Form>({
       defaultValues: {
-        slug: event.slug || "",
+        slug: event.slug || slugify(event.name || ""),
         primary_img: event.primary_img || "",
         secondary_imgs: event.secondary_imgs || [],
       },
@@ -157,6 +158,18 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
     setLoading(true);
     const toastId = toast.loading("Updating event...");
     try {
+      if (d.primary_img === "") {
+        toast.error("Please upload a cover image", { id: toastId });
+        setLoading(false);
+        return;
+      }
+
+      if (d.secondary_imgs.length === 0) {
+        toast.error("Please upload at least one image", { id: toastId });
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from("events")
         .update({
@@ -171,9 +184,9 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
       toast.success("Event updated successfully", { id: toastId });
       // redirect to the next page
       router.push(`/organizer/event/${eventId}/edit/5`);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating event", error);
-      toast.error("Error creating event", { id: toastId });
+      toast.error(`Error creating an event ${error?.message}`, { id: toastId });
     } finally {
       setLoading(false);
     }
@@ -191,7 +204,10 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
             <input
               type="text"
               placeholder="Enter a slug for your event"
-              {...register("slug", { required: true })}
+              {...register("slug", {
+                required: true,
+                validate: (value) => slugify(value) === value || "Invalid slug",
+              })}
             />
             <ErrorMessage
               render={(data) => (
@@ -227,6 +243,8 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
                     >
                       <span>Upload a file</span>
                       <input
+                        id="file-upload"
+                        className="sr-only"
                         type="file"
                         accept="image/*"
                         onChange={handlePrimaryImageUpload}
@@ -242,8 +260,12 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
             </div>
           </div>
           {primaryImageUrl && (
-            <div className="w-1/2 m-auto relative">
-              <img src={primaryImageUrl} alt="Primary Image" />
+            <div className="w-1/2 m-auto relative mt-5">
+              <img
+                src={primaryImageUrl}
+                alt="Primary Image"
+                className="w-full rounded-md"
+              />
               <button
                 onClick={() => {
                   handleImageDelete(primaryImageUrl);
@@ -291,6 +313,8 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
                     >
                       <span>Upload files</span>
                       <input
+                        id="file-upload-2"
+                        className="sr-only"
                         type="file"
                         accept="image/*"
                         multiple
@@ -310,7 +334,11 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
             <div className="grid grid-cols-3 gap-4">
               {secondaryImageUrls.map((url, index) => (
                 <div key={index} className="relative">
-                  <img src={url} alt={`Secondary Image ${index}`} />
+                  <img
+                    src={url}
+                    alt={`Secondary Image ${index}`}
+                    className="w-full rounded-md"
+                  />
                   <button
                     onClick={() => {
                       handleImageDelete(url);
@@ -347,7 +375,7 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event }) => {
             onClick={handleSubmit(onSubmit)}
             loading={loading || primaryImageLoading || secondaryImageLoading}
           >
-            Publish Event
+            Continue
           </ButtonPrimary>
         </div>
       </>

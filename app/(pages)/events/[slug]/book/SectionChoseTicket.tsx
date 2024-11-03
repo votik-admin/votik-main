@@ -161,11 +161,6 @@ const SectionChoseTicket = ({
                 )}
                 errors={errors}
                 name="firstName"
-                render={(data) => {
-                  return (
-                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
-                  );
-                }}
               />
             </div>
             <div className="w-full">
