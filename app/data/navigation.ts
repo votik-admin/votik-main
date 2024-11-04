@@ -202,7 +202,7 @@ export const NAVIGATION_DEMO: NavItemType[] = [
       {
         id: ncNanoId(),
         href: "/user/account",
-        name: "My profile",
+        name: "My Profile",
       },
       {
         id: ncNanoId(),
@@ -224,12 +224,12 @@ export const NAVIGATION_DEMO: NavItemType[] = [
       {
         id: ncNanoId(),
         href: "/organizer/add-event",
-        name: "List your event",
+        name: "List Your Event",
       },
       {
         id: ncNanoId(),
         href: "/organizer/account",
-        name: "Manage your account",
+        name: "Manage Organiser Account",
       },
       {
         id: ncNanoId(),
@@ -239,8 +239,18 @@ export const NAVIGATION_DEMO: NavItemType[] = [
       {
         id: ncNanoId(),
         href: "/organizer/scan",
-        name: "Scan QR",
+        name: "Scan Ticket",
       },
     ],
+  },
+  {
+    id: ncNanoId(),
+    href: "/tnc",
+    name: "T&C",
+  },
+  {
+    id: ncNanoId(),
+    href: "/privacy",
+    name: "Privacy Policy",
   },
 ];
