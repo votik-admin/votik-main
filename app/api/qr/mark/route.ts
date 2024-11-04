@@ -11,7 +11,9 @@ export async function POST(request: Request) {
     const booking = await supabase
       .from("ticket_bookings")
       .update({ status: "USED" })
-      .eq("hash", decryptedBookingHash)
+      .eq("id", decryptedBookingHash)
+      .eq("status", "CONFIRMED")
+      .select("*, users(*), events(*), tickets(*)")
       .single();
 
     return Response.json(booking, { status: 200 });
