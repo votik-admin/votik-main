@@ -38,6 +38,7 @@ const SectionChoseTicket = ({
   );
 
   const [loading, setLoading] = useState(false);
+  const [stage, setStage] = useState<1 | 2>(1);
 
   const {
     handleSubmit,
@@ -136,128 +137,152 @@ const SectionChoseTicket = ({
       setLoading(false);
     }
   };
-  return (
-    <div className="listingSection__wrap !space-y-6">
-      {/* HEADING */}
-      <div>
-        <h2 className="text-2xl font-semibold">Confirm your details</h2>
-      </div>
-      <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-      <div className="space-y-4">
-        <div>
-          <div className="flex justify-between space-x-2">
-            <div className="w-full">
-              <Label>First Name</Label>
-              <Input
-                type="text"
-                className="mt-1.5 w-full"
-                {...register("firstName", {
-                  required: "First name is required",
-                })}
-              />
-              <ErrorMessage
-                render={(data) => (
-                  <p className="text-red-500 mt-2 text-sm">{data.message}</p>
-                )}
-                errors={errors}
-                name="firstName"
-              />
-            </div>
-            <div className="w-full">
-              <Label>Last Name</Label>
-              <Input
-                type="text"
-                className="mt-1.5 w-full"
-                {...register("lastName")}
-              />
-              <ErrorMessage
-                render={(data) => (
-                  <p className="text-red-500 mt-2 text-sm">{data.message}</p>
-                )}
-                errors={errors}
-                name="lastName"
-              />
-            </div>
-          </div>
-          {errors.firstName && (
-            <p className="text-red-500 mt-2 text-sm">
-              {errors.firstName.message}
-            </p>
-          )}
-        </div>
 
+  const renderConfirmYourDetails = () => {
+    return (
+      <div className="listingSection__wrap !space-y-6">
+        {/* Confirm your details */}
         <div>
-          <Label>Email</Label>
-          <Input
-            type="email"
-            placeholder="Tickets will be sent to this email"
-            className="mt-1.5"
-            {...register("email", {
-              required: "Email is required",
-            })}
-          />
-          <ErrorMessage
-            render={(data) => (
-              <p className="text-red-500 mt-2 text-sm">{data.message}</p>
-            )}
-            errors={errors}
-            name="email"
-          />
+          <h2 className="text-2xl font-semibold">Confirm your details</h2>
         </div>
-        <div>
-          <Label>Phone Number</Label>
-          <Input
-            type="tel"
-            className="mt-1.5"
-            {...register("phoneNumber", {
-              required: "Phone number is required",
-            })}
-          />
-          <ErrorMessage
-            render={(data) => (
-              <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
+        <div className="space-y-4">
+          <div>
+            <div className="flex justify-between space-x-2">
+              <div className="w-full">
+                <Label>First Name</Label>
+                <Input
+                  type="text"
+                  className="mt-1.5 w-full"
+                  {...register("firstName", {
+                    required: "First name is required",
+                  })}
+                />
+                <ErrorMessage
+                  render={(data) => (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  )}
+                  errors={errors}
+                  name="firstName"
+                />
+              </div>
+              <div className="w-full">
+                <Label>Last Name</Label>
+                <Input
+                  type="text"
+                  className="mt-1.5 w-full"
+                  {...register("lastName")}
+                />
+                <ErrorMessage
+                  render={(data) => (
+                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+                  )}
+                  errors={errors}
+                  name="lastName"
+                />
+              </div>
+            </div>
+            {errors.firstName && (
+              <p className="text-red-500 mt-2 text-sm">
+                {errors.firstName.message}
+              </p>
             )}
-            errors={errors}
-            name="phoneNumber"
-          />
-        </div>
-      </div>
-      <div>
-        <h2 className="text-2xl font-semibold">Chose Tickets</h2>
-      </div>
-      <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-      <div className="space-y-4">
-        {tickets.map((ticket) => (
-          <div
-            key={ticket.id}
-            className="border dark:border-neutral-700 rounded-lg p-4"
-          >
-            <p className="text-lg font-medium">{ticket.name}</p>
-            <NcInputNumber
-              className="w-full mt-2"
-              defaultValue={0}
-              onChange={(val) => {
-                setSelectedTickets({
-                  ...selectedTickets,
-                  [ticket.id]: val,
-                });
-                setPrice({ ...price, [ticket.id]: val * ticket.price });
-              }}
-              max={Math.min(10, ticket.current_available_count)}
-              min={0}
-              label={"₹ " + convertNumbThousand(ticket.price)}
-              desc=""
-              availableCount={ticket.current_available_count}
+          </div>
+
+          <div>
+            <Label>Email</Label>
+            <Input
+              type="email"
+              placeholder="Tickets will be sent to this email"
+              className="mt-1.5"
+              {...register("email", {
+                required: "Email is required",
+              })}
             />
-
-            <p className="text-neutral-500 dark:text-neutral-400 border-t dark:border-neutral-700 mt-4 pt-4">
-              {ticket.description}
-            </p>
+            <ErrorMessage
+              render={(data) => (
+                <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+              )}
+              errors={errors}
+              name="email"
+            />
           </div>
-        ))}
+          <div>
+            <Label>Phone Number</Label>
+            <Input
+              type="tel"
+              className="mt-1.5"
+              {...register("phoneNumber", {
+                required: "Phone number is required",
+              })}
+            />
+            <ErrorMessage
+              render={(data) => (
+                <p className="text-red-500 mt-2 text-sm">{data.message}</p>
+              )}
+              errors={errors}
+              name="phoneNumber"
+            />
+          </div>
+        </div>
       </div>
-      {Object.values(selectedTickets).reduce((a, b) => a + b, 0) !== 0 && (
-        <div className="flex justify-between items-center border-t dark:border-neutral-700 pt-4 xl:pt-8 -mx-4 px-4 xl:-mx-8 xl:px-8">
+    );
+  };
+
+  const renderChoseTickets = () => {
+    return (
+      <div className="listingSection__wrap !space-y-6 pb-24 lg:pb-4">
+        {/* Chose tickets */}
+        <div>
+          <h2 className="text-2xl font-semibold">Chose Tickets</h2>
+        </div>
+        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
+        <div className="space-y-4">
+          {tickets.map((ticket) => (
+            <div
+              key={ticket.id}
+              className="border dark:border-neutral-700 rounded-lg p-4"
+            >
+              <p className="text-lg font-medium">{ticket.name}</p>
+              <NcInputNumber
+                className="w-full mt-2"
+                defaultValue={0}
+                onChange={(val) => {
+                  setSelectedTickets({
+                    ...selectedTickets,
+                    [ticket.id]: val,
+                  });
+                  setPrice({ ...price, [ticket.id]: val * ticket.price });
+                }}
+                max={Math.min(10, ticket.current_available_count)}
+                min={0}
+                label={"₹ " + convertNumbThousand(ticket.price)}
+                desc=""
+                availableCount={ticket.current_available_count}
+              />
+
+              <p className="text-neutral-500 dark:text-neutral-400 border-t dark:border-neutral-700 mt-4 pt-4">
+                {ticket.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div>
+      {stage === 1 && renderChoseTickets()}
+      {stage === 2 && renderConfirmYourDetails()}
+      <div
+        className={`fixed bottom-0 inset-x-0 transition ${
+          Object.values(selectedTickets).reduce((a, b) => a + b, 0) !== 0
+            ? "opacity-100"
+            : "opacity-0"
+        }`}
+      >
+        <div className="flex bg-neutral-800 justify-between items-center border-t dark:border-neutral-700 px-4 py-2 xl:px-8 xl:py-4">
           <div>
             <h2 className="text-2xl font-semibold">
               ₹{" "}
@@ -274,15 +299,22 @@ const SectionChoseTicket = ({
                 : " ticket"}
             </p>
           </div>
-          <ButtonCustom
-            id="rzp-button1"
-            onClick={handleSubmit(processPayment)}
-            loading={loading}
-          >
-            PROCEED TO CHECK OUT
-          </ButtonCustom>
+          {stage === 1 && (
+            <ButtonCustom onClick={() => setStage(2)}>
+              PROCEED TO PAY
+            </ButtonCustom>
+          )}
+          {stage === 2 && (
+            <ButtonCustom
+              id="rzp-button1"
+              onClick={handleSubmit(processPayment)}
+              loading={loading}
+            >
+              CHECK OUT
+            </ButtonCustom>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
