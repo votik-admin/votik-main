@@ -1,0 +1,18 @@
+{
+  "amount": 259800,
+  "amount_due": 259800,
+  "amount_paid": 0,
+  "attempts": 0,
+  "created_at": 1730721292,
+  "currency": "INR",
+  "entity": "order",
+  "id": "order_PHDc811J9fipzF",
+  "notes": {
+    "event_id": "d3601657-893f-49f8-97b3-82517b70f136",
+    "selectedTickets": { "1": 0, "2": 0, "3": 2 },
+    "user_id": "6330e012-45de-4f38-ae9e-d759ef048898"
+  },
+  "offer_id": null,
+  "receipt": "receipt#1730721289568",
+  "status": "created"
+}
