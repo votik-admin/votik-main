@@ -60,7 +60,6 @@ async function PageHome3() {
 
         <SectionHero3 className="" />
 
-        {/* SECTION HERO */}
         <div className="container px-1 sm:px-4 mb-24 "></div>
 
         <div className="container relative space-y-24 mb-24 ">

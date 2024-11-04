@@ -95,7 +95,7 @@ const LocationInput: FC<Props> = ({
                     {heading === "Recent Searches" && (
                       <ClockIcon className="w-5 h-5 text-neutral-500 dark:text-neutral-400 shrink-0" />
                     )}
-                    {heading === "Search Results" && (
+                    {heading === "Search results" && (
                       <MapPinIcon className="w-5 h-5 text-neutral-500 dark:text-neutral-400 shrink-0" />
                     )}
                     <span className="">{item.name}</span>

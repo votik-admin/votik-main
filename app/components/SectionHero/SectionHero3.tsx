@@ -82,8 +82,8 @@ const SectionHero3: FC<SectionHero3Props> = ({ className = "" }) => {
           alt="hero"
         />
       </div>
-      <div className="bg-gradient-to-t from-black to-black 2xl:to-transparent via-black text-white 2xl:-translate-y-1/2 2xl:-mb-[22rem] pb-1">
-        <div className="container relative space-y-24 mb-24 lg:space-y-28 lg:mb-28">
+      <div className="bg-gradient-to-t from-black to-black 2xl:to-transparent via-black text-white pt-10 2xl:-translate-y-1/2 2xl:-mb-[22rem] pb-1">
+        <div className="container relative space-y-24 mb-24">
           <SectionSliderNewCategories
             heading="Mumbai’s Trending Events!"
             subHeading=""
@@ -91,6 +91,7 @@ const SectionHero3: FC<SectionHero3Props> = ({ className = "" }) => {
             itemPerRow={4}
             uniqueClassName="PageHome_s3"
             disableDark={true}
+            sliderStyle="style1"
           />
         </div>
       </div>
