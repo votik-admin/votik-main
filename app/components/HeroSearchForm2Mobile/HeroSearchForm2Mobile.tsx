@@ -29,20 +29,24 @@ const HeroSearchForm2Mobile = () => {
       >
         <MagnifyingGlassIcon className="flex-shrink-0 w-5 h-5" />
 
-        <div className="ml-3 flex-1 text-left overflow-hidden">
-          <span className="block font-medium text-sm">
-            What do you want to see live?
-          </span>
-          <span className="block mt-0.5 text-xs font-light text-neutral-500 dark:text-neutral-400 line-clamp-1">
-            Anywhere • Any week • Any event
-          </span>
+        <div className="ml-3 flex-1 text-left">
+          <div className="line-clamp-1 text-ellipsis">
+            <span className="block font-medium text-sm">
+              What do you want to see live?
+            </span>
+          </div>
+          <div className="line-clamp-1 text-ellipsis">
+            <span className="block mt-0.5 text-xs font-light text-neutral-500 dark:text-neutral-400">
+              Anywhere • Any week • Any event
+            </span>
+          </div>
         </div>
       </button>
     );
   };
 
   return (
-    <div className="HeroSearchForm2Mobile">
+    <div className="HeroSearchForm2Mobile w-full">
       {renderButtonOpenModal()}
       <Transition appear show={showModal} as={Fragment}>
         <Dialog

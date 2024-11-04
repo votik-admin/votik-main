@@ -76,7 +76,7 @@ const NavMobile: React.FC<NavMobileProps> = ({
       >
         {item.children ? (
           <div
-            className={`flex w-full px-4 font-medium uppercase tracking-wide text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg ${
+            className={`flex w-full px-4 font-medium uppercase tracking-wide text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 relative rounded-lg ${
               pathname === item.href ? "text-secondary" : ""
             }`}
           >
@@ -86,10 +86,13 @@ const NavMobile: React.FC<NavMobileProps> = ({
               {item.name}
             </span>
             {item.children && (
-              <span className="flex-1 flex" onClick={(e) => e.preventDefault()}>
+              <span
+                className="flex-1 flex absolute inset-0 rounded-lg overflow-hidden"
+                onClick={(e) => e.preventDefault()}
+              >
                 <Disclosure.Button
                   as="span"
-                  className="py-2.5 flex items-center justify-end flex-1 "
+                  className="p-2.5 flex items-center justify-end flex-1"
                 >
                   <ChevronDownIcon
                     className="ml-2 h-4 w-4 text-neutral-500"
