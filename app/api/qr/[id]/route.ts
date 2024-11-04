@@ -27,10 +27,8 @@ export async function POST(request: Request) {
   const bookingId = decrypt(bookingHash);
   const { data, error } = await supabaseAdmin
     .from("ticket_bookings")
-    .select(`*`)
+    .select(`*, users(*), events(*), tickets(*)`)
     .eq("id", bookingId);
-
-  console.log(data);
 
   if (error || !data || data.length === 0) {
     return Response.json(

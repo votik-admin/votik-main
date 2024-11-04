@@ -3,8 +3,9 @@
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import React, { useEffect, useRef, useState } from "react";
 import QrScanner from "qr-scanner";
-import supabase from "@app/lib/supabase";
 import { Tables } from "@app/types/database.types";
+import toast from "react-hot-toast";
+import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
 
 const QrCodeScanner = () => {
   const [scanResult, setScanResult] = useState<string | null>(null);
@@ -15,23 +16,33 @@ const QrCodeScanner = () => {
   const qrScannerRef = useRef<QrScanner | null>(null);
   const [bookingDetails, setBookingDetails] = useState<
     | (Tables<"ticket_bookings"> & {
-        tickets: Tables<"tickets">[];
+        tickets: Tables<"tickets">;
         users: Tables<"users">;
+        events: Tables<"events">;
       })
     | null
   >(null);
 
   const markUsed = async (id: string) => {
     setLoading(true);
+    const toastId = toast.loading("Marking ticket as used...");
     try {
       const res = await fetch(`/api/qr/mark`, {
         method: "POST",
         body: JSON.stringify({ id }),
       });
-      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error("Failed to mark ticket as used");
+      }
+
+      await res.json();
+
       setScanResult(null);
-      console.log(data);
+      setBookingDetails(null);
+      toast.success("Ticket marked as used", { id: toastId });
     } catch (err) {
+      toast.error("Failed to mark ticket as used", { id: toastId });
       console.error(err);
     } finally {
       setLoading(false);
@@ -55,6 +66,7 @@ const QrCodeScanner = () => {
     if (scanResult) {
       // get the username and all
       const getBookingDetails = async (id: string) => {
+        const toastId = toast.loading("Loading booking details...");
         setBookingLoading(true);
         const response = await fetch(`/api/qr/${id}`, {
           method: "POST",
@@ -63,12 +75,15 @@ const QrCodeScanner = () => {
 
         if (!response.ok) {
           setError("Failed to fetch booking details");
+          setBookingLoading(false);
+          toast.error("Failed to fetch booking details", { id: toastId });
           return;
         }
 
         const data = await response.json();
-        setBookingDetails(data);
+        setBookingDetails(data.data);
         setBookingLoading(false);
+        toast.success("Booking details loaded", { id: toastId });
       };
 
       getBookingDetails(scanResult);
@@ -90,6 +105,12 @@ const QrCodeScanner = () => {
       };
     }
   }, []);
+
+  useEffect(() => {
+    if (bookingDetails === null) {
+      videoRef.current?.play();
+    }
+  }, [bookingDetails]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
@@ -129,19 +150,32 @@ const QrCodeScanner = () => {
                   </div>
                   <div>
                     <span className="font-semibold">Tickets:</span>{" "}
-                    {bookingDetails.tickets.length}
+                    {bookingDetails.booked_count}
                   </div>
                   <div>
                     <span className="font-semibold">Ticket Type:</span>{" "}
-                    {bookingDetails.tickets[0].name}
+                    {bookingDetails.tickets.name}
                   </div>
                 </div>
-                <ButtonPrimary
-                  onClick={() => markUsed(scanResult)}
-                  disabled={loading}
-                >
-                  Mark as used
-                </ButtonPrimary>
+                <div className="flex gap-4 mt-4">
+                  <ButtonPrimary
+                    onClick={() => markUsed(scanResult)}
+                    loading={loading}
+                    disabled={loading}
+                  >
+                    Mark as used
+                  </ButtonPrimary>
+                  <ButtonSecondary
+                    onClick={() => {
+                      setScanResult(null);
+                      setBookingDetails(null);
+                    }}
+                    disabled={loading}
+                    loading={loading}
+                  >
+                    Cancel
+                  </ButtonSecondary>
+                </div>
               </div>
             )
           )
