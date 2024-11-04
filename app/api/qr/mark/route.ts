@@ -1,5 +1,5 @@
 import { decrypt } from "@app/lib/enc";
-import { createClient } from "@app/lib/supabase/server";
+import { createServiceClient } from "@app/lib/supabase/serverAdmin";
 
 export async function POST(request: Request) {
   try {
@@ -7,7 +7,7 @@ export async function POST(request: Request) {
     const { id } = body;
     const decryptedBookingHash = decrypt(id);
 
-    const supabase = createClient();
+    const supabase = createServiceClient();
     const booking = await supabase
       .from("ticket_bookings")
       .update({ status: "USED" })

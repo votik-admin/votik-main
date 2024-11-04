@@ -2,10 +2,6 @@ import { Dialog, Tab, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import React, { Fragment, useState } from "react";
-import ButtonSubmit from "./ButtonSubmit";
-import CarsSearchForm from "./CarsSearchForm";
-import ExperiencesSearchForm from "./ExperiencesSearchForm";
-import FlightSearchForm from "./FlightSearchForm";
 import StaySearchForm from "./StaySearchForm";
 import { useTimeoutFn } from "react-use";
 
@@ -33,33 +29,24 @@ const HeroSearchForm2Mobile = () => {
       >
         <MagnifyingGlassIcon className="flex-shrink-0 w-5 h-5" />
 
-        <div className="ml-3 flex-1 text-left overflow-hidden">
-          <span className="block font-medium text-sm">
-            What do you want to see live?
-          </span>
-          <span className="block mt-0.5 text-xs font-light text-neutral-500 dark:text-neutral-400 line-clamp-1">
-            Anywhere • Any week • Any event
-          </span>
+        <div className="ml-3 flex-1 text-left">
+          <div className="line-clamp-1 text-ellipsis">
+            <span className="block font-medium text-sm">
+              What do you want to see live?
+            </span>
+          </div>
+          <div className="line-clamp-1 text-ellipsis">
+            <span className="block mt-0.5 text-xs font-light text-neutral-500 dark:text-neutral-400">
+              Anywhere • Any week • Any event
+            </span>
+          </div>
         </div>
-
-        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full border border-neutral-200 dark:border-neutral-6000 dark:text-neutral-300">
-          <svg
-            viewBox="0 0 16 16"
-            aria-hidden="true"
-            role="presentation"
-            focusable="false"
-            className="block w-4 h-4"
-            fill="currentColor"
-          >
-            <path d="M5 8c1.306 0 2.418.835 2.83 2H14v2H7.829A3.001 3.001 0 1 1 5 8zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm6-8a3 3 0 1 1-2.829 4H2V4h6.17A3.001 3.001 0 0 1 11 2zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"></path>
-          </svg>
-        </span>
       </button>
     );
   };
 
   return (
-    <div className="HeroSearchForm2Mobile">
+    <div className="HeroSearchForm2Mobile w-full">
       {renderButtonOpenModal()}
       <Transition appear show={showModal} as={Fragment}>
         <Dialog
@@ -111,7 +98,7 @@ const HeroSearchForm2Mobile = () => {
                         <Tab.Panels className="flex-1 overflow-y-auto py-4">
                           <Tab.Panel>
                             <div className="transition-opacity animate-[myblur_0.4s_ease-in-out]">
-                              <StaySearchForm />
+                              <StaySearchForm closeModal={closeModal} />
                             </div>
                           </Tab.Panel>
                         </Tab.Panels>

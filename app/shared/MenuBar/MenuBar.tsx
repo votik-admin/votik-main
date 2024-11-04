@@ -8,7 +8,7 @@ export interface MenuBarProps {
   iconClassName?: string;
 }
 const MenuBar: React.FC<MenuBarProps> = ({
-  className = "p-2.5 rounded-lg text-neutral-700 dark:text-neutral-300",
+  className = "p-2.5 pr-0 rounded-lg text-neutral-700 dark:text-neutral-300",
   iconClassName = "h-7 w-7",
 }) => {
   const [isVisable, setIsVisable] = useState(false);

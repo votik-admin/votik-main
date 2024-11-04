@@ -76,6 +76,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
         <div className={`w-full max-w-4xl mx-auto pb-6`}>
           <HeroSearchForm
             defaultFieldFocus={showHeroSearch || undefined}
+            setShowHeroSearch={setShowHeroSearch}
             onTabChange={setCurrentTab}
             defaultTab={currentTab}
           />
@@ -149,9 +150,13 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
               <div className="hidden lg:block">
                 {renderButtonOpenHeroSearch()}
               </div>
-              {/* MOBILE */}
-              <div className="lg:hidden w-full max-w-lg mx-auto">
+              {/* MOBILE + TAB */}
+              <div className="lg:hidden w-full max-w-lg mx-auto flex justify-between items-center">
                 <HeroSearchForm2MobileFactory />
+                {/* MOBILE */}
+                <div className="block md:hidden">
+                  <MenuBar />
+                </div>
               </div>
               {renderHeroSearch()}
             </div>

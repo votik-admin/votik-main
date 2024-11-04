@@ -26,7 +26,7 @@ const NavMobile: React.FC<NavMobileProps> = ({
     return (
       <ul className="nav-mobile-sub-menu pl-6 pb-1 text-base">
         {item.children?.map((i, index) => (
-          <Disclosure key={i.href + index} as="li">
+          <Disclosure key={index} as="li">
             <Link
               href={{
                 pathname: i.href || undefined,
@@ -74,33 +74,63 @@ const NavMobile: React.FC<NavMobileProps> = ({
         as="li"
         className="text-neutral-900 dark:text-white"
       >
-        <Link
-          className={`flex w-full px-4 font-medium uppercase tracking-wide text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg ${
-            pathname === item.href ? "text-secondary" : ""
-          }`}
-          href={{
-            pathname: item.href || undefined,
-          }}
-        >
-          <span
-            className={`py-2.5 pr-3 ${!item.children ? "block w-full" : ""}`}
+        {item.children ? (
+          <div
+            className={`flex w-full px-4 font-medium uppercase tracking-wide text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 relative rounded-lg ${
+              pathname === item.href ? "text-secondary" : ""
+            }`}
           >
-            {item.name}
-          </span>
-          {item.children && (
-            <span className="flex-1 flex" onClick={(e) => e.preventDefault()}>
-              <Disclosure.Button
-                as="span"
-                className="py-2.5 flex items-center justify-end flex-1 "
-              >
-                <ChevronDownIcon
-                  className="ml-2 h-4 w-4 text-neutral-500"
-                  aria-hidden="true"
-                />
-              </Disclosure.Button>
+            <span
+              className={`py-2.5 pr-3 ${!item.children ? "block w-full" : ""}`}
+            >
+              {item.name}
             </span>
-          )}
-        </Link>
+            {item.children && (
+              <span
+                className="flex-1 flex absolute inset-0 rounded-lg overflow-hidden"
+                onClick={(e) => e.preventDefault()}
+              >
+                <Disclosure.Button
+                  as="span"
+                  className="p-2.5 flex items-center justify-end flex-1"
+                >
+                  <ChevronDownIcon
+                    className="ml-2 h-4 w-4 text-neutral-500"
+                    aria-hidden="true"
+                  />
+                </Disclosure.Button>
+              </span>
+            )}
+          </div>
+        ) : (
+          <Link
+            className={`flex w-full px-4 font-medium uppercase tracking-wide text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg ${
+              pathname === item.href ? "text-secondary" : ""
+            }`}
+            href={{
+              pathname: item.href || undefined,
+            }}
+          >
+            <span
+              className={`py-2.5 pr-3 ${!item.children ? "block w-full" : ""}`}
+            >
+              {item.name}
+            </span>
+            {item.children && (
+              <span className="flex-1 flex" onClick={(e) => e.preventDefault()}>
+                <Disclosure.Button
+                  as="span"
+                  className="py-2.5 flex items-center justify-end flex-1 "
+                >
+                  <ChevronDownIcon
+                    className="ml-2 h-4 w-4 text-neutral-500"
+                    aria-hidden="true"
+                  />
+                </Disclosure.Button>
+              </span>
+            )}
+          </Link>
+        )}
         {item.children && (
           <Disclosure.Panel>{_renderMenuChild(item)}</Disclosure.Panel>
         )}
@@ -129,21 +159,10 @@ const NavMobile: React.FC<NavMobileProps> = ({
           <ButtonClose onClick={onClickClose} />
         </span>
       </div>
-      {/* <ul className="flex flex-col py-6 px-2 space-y-1">
+      <ul className="flex flex-col py-6 px-2 space-y-1">
         {data.map(_renderItem)}
-      </ul> */}
-      {/* <div className="flex items-center justify-between py-6 px-5">
-        <a
-          className="inline-block"
-          href="https://themeforest.net/item/chisfis-online-booking-react-template/33515927"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <ButtonPrimary>Get Template</ButtonPrimary>
-        </a>
-
-        <LangDropdown panelClassName="z-10 w-screen max-w-[280px] px-4 mb-3 -right-3 bottom-full sm:px-0" />
-      </div> */}
+      </ul>
+      <div className="flex items-center justify-between py-6 px-5"></div>
     </div>
   );
 };

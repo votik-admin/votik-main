@@ -1,12 +1,14 @@
 import { getSessionAndOrganizer, getSessionAndUser } from "@app/lib/auth";
 import { decrypt, encrypt } from "@app/lib/enc";
 import { createClient } from "@app/lib/supabase/server";
+import { createServiceClient } from "@app/lib/supabase/serverAdmin";
 
 export async function POST(request: Request) {
   // Get the hash from the body
   const { bookingHash } = await request.json();
 
   const supabase = createClient();
+  const supabaseAdmin = createServiceClient();
 
   const { data: user, error: e } = await supabase.auth.getUser();
 
@@ -23,8 +25,7 @@ export async function POST(request: Request) {
 
   // Get the booking details
   const bookingId = decrypt(bookingHash);
-  // TODO: FUCKKKK UUUU PRINSCEEEE MF GO DIE
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from("ticket_bookings")
     .select(`*`)
     .eq("id", bookingId);

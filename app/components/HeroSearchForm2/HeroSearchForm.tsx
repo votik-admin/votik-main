@@ -1,8 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import ExperiencesSearchForm from "./ExperiencesSearchForm";
 import StaySearchForm, { StaySearchFormFields } from "./StaySearchForm";
-import RentalCarSearchForm from "./RentalCarSearchForm";
-import FlightSearchForm from "./FlightSearchForm";
 
 export type SearchTab = "Search";
 
@@ -11,6 +8,9 @@ export interface HeroSearchFormProps {
   defaultTab?: SearchTab;
   onTabChange?: (tab: SearchTab) => void;
   defaultFieldFocus?: StaySearchFormFields;
+  setShowHeroSearch: React.Dispatch<
+    React.SetStateAction<StaySearchFormFields | null | undefined>
+  >;
 }
 const TABS: SearchTab[] = ["Search"];
 
@@ -19,6 +19,7 @@ const HeroSearchForm: FC<HeroSearchFormProps> = ({
   defaultTab = "Search",
   onTabChange,
   defaultFieldFocus,
+  setShowHeroSearch,
 }) => {
   const [tabActive, setTabActive] = useState<SearchTab>(defaultTab);
 
@@ -61,7 +62,12 @@ const HeroSearchForm: FC<HeroSearchFormProps> = ({
   const renderForm = () => {
     switch (tabActive) {
       case "Search":
-        return <StaySearchForm defaultFieldFocus={defaultFieldFocus} />;
+        return (
+          <StaySearchForm
+            defaultFieldFocus={defaultFieldFocus}
+            setShowHeroSearch={setShowHeroSearch}
+          />
+        );
       default:
         return null;
     }

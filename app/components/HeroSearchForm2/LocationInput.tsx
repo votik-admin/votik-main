@@ -4,15 +4,26 @@ import { useEffect } from "react";
 import ClearDataButton from "./ClearDataButton";
 import { useRef } from "react";
 import useOutsideAlerter from "@app/hooks/useOutsideAlerter";
+import { search } from "@app/queries";
+import Link from "next/link";
+import { StaySearchFormFields } from "./StaySearchForm";
+
+export interface SearchResult {
+  name: string | null;
+  slug: string | null;
+}
 
 export interface LocationInputProps {
   defaultValue: string;
   onChange?: (value: string) => void;
-  onInputDone?: (value: string) => void;
+  onInputDone?: (value: SearchResult) => void;
   placeHolder?: string;
   desc?: string;
   className?: string;
   autoFocus?: boolean;
+  setShowHeroSearch: React.Dispatch<
+    React.SetStateAction<StaySearchFormFields | null | undefined>
+  >;
 }
 
 const LocationInput: FC<LocationInputProps> = ({
@@ -23,11 +34,13 @@ const LocationInput: FC<LocationInputProps> = ({
   placeHolder = "Search events, venues, artists and more",
   desc = "Anywhere • Any week • Any event",
   className = "nc-flex-1.5",
+  setShowHeroSearch,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [value, setValue] = useState(defaultValue);
+  const [results, setResults] = useState<SearchResult[] | null>([]);
   const [showPopover, setShowPopover] = useState(autoFocus);
 
   useEffect(() => {
@@ -53,51 +66,95 @@ const LocationInput: FC<LocationInputProps> = ({
     }
   }, [showPopover]);
 
-  const handleSelectLocation = (item: string) => {
-    setValue(item);
-    onInputDone && onInputDone(item);
+  const handleSelectLocation = (item: {
+    name: string | null;
+    slug: string | null;
+  }) => {
+    const recentSearches = JSON.parse(
+      localStorage.getItem("votik_recent_searches") || "[]"
+    ) as SearchResult[];
+
+    const uniqueSlugs = new Set();
+    localStorage.setItem(
+      "votik_recent_searches",
+      JSON.stringify(
+        [item, ...recentSearches].filter((item) => {
+          if (uniqueSlugs.has(item.slug)) {
+            return false;
+          } else {
+            uniqueSlugs.add(item.slug);
+            return true;
+          }
+        })
+      )
+    );
+    setShowHeroSearch(null);
     setShowPopover(false);
   };
 
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.currentTarget.value;
+    setValue(query);
+    // debounced search
+    setTimeout(async () => {
+      if (query === inputRef.current?.value) {
+        const { data, error } = await search("events", query);
+        setResults(data);
+      }
+    }, 200);
+  };
+
   const renderRecentSearches = () => {
+    const recentSearches = JSON.parse(
+      localStorage.getItem("votik_recent_searches") || "[]"
+    );
     return (
       <>
         <h3 className="block mt-2 sm:mt-0 px-4 sm:px-8 font-semibold text-base text-neutral-800 dark:text-neutral-100">
           Recent searches
         </h3>
         <div className="mt-2">
-          {[
-            "Hamptons, Suffolk County, NY",
-            "Las Vegas, NV, United States",
-            "Ueno, Taito, Tokyo",
-            "Ikebukuro, Toshima, Tokyo",
-          ].map((item) => (
-            <span
-              onClick={() => handleSelectLocation(item)}
-              key={item}
-              className="flex px-4 sm:px-6 items-center space-x-3 py-4 hover:bg-neutral-100 dark:hover:bg-neutral-700 cursor-pointer"
-            >
-              <span className="block text-neutral-400">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 sm:h-6 w-4 sm:w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+          {recentSearches && recentSearches.length ? (
+            recentSearches.map(
+              (
+                item: {
+                  name: string | null;
+                  slug: string | null;
+                },
+                key: number
+              ) => (
+                <Link
+                  href={`/events/${item.slug}`}
+                  key={key}
+                  onClick={() => handleSelectLocation(item)}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </span>
-              <span className=" block text-neutral-700 dark:text-neutral-200">
-                {item}
-              </span>
-            </span>
-          ))}
+                  <span className="flex px-4 sm:px-6 items-center space-x-3 py-4 hover:bg-neutral-100 dark:hover:bg-neutral-700 cursor-pointer">
+                    <span className="block text-neutral-400">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 sm:h-6 w-4 sm:w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </span>
+                    <span className=" block text-neutral-700 dark:text-neutral-200">
+                      {item.name}
+                    </span>
+                  </span>
+                </Link>
+              )
+            )
+          ) : (
+            <span className="pl-8">Your recent searches will appear here</span>
+          )}
         </div>
       </>
     );
@@ -106,44 +163,44 @@ const LocationInput: FC<LocationInputProps> = ({
   const renderSearchValue = () => {
     return (
       <>
-        {[
-          "Ha Noi, Viet Nam",
-          "San Diego, CA",
-          "Humboldt Park, Chicago, IL",
-          "Bangor, Northern Ireland",
-        ].map((item) => (
-          <span
-            onClick={() => handleSelectLocation(item)}
-            key={item}
-            className="flex px-4 sm:px-6 items-center space-x-3 py-4 hover:bg-neutral-100 dark:hover:bg-neutral-700 cursor-pointer"
-          >
-            <span className="block text-neutral-400">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 sm:h-6 sm:w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+        {results && results.length ? (
+          results.map((item, key) => (
+            <Link key={key} href={`/events/${item.slug}`}>
+              <span
+                className="flex px-4 sm:px-6 items-center space-x-3 py-4 hover:bg-neutral-100 dark:hover:bg-neutral-700 cursor-pointer"
+                onClick={() => handleSelectLocation(item)}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-            </span>
-            <span className="block text-neutral-700 dark:text-neutral-200">
-              {item}
-            </span>
-          </span>
-        ))}
+                <span className="block text-neutral-400">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 sm:h-6 sm:w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                </span>
+                <span className="block text-neutral-700 dark:text-neutral-200">
+                  {item.name}
+                </span>
+              </span>
+            </Link>
+          ))
+        ) : (
+          <span className="pl-8">No results found</span>
+        )}
       </>
     );
   };
@@ -162,7 +219,7 @@ const LocationInput: FC<LocationInputProps> = ({
             placeholder={placeHolder}
             value={value}
             autoFocus={showPopover}
-            onChange={(e) => setValue(e.currentTarget.value)}
+            onChange={(e) => handleChange(e)}
             ref={inputRef}
           />
           <span className="block mt-0.5 text-sm text-neutral-400 font-light ">
