@@ -76,6 +76,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
         <div className={`w-full max-w-4xl mx-auto pb-6`}>
           <HeroSearchForm
             defaultFieldFocus={showHeroSearch || undefined}
+            setShowHeroSearch={setShowHeroSearch}
             onTabChange={setCurrentTab}
             defaultTab={currentTab}
           />

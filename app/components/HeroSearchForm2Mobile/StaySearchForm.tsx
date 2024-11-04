@@ -4,7 +4,7 @@ import GuestsInput, { GuestsObject } from "./GuestsInput";
 import LocationInput from "./LocationInput";
 import StayDatesRangeInput from "./StayDatesRangeInput";
 
-const StaySearchForm = () => {
+const StaySearchForm = ({ closeModal }: { closeModal: () => void }) => {
   //
   const [fieldNameShow, setFieldNameShow] = useState<
     "location" | "dates" | "guests"
@@ -46,6 +46,7 @@ const StaySearchForm = () => {
               setLocationInputTo(value);
               setFieldNameShow("dates");
             }}
+            closeModal={closeModal}
           />
         )}
       </div>

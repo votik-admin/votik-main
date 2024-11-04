@@ -1,70 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import LocationInput from "./LocationInput";
-import GuestsInput, { GuestsInputProps } from "./GuestsInput";
-import { FocusedInputShape } from "react-dates";
-import StayDatesRangeInput from "./StayDatesRangeInput";
-import moment from "moment";
 import { FC } from "react";
 import "react-dates/initialize";
-
-export interface DateRage {
-  startDate: moment.Moment | null;
-  endDate: moment.Moment | null;
-}
 
 export type StaySearchFormFields = "location" | "guests" | "dates";
 
 export interface StaySearchFormProps {
-  haveDefaultValue?: boolean;
   defaultFieldFocus?: StaySearchFormFields;
+  setShowHeroSearch: React.Dispatch<
+    React.SetStateAction<StaySearchFormFields | null | undefined>
+  >;
 }
 
-// DEFAULT DATA FOR ARCHIVE PAGE
-const defaultLocationValue = "Tokyo, Jappan";
-const defaultDateRange = {
-  startDate: moment(),
-  endDate: moment().add(4, "days"),
-};
-
-const defaultGuestValue: GuestsInputProps["defaultValue"] = {
-  guestAdults: 2,
-  guestChildren: 2,
-  guestInfants: 1,
-};
-
 const StaySearchForm: FC<StaySearchFormProps> = ({
-  haveDefaultValue = false,
   defaultFieldFocus,
+  setShowHeroSearch,
 }) => {
-  const [dateRangeValue, setDateRangeValue] = useState<DateRage>({
-    startDate: null,
-    endDate: null,
-  });
   const [locationInputValue, setLocationInputValue] = useState("");
-  const [guestValue, setGuestValue] = useState({});
-
-  const [dateFocused, setDateFocused] = useState<FocusedInputShape | null>(
-    null
-  );
-
-  //
-
-  useEffect(() => {
-    if (defaultFieldFocus === "dates") {
-      setDateFocused("startDate");
-    } else {
-      setDateFocused(null);
-    }
-  }, [defaultFieldFocus]);
-
-  useEffect(() => {
-    if (haveDefaultValue) {
-      setDateRangeValue(defaultDateRange);
-      setLocationInputValue(defaultLocationValue);
-      setGuestValue(defaultGuestValue);
-    }
-  }, []);
-  //
 
   const renderForm = () => {
     return (
@@ -72,9 +24,9 @@ const StaySearchForm: FC<StaySearchFormProps> = ({
         <LocationInput
           defaultValue={locationInputValue}
           onChange={(e) => setLocationInputValue(e)}
-          onInputDone={() => setDateFocused("startDate")}
           className="flex-[1.5]"
           autoFocus={defaultFieldFocus === "location"}
+          setShowHeroSearch={setShowHeroSearch}
         />
       </form>
     );
