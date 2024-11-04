@@ -276,7 +276,7 @@ const ListingStayDetailPage = async ({
           {renderSection4()}
           {event.secondary_imgs && renderSectionHighlights()}
           {renderSection7()}
-          {renderSection5()}
+          {/* {renderSection5()} */}
           {renderSection8()}
           {renderSection9()}
         </div>

@@ -27,3 +27,7 @@
 .qr-video {
   transform: none !important;
 }
+
+html {
+  scroll-behavior: smooth;
+}

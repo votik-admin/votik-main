@@ -43,6 +43,12 @@ const HeaderFilter: FC<HeaderFilterProps> = ({
           className="sm:space-x-2"
           containerClassName="relative flex w-full overflow-x-auto text-sm md:text-base hiddenScrollbar"
         >
+          <NavItem
+            isActive={tabActiveState === "ALL"}
+            onClick={() => handleClickTab("ALL")}
+          >
+            All
+          </NavItem>
           {tabs.map((item, index) => (
             <NavItem
               key={index}
@@ -53,12 +59,12 @@ const HeaderFilter: FC<HeaderFilterProps> = ({
             </NavItem>
           ))}
         </Nav>
-        <span className="hidden sm:block flex-shrink-0">
+        {/* <span className="hidden sm:block flex-shrink-0">
           <ButtonSecondary className="!leading-none">
             <span>View all</span>
             <i className="ml-3 las la-arrow-right text-xl"></i>
           </ButtonSecondary>
-        </span>
+        </span> */}
       </div>
     </div>
   );

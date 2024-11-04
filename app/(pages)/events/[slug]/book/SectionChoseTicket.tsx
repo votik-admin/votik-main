@@ -231,7 +231,7 @@ const SectionChoseTicket = ({
 
   const renderChoseTickets = () => {
     return (
-      <div className="listingSection__wrap !space-y-6 pb-24 lg:pb-4">
+      <div className="listingSection__wrap !space-y-6 pb-24 lg:pb-8">
         {/* Chose tickets */}
         <div>
           <h2 className="text-2xl font-semibold">Chose Tickets</h2>
@@ -300,7 +300,12 @@ const SectionChoseTicket = ({
             </p>
           </div>
           {stage === 1 && (
-            <ButtonCustom onClick={() => setStage(2)}>
+            <ButtonCustom
+              onClick={() => {
+                setStage(2);
+                window.scrollTo(0, 0);
+              }}
+            >
               PROCEED TO PAY
             </ButtonCustom>
           )}
