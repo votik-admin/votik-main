@@ -16,7 +16,7 @@ export interface NavItemType {
   id: string;
   name: string;
   isNew?: boolean;
-  href: string;
+  href?: string;
   targetBlank?: boolean;
   children?: NavItemType[];
   megaMenu?: MegamenuItem[];

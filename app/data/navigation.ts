@@ -193,122 +193,49 @@ export const NAVIGATION_DEMO: NavItemType[] = [
     id: ncNanoId(),
     href: "/",
     name: "Home",
-    type: "dropdown",
-    children: demoChildMenus,
-    isNew: true,
   },
   {
     id: ncNanoId(),
-    href: "/unique_id_",
-    name: "Five columns",
-    type: "megaMenu",
-    megaMenu: megaMenuDemo,
-  },
-  {
-    id: ncNanoId(),
-    href: "/listing-stay",
-    name: "Listing Page",
+    name: "Account",
     type: "dropdown",
-    isNew: true,
     children: [
       {
         id: ncNanoId(),
-        href: "/listing-stay",
-        name: "Stay listing",
-        type: "dropdown",
-        children: [
-          { id: ncNanoId(), href: "/listing-stay", name: "Stay page" },
-          {
-            id: ncNanoId(),
-            href: "/listing-stay-map",
-            name: "Stay page (map)",
-          },
-          { id: ncNanoId(), href: "/listing-stay-detail", name: "Stay Detail" },
-        ],
+        href: "/user/account",
+        name: "My profile",
       },
-
-      //
       {
         id: ncNanoId(),
-        href: "/listing-experiences",
-        name: "Experiences listing",
-        type: "dropdown",
-        children: [
-          {
-            id: ncNanoId(),
-            href: "/listing-experiences",
-            name: "Experiences page",
-          },
-          {
-            id: ncNanoId(),
-            href: "/listing-experiences-map",
-            name: "Experiences page (map)",
-          },
-          {
-            id: ncNanoId(),
-            href: "/listing-experiences-detail",
-            name: "Experiences Detail",
-          },
-        ],
+        href: "/user/account/bookings",
+        name: "Manage Bookings",
       },
-
-      //
       {
         id: ncNanoId(),
-        href: "/listing-car",
-        name: "Cars listing",
-        type: "dropdown",
-        children: [
-          { id: ncNanoId(), href: "/listing-car", name: "Cars page" },
-          { id: ncNanoId(), href: "/listing-car-map", name: "Cars page (map)" },
-          { id: ncNanoId(), href: "/listing-car-detail", name: "Car Detail" },
-        ],
-      },
-
-      //
-      {
-        id: ncNanoId(),
-        href: "/listing-real-estate",
-        name: "Real Estate Listings",
-        isNew: true,
-        type: "dropdown",
-        children: [
-          {
-            id: ncNanoId(),
-            href: "/listing-real-estate",
-            name: "Real Estate Listings",
-            isNew: true,
-          },
-          {
-            id: ncNanoId(),
-            href: "/listing-real-estate-map",
-            name: "Real Estate Maps",
-            isNew: true,
-          },
-        ],
-      },
-      //
-      {
-        id: ncNanoId(),
-        href: "/listing-flights",
-        name: "Flights listing",
-        isNew: true,
+        href: "/user/account/password",
+        name: "Change Password",
       },
     ],
   },
   {
     id: ncNanoId(),
-    href: "/user/account",
-    name: "Templates",
+    name: "Organiser",
     type: "dropdown",
-    children: templatesChildrenMenus,
-  },
-
-  {
-    id: ncNanoId(),
-    href: "/blog",
-    name: "Other pages",
-    type: "dropdown",
-    children: otherPageChildMenus,
+    children: [
+      {
+        id: ncNanoId(),
+        href: "/organizer/add-event",
+        name: "List your event",
+      },
+      {
+        id: ncNanoId(),
+        href: "/organizer/account",
+        name: "Manage your account",
+      },
+      {
+        id: ncNanoId(),
+        href: "/organizer/signup",
+        name: "Signup as an Organiser",
+      },
+    ],
   },
 ];

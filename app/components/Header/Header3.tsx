@@ -151,8 +151,9 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
                 {renderButtonOpenHeroSearch()}
               </div>
               {/* MOBILE */}
-              <div className="lg:hidden w-full max-w-lg mx-auto">
+              <div className="lg:hidden w-full max-w-lg mx-auto flex">
                 <HeroSearchForm2MobileFactory />
+                <MenuBar />
               </div>
               {renderHeroSearch()}
             </div>
