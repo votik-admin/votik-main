@@ -374,7 +374,9 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
               {/* Phone number field when changed asks for otp and verifies */}
               <div className="flex flex-col gap-2">
                 <PhoneUpdate
-                  defaultPhone={user.phone_number ?? ""}
+                  defaultPhone={
+                    user.phone_number ? "+" + user.phone_number : ""
+                  }
                   onPhoneChange={(phone) => {
                     updatePhone(phone);
                     setValue("phone_number", phone);

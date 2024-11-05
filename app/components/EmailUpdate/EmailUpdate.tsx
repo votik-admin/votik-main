@@ -83,9 +83,10 @@ export default function EmailUpdate({
   };
 
   useEffect(() => {
-    const isValidEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
+    const isValidEmail =
+      email === "" || /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
     setErrors(isValidEmail ? [] : ["Invalid email address"]);
-    setEmailVerified(email === defaultEmail);
+    setEmailVerified(defaultEmail !== "" && email === defaultEmail);
     setVerificationSent(false);
   }, [email, defaultEmail]);
 
@@ -113,7 +114,11 @@ export default function EmailUpdate({
             className="btn-primary"
             onClick={handleEmailChange}
             disabled={
-              loading || verificationSent || emailVerified || errors.length > 0
+              loading ||
+              verificationSent ||
+              emailVerified ||
+              errors.length > 0 ||
+              email === ""
             }
           >
             {loading ? "Processing..." : "Change email"}

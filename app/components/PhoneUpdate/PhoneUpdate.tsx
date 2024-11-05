@@ -102,9 +102,9 @@ export default function PhoneUpdate({
   }, [otpSent]);
 
   useEffect(() => {
-    const isValidPhone = /^\+91\d{10}$/.test(phone);
+    const isValidPhone = phone === "" || /^\+91\d{10}$/.test(phone);
     setErrors(isValidPhone ? [] : ["Invalid phone number"]);
-    setPhoneVerified(phone === defaultPhone);
+    setPhoneVerified(defaultPhone !== "" && phone === defaultPhone);
     setOtpSent(false);
     if (phone === defaultPhone) {
       setOtp("");
