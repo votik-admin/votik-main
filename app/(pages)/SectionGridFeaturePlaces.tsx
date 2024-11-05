@@ -41,8 +41,9 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
     return data;
   });
 
-  const [currentTab, setCurrentTab] =
-    useState<Database["public"]["Enums"]["EventCategory"]>("COMEDY");
+  const [currentTab, setCurrentTab] = useState<
+    Database["public"]["Enums"]["EventCategory"] | "ALL"
+  >("ALL");
 
   return (
     <div className="nc-SectionGridFeaturePlaces relative">
@@ -65,13 +66,17 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
           ))}
         {data &&
           data
-            .filter((event) => event.category === currentTab)
+            .filter(
+              (event) => currentTab === "ALL" || event.category === currentTab
+            )
             .map((event) => (
               <CardCategoryCustom key={event.id} taxonomy={event} />
             ))}
       </div>
       {data &&
-        data.filter((event) => event.category === currentTab).length == 0 && (
+        data.filter(
+          (event) => currentTab === "ALL" || event.category === currentTab
+        ).length == 0 && (
           <div className="py-8 space-y-2">
             <p className="text-center text-xl font-semibold text-neutral-500 dark:text-neutral-400">
               Sorry, there are no available events in this category.
