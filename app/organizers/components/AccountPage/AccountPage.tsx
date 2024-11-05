@@ -16,6 +16,9 @@ import { SessionContext } from "@app/contexts/SessionContext";
 import { OrganizerContext } from "@app/contexts/OrganizerContext";
 import { ErrorMessage } from "@hookform/error-message";
 import { isValidSlug } from "@app/utils/slug";
+import formatRemainingTime from "@app/utils/formatOtp";
+import PhoneUpdate from "@app/components/PhoneUpdate/PhoneUpdate";
+import EmailUpdate from "@app/components/EmailUpdate/EmailUpdate";
 
 export interface AccountPageProps {
   className?: string;
@@ -78,178 +81,58 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
     organizer.avatar_url
   );
 
-  const [email, setEmail] = useState(organizer.email ?? "");
-  const [emailSent, setEmailSent] = useState(false);
-  const [emailVerified, setEmailVerified] = useState(true);
-
-  const otpTimer = React.useRef<NodeJS.Timeout | null>(null);
-  const [otpTimerValue, setOtpTimerValue] = React.useState(60);
-  const [otpSent, setOtpSent] = React.useState(false);
-  const [otp, setOtp] = React.useState("");
-  const [otpExpired, setOtpExpired] = React.useState(false);
-  const [phoneVerified, setPhoneVerified] = React.useState(true);
-  const [phone, setPhone] = React.useState(
-    organizer.phone_number ? `+${organizer.phone_number}` : ""
-  );
-
-  // listen to mail change event
-  useEffect(() => {
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "USER_UPDATED") {
-        if (session?.user?.email) {
-          if (session.user.email !== email) {
-            setEmailVerified(false);
-          } else {
-            setEmailVerified(true);
-            setValue("email", email);
-          }
-        }
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    const updateEmail = async () => {
-      const toastId = toast.loading("Updating user...");
-
-      const { error } = await supabase
-        .from("organizers")
-        .update({
-          email: email,
-        })
-        .eq("id", organizer.id);
-
-      if (error) {
-        toast.error(`Error updating user: ${error.message}`, { id: toastId });
-        return;
-      }
-
-      toast.success("User updated successfully", { id: toastId });
-    };
-    if (email !== watch("email") && emailVerified) updateEmail();
-  }, [emailVerified]);
-
-  const verifyOtp = async () => {
-    const toastId = toast.loading("Verifying OTP...");
-    try {
-      if (phone === null || /^\+91\d{10}$/.test(phone) === false) {
-        throw new Error("Invalid phone number");
-      }
-      const { data, error } = await supabase.auth.verifyOtp({
-        phone,
-        token: otp,
-        type: "phone_change",
-      });
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      toast.success("OTP verified successfully!", { id: toastId });
-      setPhoneVerified(true);
-      setValue("phone_number", phone);
-      const toastUId = toast.loading("Updating user...");
-
-      const { error: updateError } = await supabase
-        .from("organizers")
-        .update({
-          phone_number: phone,
-        })
-        .eq("id", organizer.id);
-
-      if (updateError) {
-        toast.error(`Error updating user: ${updateError.message}`, {
-          id: toastUId,
-        });
-        return;
-      }
-
-      toast.success("User updated successfully", { id: toastUId });
-    } catch (error: any) {
-      toast.error(`OTP verification failed: ${error.message}`, {
-        id: toastId,
-      });
-    }
-  };
-
-  const resendOtp = async (resend: boolean = true) => {
-    const toastId = toast.loading("Resending OTP...");
-    try {
-      if (phone === null || /^\+91\d{10}$/.test(phone) === false) {
-        throw new Error("Invalid phone number");
-      }
-      const { data, error } = resend
-        ? await supabase.auth.resend({
-            phone,
-            type: "phone_change",
-          })
-        : await supabase.auth.updateUser({
-            phone,
-          });
-
-      otpTimer.current = setInterval(() => {
-        setOtpTimerValue((prev) => {
-          if (prev <= 0) {
-            clearInterval(otpTimer.current!);
-            setOtpExpired(true);
-            setOtpSent(false);
-            return 60;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      setOtpExpired(false);
-      setOtpSent(true);
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      toast.success("OTP sent successfully!", { id: toastId });
-    } catch (error: any) {
-      toast.error(`OTP resend failed: ${error.message}`, { id: toastId });
-    }
-  };
-
-  const emailChange = async () => {
-    const toastId = toast.loading("Sending verification email...");
-    try {
-      const { data, error } = await supabase.auth.updateUser({
+  const updateEmail = async (email: string) => {
+    const toastId = toast.loading("Updating user...");
+    const { error } = await supabase
+      .from("organizers")
+      .update({
         email,
-      });
+      })
+      .eq("id", organizer.id);
 
-      if (error) {
-        throw new Error(error.message);
-      }
+    const { error: userError } = await supabase
+      .from("users")
+      .update({
+        email,
+      })
+      .eq("id", organizer.id);
 
-      toast.success("Verification email sent successfully!", { id: toastId });
-      setEmailSent(true);
-    } catch (error: any) {
-      toast.error(`Email verification failed: ${error.message}`, {
-        id: toastId,
-      });
+    if (error || userError) {
+      toast.error(
+        `Error updating user: ${error?.message || userError?.message}`,
+        { id: toastId }
+      );
+      return;
     }
+
+    toast.success("User updated successfully", { id: toastId });
   };
 
-  const resendEmail = async () => {
-    const toastId = toast.loading("Resending verification email...");
-    try {
-      const { data, error } = await supabase.auth.resend({
-        email,
-        type: "email_change",
-      });
+  const updatePhone = async (phone: string) => {
+    const toastId = toast.loading("Updating user...");
+    const { error } = await supabase
+      .from("organizers")
+      .update({
+        phone_number: phone,
+      })
+      .eq("id", organizer.id);
 
-      if (error) {
-        throw new Error(error.message);
-      }
+    const { error: userError } = await supabase
+      .from("users")
+      .update({
+        phone_number: phone,
+      })
+      .eq("id", organizer.id);
 
-      toast.success("Verification email sent successfully!", { id: toastId });
-    } catch (error: any) {
-      toast.error(`Email verification failed: ${error.message}`, {
-        id: toastId,
-      });
+    if (error || userError) {
+      toast.error(
+        `Error updating user: ${error?.message || userError?.message}`,
+        { id: toastId }
+      );
+      return;
     }
+
+    toast.success("User updated successfully", { id: toastId });
   };
 
   const { register, handleSubmit, watch, setValue, formState } =
@@ -345,17 +228,6 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
 
   const phone_number = watch("phone_number") ? `+${watch("phone_number")}` : "";
 
-  useEffect(() => {
-    setOtpSent(false);
-    setOtpExpired(false);
-    setPhoneVerified(phone === phone_number);
-  }, [phone, phone_number]);
-
-  useEffect(() => {
-    setEmailSent(false);
-    setEmailVerified(email === (watch("email") ?? ""));
-  }, [email]);
-
   return (
     <div className={`nc-AccountPage ${className}`} data-nc-id="AccountPage">
       <CommonLayout>
@@ -436,40 +308,10 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                 />
               </div>
               {/* ---- */}
-              <div>
-                <Label>Email</Label>
-                <Input
-                  className="mt-1.5"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <ErrorMessage
-                  render={(data) => (
-                    <p className="text-red-500 mt-2 text-sm">{data.message}</p>
-                  )}
-                  errors={formState.errors}
-                  name="email"
-                />
-                {email !== watch("email") &&
-                  (emailSent ? (
-                    <>
-                      <p className="text-green-500">Email sent</p>
-                      <ButtonPrimary
-                        onClick={resendEmail}
-                        disabled={!isEmail(email)}
-                      >
-                        Resend verification email
-                      </ButtonPrimary>
-                    </>
-                  ) : (
-                    <ButtonPrimary
-                      onClick={emailChange}
-                      disabled={!isEmail(email)}
-                    >
-                      Send verification email
-                    </ButtonPrimary>
-                  ))}
-              </div>
+              <EmailUpdate
+                defaultEmail={watch("email") ?? ""}
+                onEmailChange={updateEmail}
+              />
               {/* Address field */}
               <div>
                 <Label>Address 1</Label>
@@ -489,78 +331,10 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
               </div>
               {/* Phone number field when changed asks for otp and verifies */}
               <div className="flex flex-col gap-2">
-                <div>
-                  <Label>Phone number</Label>
-                  <div className="relative">
-                    <Input
-                      className="mt-1.5"
-                      value={phone}
-                      onChange={(e) => {
-                        setPhone(e.target.value);
-                      }}
-                    />
-                    <ErrorMessage
-                      render={(data) => (
-                        <p className="text-red-500 mt-2 text-sm">
-                          {data.message}
-                        </p>
-                      )}
-                      errors={formState.errors}
-                      name="phone_number"
-                    />
-                    {/* Put the tick symbol if the phone number is verified */}
-                    {phoneVerified && isPhoneNumber(phone) && (
-                      <span className="text-green-500 absolute top-1/2 right-4 transform -translate-y-1/2">
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M9.5 17L5.5 13L4 14.5L9.5 20L21 8.5L19.5 7L9.5 17Z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                      </span>
-                    )}
-                  </div>
-                </div>
-                {otpSent ? (
-                  otpExpired ? (
-                    <>
-                      <p className="text-red-500">
-                        OTP expired. Please try again.
-                      </p>
-                      <ButtonPrimary type="button" onClick={resendOtp}>
-                        Resend OTP
-                      </ButtonPrimary>
-                    </>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <Input
-                        className="mt-1.5"
-                        placeholder="Enter OTP"
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          // handle otp verification
-                          setOtp(e.target.value);
-                        }}
-                      />
-                      <p className="text-neutral-500 dark:text-neutral-400">
-                        OTP expires in {otpTimerValue} seconds
-                      </p>
-                      <ButtonPrimary onClick={verifyOtp}>Verify</ButtonPrimary>
-                    </div>
-                  )
-                ) : (
-                  <ButtonPrimary
-                    disabled={!isPhoneNumber(phone)}
-                    onClick={() => resendOtp(false)}
-                  >
-                    Send OTP
-                  </ButtonPrimary>
-                )}
+                <PhoneUpdate
+                  defaultPhone={phone_number}
+                  onPhoneChange={updatePhone}
+                />
               </div>
               {/* PAN and GSTIN */}
               <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2">
