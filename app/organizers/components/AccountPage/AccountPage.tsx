@@ -16,6 +16,7 @@ import { SessionContext } from "@app/contexts/SessionContext";
 import { OrganizerContext } from "@app/contexts/OrganizerContext";
 import { ErrorMessage } from "@hookform/error-message";
 import { isValidSlug } from "@app/utils/slug";
+import formatRemainingTime from "@app/utils/formatOtp";
 
 export interface AccountPageProps {
   className?: string;
@@ -83,7 +84,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
   const [emailVerified, setEmailVerified] = useState(true);
 
   const otpTimer = React.useRef<NodeJS.Timeout | null>(null);
-  const [otpTimerValue, setOtpTimerValue] = React.useState(60);
+  const [otpTimerValue, setOtpTimerValue] = React.useState(300);
   const [otpSent, setOtpSent] = React.useState(false);
   const [otp, setOtp] = React.useState("");
   const [otpExpired, setOtpExpired] = React.useState(false);
@@ -193,7 +194,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
             clearInterval(otpTimer.current!);
             setOtpExpired(true);
             setOtpSent(false);
-            return 60;
+            return 300;
           }
           return prev - 1;
         });
@@ -548,7 +549,8 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                         }}
                       />
                       <p className="text-neutral-500 dark:text-neutral-400">
-                        OTP expires in {otpTimerValue} seconds
+                        OTP expires in {formatRemainingTime(otpTimerValue)}{" "}
+                        minutes
                       </p>
                       <ButtonPrimary onClick={verifyOtp}>Verify</ButtonPrimary>
                     </div>

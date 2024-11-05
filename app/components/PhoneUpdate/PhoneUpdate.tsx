@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import Label from "../Label/Label";
 import Input from "@app/shared/Input/Input";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
+import formatRemainingTime from "@app/utils/formatOtp";
 
 export default function PhoneUpdate({
   defaultPhone,
@@ -17,7 +18,7 @@ export default function PhoneUpdate({
   onPhoneChange: (phone: string) => void;
 }) {
   const otpTimer = useRef<NodeJS.Timeout | null>(null);
-  const [otpTimerValue, setOtpTimerValue] = useState(60);
+  const [otpTimerValue, setOtpTimerValue] = useState(300);
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
   const [otpExpired, setOtpExpired] = useState(false);
@@ -78,7 +79,7 @@ export default function PhoneUpdate({
             clearInterval(otpTimer.current!);
             setOtpExpired(true);
             setOtpSent(false);
-            return 60;
+            return 300;
           }
           return prev - 1;
         });
@@ -95,7 +96,7 @@ export default function PhoneUpdate({
 
   useEffect(() => {
     if (!otpSent) {
-      setOtpTimerValue(60);
+      setOtpTimerValue(300);
       clearInterval(otpTimer.current!);
     }
   }, [otpSent]);
@@ -166,7 +167,9 @@ export default function PhoneUpdate({
               <div className="text-sm text-gray-500 mt-1">
                 {otpExpired
                   ? "OTP expired. Please resend OTP."
-                  : `OTP expires in ${otpTimerValue}s`}
+                  : `OTP expires in ${formatRemainingTime(
+                      otpTimerValue
+                    )} minutes`}
               </div>
             </div>
           )}

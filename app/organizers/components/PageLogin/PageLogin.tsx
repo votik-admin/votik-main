@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { toast, Toaster } from "react-hot-toast";
 import { redirect, useRouter } from "next/navigation";
 import { SignInWithOAuthCredentials } from "@supabase/supabase-js";
+import formatRemainingTime from "@app/utils/formatOtp";
 
 export interface PageLoginProps {
   className?: string;
@@ -30,7 +31,7 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
 
   const [phoneLogin, setPhoneLogin] = React.useState(false);
   const otpTimer = React.useRef<NodeJS.Timeout | null>(null);
-  const [otpTimerValue, setOtpTimerValue] = React.useState(60);
+  const [otpTimerValue, setOtpTimerValue] = React.useState(300);
   const [otpSent, setOtpSent] = React.useState(false);
   const [otpExpired, setOtpExpired] = React.useState(false);
 
@@ -61,7 +62,7 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
               clearInterval(otpTimer.current!);
               setOtpExpired(true);
               setOtpSent(false);
-              return 60;
+              return 300;
             }
             return prev - 1;
           });
@@ -124,7 +125,7 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
             clearInterval(otpTimer.current!);
             setOtpExpired(true);
             setOtpSent(false);
-            return 60;
+            return 300;
           }
           return prev - 1;
         });
@@ -209,7 +210,8 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
                       <p className="text-red-500">{errors.otp.message}</p>
                     )}
                     <p className="text-neutral-500 dark:text-neutral-400">
-                      OTP expires in {otpTimerValue} seconds
+                      OTP expires in {formatRemainingTime(otpTimerValue)}{" "}
+                      minutes
                     </p>
                     <ButtonPrimary
                       type="button"
