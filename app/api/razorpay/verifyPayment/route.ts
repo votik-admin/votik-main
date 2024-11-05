@@ -111,7 +111,7 @@ export async function POST(request: Request) {
                 first_name: accountDetails.firstName,
                 last_name: accountDetails.lastName,
                 email: accountDetails.email,
-                phone_number: accountDetails.phone_number,
+                phone_number: accountDetails.phoneNumber,
               },
             },
           });
