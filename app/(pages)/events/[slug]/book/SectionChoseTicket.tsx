@@ -276,14 +276,14 @@ const SectionChoseTicket = ({
       {stage === 1 && renderChoseTickets()}
       {stage === 2 && renderConfirmYourDetails()}
       <div
-        className={`fixed bottom-0 inset-x-0 transition ${
+        className={`fixed inset-x-0 bottom-0 transition border-t dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 ${
           Object.values(selectedTickets).reduce((a, b) => a + b, 0) !== 0
             ? "opacity-100"
             : "opacity-0"
         }`}
       >
-        <div className="flex bg-neutral-800 justify-between items-center border-t dark:border-neutral-700 px-4 py-2 xl:px-8 xl:py-4">
-          <div>
+        <div className="flex container justify-between items-center">
+          <div className="py-2 xl:py-4">
             <h2 className="text-2xl font-semibold">
               ₹{" "}
               {convertNumbThousand(
