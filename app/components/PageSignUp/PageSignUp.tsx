@@ -56,9 +56,16 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
     const toastId = toast.loading("Signing up...");
     try {
       if (phoneLogin) {
+        const phone = watch("phone");
+        const password = watch("password");
         const { data, error } = await supabase.auth.signUp({
-          phone: watch("phone"),
-          password: watch("password"),
+          phone,
+          password,
+          options: {
+            data: {
+              username: phone.replace("+91", ""),
+            },
+          },
         });
 
         if (error) {
@@ -68,9 +75,16 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
         toast.success("Signed up successfully!", { id: toastId });
         router.push("/auth/login");
       } else {
+        const email = watch("email");
+        const password = watch("password");
         const { data, error } = await supabase.auth.signUp({
-          email: watch("email"),
-          password: watch("password"),
+          email,
+          password,
+          options: {
+            data: {
+              username: email,
+            },
+          },
         });
 
         if (error) {
@@ -82,28 +96,6 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
       }
     } catch (err: any) {
       toast.error(`Signup failed: ${err.message}`, { id: toastId });
-    }
-  };
-
-  const verifyOtp = async (otp: string) => {
-    const toastId = toast.loading("Verifying OTP...");
-    try {
-      const { data, error } = await supabase.auth.verifyOtp({
-        phone: watch("phone"),
-        token: otp,
-        type: "sms",
-      });
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      toast.success("OTP verified successfully!", { id: toastId });
-      router.push("/user/account");
-    } catch (error: any) {
-      toast.error(`OTP verification failed: ${error.message}`, {
-        id: toastId,
-      });
     }
   };
 
