@@ -2,7 +2,12 @@ function formatDate(isoDate: string | null): string {
   if (!isoDate) {
     return "";
   }
+
   const date = new Date(isoDate);
+
+  // Convert UTC time to IST
+  date.setHours(date.getUTCHours() + 5);
+  date.setMinutes(date.getUTCMinutes() + 30);
 
   // Get month name
   const monthNames = [
@@ -20,12 +25,11 @@ function formatDate(isoDate: string | null): string {
     "December",
   ];
 
-  const month = monthNames[date.getUTCMonth()];
+  const month = monthNames[date.getMonth()];
   const day = date.getDate();
 
   // Get hours and format it to 12-hour format
   let hours = date.getHours();
-
   let minutes = date.getMinutes().toString();
   if (minutes.length < 2) {
     minutes = "0" + minutes;
