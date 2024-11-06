@@ -308,12 +308,14 @@ const ListingStayDetailPage = async ({
             className="rounded-2xl aspect-[1/1] object-cover"
           />
           <div className="lg:hidden">{renderSection1()}</div>
-          {renderSection4()}
-          {event.secondary_imgs && renderSectionHighlights()}
+          {/* {renderSection4()} */}
+          {event.secondary_imgs &&
+            event.secondary_imgs.length > 0 &&
+            renderSectionHighlights()}
           {renderSection7()}
           {/* {renderSection5()} */}
-          {renderSection8()}
-          {renderSection9()}
+          {/* {renderSection8()} */}
+          {/* {renderSection9()} */}
         </div>
 
         {/* SIDEBAR */}
@@ -344,5 +346,7 @@ const ListingStayDetailPage = async ({
     </div>
   );
 };
+
+export const dynamic = "force-dynamic";
 
 export default ListingStayDetailPage;
