@@ -155,6 +155,7 @@ export type Database = {
           bank_acc_number: string | null;
           bank_acc_type: Database["public"]["Enums"]["BankAccType"] | null;
           created_at: string;
+          description: string | null;
           email: string | null;
           gstin_number: string | null;
           id: string;
@@ -173,6 +174,7 @@ export type Database = {
           bank_acc_number?: string | null;
           bank_acc_type?: Database["public"]["Enums"]["BankAccType"] | null;
           created_at?: string;
+          description?: string | null;
           email?: string | null;
           gstin_number?: string | null;
           id: string;
@@ -191,6 +193,7 @@ export type Database = {
           bank_acc_number?: string | null;
           bank_acc_type?: Database["public"]["Enums"]["BankAccType"] | null;
           created_at?: string;
+          description?: string | null;
           email?: string | null;
           gstin_number?: string | null;
           id?: string;
@@ -388,6 +391,7 @@ export type Database = {
           address: string;
           city: Database["public"]["Enums"]["City"];
           created_at: string;
+          description: string | null;
           id: string;
           image: string | null;
           latitude: number;
@@ -400,6 +404,7 @@ export type Database = {
           address: string;
           city: Database["public"]["Enums"]["City"];
           created_at?: string;
+          description?: string | null;
           id?: string;
           image?: string | null;
           latitude: number;
@@ -412,6 +417,7 @@ export type Database = {
           address?: string;
           city?: Database["public"]["Enums"]["City"];
           created_at?: string;
+          description?: string | null;
           id?: string;
           image?: string | null;
           latitude?: number;

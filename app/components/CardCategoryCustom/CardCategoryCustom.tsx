@@ -23,7 +23,7 @@ const CardCategoryCustom: FC<CardCategoryCustomProps> = ({
   const href = `/events/${slug}`;
 
   return (
-    <div className="rounded-2xl overflow-hidden flex flex-col">
+    <div className="rounded-2xl overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700">
       <Link
         href={href}
         className={`nc-CardCategory3 flex flex-col ${className}`}

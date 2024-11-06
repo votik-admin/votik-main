@@ -43,7 +43,7 @@ const PageAddListing3: FC<PageAddListing3Props> = ({ event, revalidate }) => {
     watch,
   } = useForm<Page3Form>({
     defaultValues: {
-      venueId: event.venue || "",
+      venueId: event.venue || "announced",
       venueLayout: event.venue_layout || "",
     },
   });
@@ -137,7 +137,7 @@ const PageAddListing3: FC<PageAddListing3Props> = ({ event, revalidate }) => {
       const { data, error } = await supabase
         .from("events")
         .update({
-          venue: d.venueId || null,
+          venue: d.venueId === "announced" ? null : d.venueId,
           venue_layout: d.venueLayout === "" ? null : d.venueLayout,
         })
         .eq("id", eventId);
@@ -192,14 +192,14 @@ const PageAddListing3: FC<PageAddListing3Props> = ({ event, revalidate }) => {
                 onChange={(e) => {
                   setValue("venueId", e.target.value);
                 }}
-                value={watch("venueId") || ""}
+                value={watch("venueId")}
               >
                 {venues.map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.name}
                   </option>
                 ))}
-                <option value="">To be announced</option>
+                <option value="announced">To be announced</option>
               </Select>
             )}
           </FormItem>

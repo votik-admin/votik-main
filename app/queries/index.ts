@@ -7,6 +7,13 @@ const getAllEvents = () =>
     .select("*, tickets(price)")
     .order("created_at", { ascending: false });
 
+const getEventsByOrganizer = (organizerId: string) =>
+  supabase
+    .from("events")
+    .select("*, tickets(price)")
+    .eq("organizer_id", organizerId)
+    .order("created_at", { ascending: false });
+
 const getAllVenues = () =>
   supabase.from("venues").select("*").order("created_at", { ascending: false });
 
