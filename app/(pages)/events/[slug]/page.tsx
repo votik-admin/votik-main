@@ -33,13 +33,14 @@ export async function generateMetadata(
 
   // optionally access and extend (rather than replace) parent metadata
   const parentMetadata = await parent;
+
   const previousImages = parentMetadata.openGraph?.images || [];
 
   if (event?.primary_img) {
     return {
       title: event?.name,
       openGraph: {
-        images: [event?.primary_img, ...previousImages],
+        images: [...previousImages, event?.primary_img],
       },
     };
   }
