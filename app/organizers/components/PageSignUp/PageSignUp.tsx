@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FC } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, UseFormRegister } from "react-hook-form";
 import googleSvg from "@app/images/Google.svg";
 import { Helmet } from "react-helmet";
 import Input from "@app/shared/Input/Input";
@@ -10,8 +10,10 @@ import Image from "next/image";
 import Link from "next/link";
 import supabase from "@app/lib/supabase";
 import toast, { Toaster } from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SignInWithOAuthCredentials } from "@supabase/supabase-js";
+import { sanitizeRedirect } from "@app/utils/sanitizeRedirectUrl";
+import sanitizePhone, { checkPhone } from "@app/utils/sanitizePhone";
 
 export interface PageSignUpProps {
   className?: string;
@@ -27,28 +29,36 @@ type FormValues = {
 const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
   const router = useRouter();
 
+  const searchParams = useSearchParams();
+  const redirectUrl = sanitizeRedirect(searchParams.get("redirect") ?? "/");
+
   const [phoneLogin, setPhoneLogin] = React.useState(false);
 
   const {
-    register,
+    register: registerOld,
     handleSubmit,
     formState: { errors },
     watch,
   } = useForm<FormValues>();
+
+  const register: UseFormRegister<FormValues> = (name, options) => ({
+    ...registerOld(name, options),
+    required: !!options?.required,
+  });
 
   const onSubmit: SubmitHandler<FormValues> = async (d) => {
     const toastId = toast.loading("Signing up...");
     try {
       if (phoneLogin) {
         const { data, error } = await supabase.auth.signUp({
-          phone: d.phone,
+          phone: sanitizePhone(d.phone),
           password: d.password,
           options: {
             channel: "sms",
             data: {
               email: "",
-              name: d.phone,
-              phone_number: d.phone,
+              name: sanitizePhone(d.phone),
+              phone_number: sanitizePhone(d.phone),
               role: "organizer",
             },
           },
@@ -60,7 +70,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
 
         toast.success("Confirmation mail sent to mail!", { id: toastId });
 
-        router.push("/auth/login");
+        router.push(`/auth/login?redirect=${redirectUrl}`);
       } else {
         const { data, error } = await supabase.auth.signUp({
           email: d.email,
@@ -78,7 +88,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
           throw new Error(error.message);
         }
         toast.success("Signed up successfully!", { id: toastId });
-        router.push("/auth/login");
+        router.push(`/auth/login?redirect=${redirectUrl}`);
       }
     } catch (err: any) {
       toast.error(err.message, { id: toastId });
@@ -131,6 +141,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                   className="mt-1"
                   {...register("phone", {
                     required: "Phone number is required",
+                    validate: checkPhone,
                   })}
                 />
                 {errors.phone && (

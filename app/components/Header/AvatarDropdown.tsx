@@ -47,7 +47,6 @@ export default function AvatarDropdown({
           }
         });
         toast.success("Logged out successfully!");
-        router.push("/");
         router.refresh();
       },
       icon: ArrowRightOnRectangleIcon,

@@ -11,7 +11,7 @@ import Select from "@app/shared/Select/Select";
 import CommonLayout from "./CommonLayout";
 import FormItem from "./FormItem";
 import EventTypes, { CityLatLngMap } from "@app/data/event-create";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormRegister } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import { useParams, useRouter } from "next/navigation";
@@ -41,14 +41,24 @@ const PageAddListing2: FC<PageAddListing2Props> = ({ event, revalidate }) => {
     revalidate();
   }, []);
 
-  const { register, setValue, formState, handleSubmit, watch } =
-    useForm<Page2Form>({
-      defaultValues: {
-        address: event.location || "",
-        postalCode: 0,
-        city: event.city || "MUMBAI",
-      },
-    });
+  const {
+    register: registerOld,
+    setValue,
+    formState,
+    handleSubmit,
+    watch,
+  } = useForm<Page2Form>({
+    defaultValues: {
+      address: event.location || "",
+      postalCode: 0,
+      city: event.city || "MUMBAI",
+    },
+  });
+
+  const register: UseFormRegister<Page2Form> = (name, options) => ({
+    ...registerOld(name, options),
+    required: !!options?.required,
+  });
 
   const selectedCity = watch("city");
 
@@ -155,6 +165,10 @@ const PageAddListing2: FC<PageAddListing2Props> = ({ event, revalidate }) => {
                     onChange={(e) => {
                       setValue("latitute", e.center.lat);
                       setValue("longitude", e.center.lng);
+                    }}
+                    center={{
+                      lat: CityLatLngMap[selectedCity][0],
+                      lng: CityLatLngMap[selectedCity][1],
                     }}
                   >
                     <LocationMarker

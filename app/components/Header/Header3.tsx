@@ -14,6 +14,7 @@ import HeroSearchForm2MobileFactory from "@app/components/HeroSearchForm2Mobile/
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import { Database } from "@app/types/database.types";
 import { SessionContext } from "@app/contexts/SessionContext";
+import { usePathname } from "next/navigation";
 
 interface Header3Props {
   className?: string;
@@ -23,6 +24,8 @@ let WIN_PREV_POSITION = 0;
 
 const Header3: FC<Header3Props> = ({ className = "" }) => {
   const { user } = useContext(SessionContext);
+
+  const path = usePathname();
 
   const headerInnerRef = useRef<HTMLDivElement>(null);
 
@@ -193,7 +196,16 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
                 {user ? (
                   <AvatarDropdown user={user} />
                 ) : (
-                  <ButtonPrimary href="/auth/signup">Sign up</ButtonPrimary>
+                  <ButtonPrimary
+                    href={(() => {
+                      if (path.includes("/auth")) {
+                        return "/auth/signup";
+                      }
+                      return `/auth/signup?redirect=${path}`;
+                    })()}
+                  >
+                    Sign up
+                  </ButtonPrimary>
                 )}
                 <div className="hidden md:block">
                   <MenuBar />

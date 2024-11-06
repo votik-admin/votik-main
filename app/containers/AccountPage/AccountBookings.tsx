@@ -74,8 +74,35 @@ const TicketTab = ({ type }: { type: (typeof TicketTimeline)[number] }) => {
   }, [data]);
 
   const renderContent = () => {
-    if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
+
+    if (loading)
+      return (
+        // Show skeleton loader
+        <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, key) => {
+            return (
+              <div key={key}>
+                <div className="animate-pulse bg-neutral-200 dark:bg-neutral-800 h-48 rounded-xl"></div>
+                <div className="flex justify-between items-center mt-3">
+                  <div className="w-1/2 h-4 bg-neutral-200 dark:bg-neutral-800 rounded-full"></div>
+                  <div className="w-1/4 h-4 bg-neutral-200 dark:bg-neutral-800 rounded-full"></div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      );
+
+    if (Object.keys(actualData).length === 0) {
+      return (
+        <div className="flex justify-center items-center h-48">
+          <p className="text-neutral-500 dark:text-neutral-400">
+            No tickets found. 🎟
+          </p>
+        </div>
+      );
+    }
 
     return (
       <>

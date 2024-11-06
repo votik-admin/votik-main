@@ -14,6 +14,7 @@ import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import { Database } from "@app/types/database.types";
 import { SessionContext } from "@app/contexts/SessionContext";
 import { OrganizerContext } from "@app/contexts/OrganizerContext";
+import { usePathname } from "next/navigation";
 
 interface Header3Props {
   className?: string;
@@ -25,6 +26,8 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
   const { organizer } = useContext(OrganizerContext);
 
   const headerInnerRef = useRef<HTMLDivElement>(null);
+
+  const path = usePathname();
 
   const [showHeroSearch, setShowHeroSearch] =
     useState<StaySearchFormFields | null>();
@@ -178,7 +181,14 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
                 {organizer ? (
                   <AvatarDropdown organizer={organizer} />
                 ) : (
-                  <ButtonPrimary href="/auth/signup">
+                  <ButtonPrimary
+                    href={(() => {
+                      if (path.includes("/auth")) {
+                        return "/auth/signup";
+                      }
+                      return `/auth/signup?redirect=${path}`;
+                    })()}
+                  >
                     Organizer sign up
                   </ButtonPrimary>
                 )}

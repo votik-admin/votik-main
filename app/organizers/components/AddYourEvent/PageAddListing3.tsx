@@ -6,7 +6,7 @@ import Select from "@app/shared/Select/Select";
 import CommonLayout from "./CommonLayout";
 import FormItem from "./FormItem";
 import { useParams, useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormRegister } from "react-hook-form";
 import toast from "react-hot-toast";
 import supabase from "@app/lib/supabase";
 import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
@@ -35,13 +35,24 @@ const PageAddListing3: FC<PageAddListing3Props> = ({ event, revalidate }) => {
     revalidate();
   }, []);
 
-  const { register, setValue, formState, handleSubmit, watch } =
-    useForm<Page3Form>({
-      defaultValues: {
-        venueId: event.venue || "",
-        venueLayout: event.venue_layout || "",
-      },
-    });
+  const {
+    register: registerOld,
+    setValue,
+    formState,
+    handleSubmit,
+    watch,
+  } = useForm<Page3Form>({
+    defaultValues: {
+      venueId: event.venue || "",
+      venueLayout: event.venue_layout || "",
+    },
+  });
+
+  const register: UseFormRegister<Page3Form> = (name, options) => ({
+    ...registerOld(name, options),
+    required: !!options?.required,
+  });
+
   const layoutUrl = watch("venueLayout");
   const setLayoutUrl = (url: string) => setValue("venueLayout", url);
 
@@ -115,11 +126,6 @@ const PageAddListing3: FC<PageAddListing3Props> = ({ event, revalidate }) => {
   };
 
   const onSubmit = async (d: Page3Form) => {
-    if (!d.venueId) {
-      toast.error("Please select a venue");
-      return;
-    }
-
     // if (!layoutUrl) {
     //   toast.error("Please upload venue layout image");
     //   return;
@@ -131,7 +137,7 @@ const PageAddListing3: FC<PageAddListing3Props> = ({ event, revalidate }) => {
       const { data, error } = await supabase
         .from("events")
         .update({
-          venue: d.venueId,
+          venue: d.venueId || null,
           venue_layout: d.venueLayout === "" ? null : d.venueLayout,
         })
         .eq("id", eventId);
@@ -168,10 +174,6 @@ const PageAddListing3: FC<PageAddListing3Props> = ({ event, revalidate }) => {
     fetchVenues();
   }, []);
 
-  console.log({ venueId: watch("venueId") });
-
-  console.log(venues);
-
   return (
     <CommonLayout index="03">
       <>
@@ -190,13 +192,14 @@ const PageAddListing3: FC<PageAddListing3Props> = ({ event, revalidate }) => {
                 onChange={(e) => {
                   setValue("venueId", e.target.value);
                 }}
-                value={watch("venueId")}
+                value={watch("venueId") || ""}
               >
                 {venues.map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.name}
                   </option>
                 ))}
+                <option value="">To be announced</option>
               </Select>
             )}
           </FormItem>

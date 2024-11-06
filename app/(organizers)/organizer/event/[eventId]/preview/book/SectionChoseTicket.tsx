@@ -2,6 +2,7 @@
 import Label from "@app/components/Label/Label";
 import NcInputNumber from "@app/components/NcInputNumber/NcInputNumber";
 import ButtonCustom from "@app/shared/Button/ButtonCustom";
+import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import Input from "@app/shared/Input/Input";
 import { Tables } from "@app/types/database.types";
 import convertNumbThousand from "@app/utils/convertNumbThousand";
@@ -305,25 +306,31 @@ const SectionChoseTicket = ({
                 : " ticket"}
             </p>
           </div>
-          {stage === 1 && (
-            <ButtonCustom
-              onClick={() => {
-                setStage(2);
-                window.scrollTo(0, 0);
-              }}
-            >
-              PROCEED TO PAY
-            </ButtonCustom>
-          )}
-          {stage === 2 && (
-            <ButtonCustom
-              id="rzp-button1"
-              onClick={handleSubmit(processPayment)}
-              loading={loading}
-            >
-              CHECK OUT
-            </ButtonCustom>
-          )}
+          <div className="flex flex-col sm:flex-row gap-4 sm:justify-end">
+            {stage === 1 && (
+              <ButtonCustom
+                onClick={() => {
+                  setStage(2);
+                  window.scrollTo(0, 0);
+                }}
+                disabled
+              >
+                PROCEED TO PAY
+              </ButtonCustom>
+            )}
+            {stage === 2 && (
+              <ButtonCustom
+                id="rzp-button1"
+                onClick={handleSubmit(processPayment)}
+                loading={loading}
+              >
+                CHECK OUT
+              </ButtonCustom>
+            )}
+            <ButtonPrimary href={`/organizer/event/${event_id}/preview`}>
+              Go back to event
+            </ButtonPrimary>
+          </div>
         </div>
       </div>
     </div>

@@ -40,6 +40,16 @@ export default async function AddListing({
     notFound();
   }
 
+  const { data: ticketsData, error: ticketsError } = await supabase
+    .from("tickets")
+    .select("*")
+    .eq("event_id", eventId);
+
+  if (ticketsError) {
+    console.error("Error fetching tickets", ticketsError);
+    notFound();
+  }
+
   const revalidate = async () => {
     "use server";
     revalidatePath("(organizers)/organizer/event/[eventId]/edit/[id]", "page");
@@ -50,7 +60,7 @@ export default async function AddListing({
     2: <AddEvent2 event={data} revalidate={revalidate} />,
     3: <AddEvent3 event={data} revalidate={revalidate} />,
     4: <AddEvent4 event={data} revalidate={revalidate} />,
-    5: <AddEvent5 event={data} revalidate={revalidate} />,
+    5: <AddEvent5 tickets={ticketsData} revalidate={revalidate} />,
     6: <AddEvent6 />,
   };
 

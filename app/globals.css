@@ -91,3 +91,8 @@
 html {
   scroll-behavior: smooth;
 }
+
+label:has(+ input:required):after {
+  content: " *";
+  color: red;
+}

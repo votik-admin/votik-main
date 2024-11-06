@@ -16,6 +16,8 @@ import { DateRage } from "@app/components/HeroSearchForm/StaySearchForm";
 import converSelectedDateToString from "@app/utils/converSelectedDateToString";
 import ModalSelectGuests from "@app/components/ModalSelectGuests";
 import { GuestsObject } from "@app/components/HeroSearchForm2Mobile/GuestsInput";
+import { DatePicker } from "react-next-dates";
+import { enIN } from "date-fns/locale";
 
 export interface CheckOutPageProps {
   className?: string;
@@ -199,7 +201,9 @@ const CheckOutPage: FC<CheckOutPageProps> = ({ className = "" }) => {
                   <div className="flex space-x-5  ">
                     <div className="flex-1 space-y-1">
                       <Label>Expiration date </Label>
-                      <Input type="date" defaultValue="MM/YY" />
+                      <DatePicker locale={enIN} format="MM/YY">
+                        {({ inputProps }) => <input {...inputProps} />}
+                      </DatePicker>
                     </div>
                     <div className="flex-1 space-y-1">
                       <Label>CVC </Label>

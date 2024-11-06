@@ -5,7 +5,7 @@ import React, { FC, useContext, useEffect, useState } from "react";
 import Select from "@app/shared/Select/Select";
 import CommonLayout from "./CommonLayout";
 import FormItem from "./FormItem";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormRegister } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
@@ -16,7 +16,7 @@ import { OrganizerContext } from "@app/contexts/OrganizerContext";
 import toast from "react-hot-toast";
 
 export interface PageAddListing5Props {
-  event: Tables<"events">;
+  tickets: Tables<"tickets">[];
   revalidate: () => Promise<void>;
 }
 
@@ -29,7 +29,7 @@ type Page5Form = {
   }[];
 };
 
-const PageAddListing5: FC<PageAddListing5Props> = ({ event, revalidate }) => {
+const PageAddListing5: FC<PageAddListing5Props> = ({ tickets, revalidate }) => {
   const { eventId, id } = useParams();
   const router = useRouter();
 
@@ -44,23 +44,37 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event, revalidate }) => {
     revalidate();
   }, []);
 
+  if (tickets.length === 0) {
+    tickets = [
+      {
+        name: "General Admission",
+        price: 0,
+        initial_available_count: 0,
+        description: "General admission ticket",
+      },
+    ] as Tables<"tickets">[];
+  }
+
   const {
-    register,
+    register: registerOld,
     formState: { errors },
     watch,
     setValue,
     handleSubmit,
   } = useForm<Page5Form>({
     defaultValues: {
-      tickets: [
-        {
-          name: "General Admission",
-          price: 0,
-          quantity: 100,
-          description: "General admission ticket",
-        },
-      ],
+      tickets: tickets.map((ticket) => ({
+        name: ticket.name,
+        price: ticket.price,
+        quantity: ticket.initial_available_count,
+        description: ticket.description,
+      })),
     },
+  });
+
+  const register: UseFormRegister<Page5Form> = (name, options) => ({
+    ...registerOld(name, options),
+    required: !!options?.required,
   });
 
   const onSubmit = async (d: Page5Form) => {
@@ -73,7 +87,20 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event, revalidate }) => {
 
     const toastId = toast.loading("Updating event...");
 
-    const tickets = ticketTypes.map((ticket) => ({
+    const { data: deleteData, error: deleteError } = await supabase
+      .from("tickets")
+      .delete()
+      .eq("event_id", eventId);
+
+    if (deleteError) {
+      console.error("Error deleting tickets", deleteError);
+      toast.error(`Error deleting tickets: ${deleteError.message}`, {
+        id: toastId,
+      });
+      return;
+    }
+
+    const newTickets = ticketTypes.map((ticket) => ({
       event_id: eventId,
       name: ticket.name,
       price: ticket.price,
@@ -82,7 +109,7 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event, revalidate }) => {
       initial_available_count: ticket.quantity,
     }));
 
-    const { data, error } = await supabase.from("tickets").insert(tickets);
+    const { data, error } = await supabase.from("tickets").insert(newTickets);
 
     if (error) {
       console.error("Error creating tickets", error);

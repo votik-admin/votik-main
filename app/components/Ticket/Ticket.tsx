@@ -26,8 +26,8 @@ export default function Ticket({
       }}
       className="grid grid-cols-[1.5fr_0.4fr] p-8 bg-[#430D7F] rounded-md text-white w-fit h-fit relative small-font"
     >
-      <div className="ticket-container after:bg-white after:dark:bg-neutral-800 before:bg-white before:dark:bg-neutral-800 grid grid-cols-[275px_275px] border-dashed border-r-2 gap-6 pr-10 relative">
-        <div className="w-full h-full">
+      <div className="ticket-container after:bg-white after:dark:bg-neutral-800 before:bg-white before:dark:bg-neutral-800 grid grid-cols-[275px_275px] border-dashed border-r-2 gap-6 pr-10 relative border-gray-50">
+        <div className="w-full h-full grid place-items-center">
           <NcImage
             src={ticket.imgSrc}
             alt="image"
@@ -38,7 +38,7 @@ export default function Ticket({
           />
         </div>
         <div className="flex flex-col justify-between max-w-[300px] px-2">
-          <div className="flex flex-col gap-2 items-start">
+          <div className="flex flex-col gap-2 items-start line-clamp-2 text-ellipsis">
             <Badge name="Music" className="small-font" />
             <p className="font-bold text-base leading-tight text-left">
               {ticket.name}
@@ -76,7 +76,7 @@ export default function Ticket({
           </div>
           <div className="flex justify-between font-bold bg-[#542290] py-2 px-3 rounded-md text-sm rounded-t-none">
             <p>Amount Paid</p>
-            <p>Rs. {ticket.amount.toFixed(2)}</p>
+            <p>Rs. {ticket.amount.toFixed(2) + " /-"}</p>
           </div>
         </div>
       </div>
@@ -87,12 +87,12 @@ export default function Ticket({
           }}
           src="https://picsum.photos/300"
           alt="QR"
-          className="rounded-md w-[200px]"
+          className="rounded-md w-[200px] overflow-hidden"
         /> */}
         <QRImage
           width={200}
           height={200}
-          className="rounded-md w-[200px]"
+          className="rounded-md w-[200px] overflow-hidden"
           text={ticket.bookingId}
         />
         <p className="font-light text-center ">

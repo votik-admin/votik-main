@@ -7,6 +7,7 @@ import Label from "../Label/Label";
 import Input from "@app/shared/Input/Input";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import formatRemainingTime from "@app/utils/formatOtp";
+import sanitizePhone, { checkPhone } from "@app/utils/sanitizePhone";
 
 export default function PhoneUpdate({
   defaultPhone,
@@ -31,12 +32,12 @@ export default function PhoneUpdate({
     const toastId = toast.loading("Verifying OTP...");
     setLoading(true);
     try {
-      if (!/^\+\d{10,15}$/.test(phone)) {
+      if (checkPhone(phone) !== true) {
         throw new Error("Invalid phone number");
       }
 
       const { error } = await supabase.auth.verifyOtp({
-        phone,
+        phone: sanitizePhone(phone),
         token: otp,
         type: "phone_change",
       });
@@ -61,13 +62,16 @@ export default function PhoneUpdate({
     const toastId = toast.loading("Sending OTP...");
     setLoading(true);
     try {
-      if (!/^\+91\d{10}$/.test(phone)) {
+      if (checkPhone(phone) !== true) {
         throw new Error("Invalid phone number");
       }
 
       const { error } = resend
-        ? await supabase.auth.resend({ phone, type: "phone_change" })
-        : await supabase.auth.updateUser({ phone });
+        ? await supabase.auth.resend({
+            phone: sanitizePhone(phone),
+            type: "phone_change",
+          })
+        : await supabase.auth.updateUser({ phone: sanitizePhone(phone) });
 
       if (error) {
         throw new Error(error.message);
@@ -102,7 +106,7 @@ export default function PhoneUpdate({
   }, [otpSent]);
 
   useEffect(() => {
-    const isValidPhone = phone === "" || /^\+91\d{10}$/.test(phone);
+    const isValidPhone = phone === "" || checkPhone(phone) === true;
     setErrors(isValidPhone ? [] : ["Invalid phone number"]);
     setPhoneVerified(defaultPhone !== "" && phone === defaultPhone);
     setOtpSent(false);
@@ -137,10 +141,7 @@ export default function PhoneUpdate({
         <div className="mt-4">
           <ButtonPrimary
             className={`${
-              loading ||
-              otpSent ||
-              phoneVerified ||
-              !/^\+\d{10,15}$/.test(phone)
+              loading || otpSent || phoneVerified || checkPhone(phone) !== true
                 ? "opacity-50 cursor-not-allowed"
                 : ""
             }`}

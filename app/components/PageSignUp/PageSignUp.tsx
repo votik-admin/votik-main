@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FC, useEffect } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, UseFormRegister } from "react-hook-form";
 import facebookSvg from "@app/images/Facebook.svg";
 import twitterSvg from "@app/images/Twitter.svg";
 import googleSvg from "@app/images/Google.svg";
@@ -12,10 +12,12 @@ import Image from "next/image";
 import Link from "next/link";
 import supabase from "@app/lib/supabase";
 import toast, { Toaster } from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SignInWithOAuthCredentials } from "@supabase/supabase-js";
 import { ErrorMessage } from "@hookform/error-message";
 import formatRemainingTime from "@app/utils/formatOtp";
+import { sanitizeRedirect } from "@app/utils/sanitizeRedirectUrl";
+import sanitizePhone, { checkPhone } from "@app/utils/sanitizePhone";
 
 export interface PageSignUpProps {
   className?: string;
@@ -44,6 +46,11 @@ const loginSocials: {
 const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
   const router = useRouter();
 
+  const searchParams = useSearchParams();
+  const redirectUrl = sanitizeRedirect(
+    searchParams.get("redirect") ?? "/user/account"
+  );
+
   const [phoneLogin, setPhoneLogin] = React.useState(false);
 
   const otpTimer = React.useRef<NodeJS.Timeout | null>(null);
@@ -52,22 +59,27 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
   const [otpExpired, setOtpExpired] = React.useState(false);
 
   const {
-    register,
+    register: registerOld,
     handleSubmit,
     formState: { errors },
     watch,
   } = useForm<FormValues>();
+
+  const register: UseFormRegister<FormValues> = (name, options) => ({
+    ...registerOld(name, options),
+    required: !!options?.required,
+  });
 
   const onSubmit = async (data: FormValues) => {
     const toastId = toast.loading("Signing up...");
     try {
       if (phoneLogin) {
         const { data, error } = await supabase.auth.signUp({
-          phone: watch("phone"),
+          phone: sanitizePhone(watch("phone")),
           password: watch("password"),
           options: {
             data: {
-              username: watch("phone").replace("+91", ""),
+              username: sanitizePhone(watch("phone")).replace("+91", ""),
             },
           },
         });
@@ -78,7 +90,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
 
         if (data.user?.user_metadata?.phone_verified === undefined) {
           toast.error("Account already exists!", { id: toastId });
-          router.push("/auth/login");
+          router.replace(`/auth/login?redirect=${redirectUrl}`);
           return;
         }
 
@@ -112,7 +124,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
         }
 
         toast.success("Sent verification email!", { id: toastId });
-        router.push("/auth/login");
+        router.replace(`/auth/login?redirect=${redirectUrl}`);
       }
     } catch (err: any) {
       toast.error(`Signup failed: ${err.message}`, { id: toastId });
@@ -123,7 +135,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
     const toastId = toast.loading("Verifying OTP...");
     try {
       const { data, error } = await supabase.auth.verifyOtp({
-        phone: watch("phone"),
+        phone: sanitizePhone(watch("phone")),
         token: otp,
         type: "sms",
       });
@@ -133,7 +145,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
       }
 
       toast.success("OTP verified successfully!", { id: toastId });
-      router.push("/user/account");
+      router.replace(redirectUrl);
     } catch (error: any) {
       toast.error(`OTP verification failed: ${error.message}`, {
         id: toastId,
@@ -145,7 +157,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
     const toastId = toast.loading("Resending OTP...");
     try {
       const { data, error } = await supabase.auth.signInWithOtp({
-        phone: watch("phone"),
+        phone: sanitizePhone(watch("phone")),
       });
 
       otpTimer.current = setInterval(() => {
@@ -201,6 +213,9 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                     const { data, error } = await supabase.auth.signInWithOAuth(
                       {
                         provider: item.provider,
+                        options: {
+                          redirectTo: `${window.location.origin}/auth/callback?redirect=${redirectUrl}`,
+                        },
                       }
                     );
 
@@ -210,7 +225,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
 
                     toast.success("Redirecting...", { id: toastId });
 
-                    router.push("/auth/login");
+                    router.replace(redirectUrl);
                   } catch (err: any) {
                     toast.error(err.message, { id: toastId });
                   }
@@ -261,11 +276,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                   className="mt-1"
                   {...register("phone", {
                     required: "Phone number is required",
-                    // Should start with +91 and contain 10 digits
-                    pattern: {
-                      value: /^\+91[0-9]{10}$/,
-                      message: "Invalid phone number",
-                    },
+                    validate: checkPhone,
                   })}
                 />
                 <ErrorMessage

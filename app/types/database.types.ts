@@ -49,6 +49,7 @@ export type Database = {
           name: string | null;
           organizer_id: string | null;
           primary_img: string | null;
+          search_vector: unknown | null;
           secondary_imgs: string[] | null;
           slug: string | null;
           start_time: string | null;
@@ -67,6 +68,7 @@ export type Database = {
           name?: string | null;
           organizer_id?: string | null;
           primary_img?: string | null;
+          search_vector?: unknown | null;
           secondary_imgs?: string[] | null;
           slug?: string | null;
           start_time?: string | null;
@@ -85,6 +87,7 @@ export type Database = {
           name?: string | null;
           organizer_id?: string | null;
           primary_img?: string | null;
+          search_vector?: unknown | null;
           secondary_imgs?: string[] | null;
           slug?: string | null;
           start_time?: string | null;
@@ -150,7 +153,7 @@ export type Database = {
           bank_acc_beneficiary_name: string | null;
           bank_acc_ifsc: string | null;
           bank_acc_number: string | null;
-          bank_acc_type: string | null;
+          bank_acc_type: Database["public"]["Enums"]["BankAccType"] | null;
           created_at: string;
           email: string | null;
           gstin_number: string | null;
@@ -168,7 +171,7 @@ export type Database = {
           bank_acc_beneficiary_name?: string | null;
           bank_acc_ifsc?: string | null;
           bank_acc_number?: string | null;
-          bank_acc_type?: string | null;
+          bank_acc_type?: Database["public"]["Enums"]["BankAccType"] | null;
           created_at?: string;
           email?: string | null;
           gstin_number?: string | null;
@@ -186,7 +189,7 @@ export type Database = {
           bank_acc_beneficiary_name?: string | null;
           bank_acc_ifsc?: string | null;
           bank_acc_number?: string | null;
-          bank_acc_type?: string | null;
+          bank_acc_type?: Database["public"]["Enums"]["BankAccType"] | null;
           created_at?: string;
           email?: string | null;
           gstin_number?: string | null;
@@ -277,7 +280,7 @@ export type Database = {
         Row: {
           created_at: string;
           current_available_count: number;
-          description: string | null;
+          description: string;
           event_id: string;
           id: number;
           initial_available_count: number;
@@ -287,8 +290,8 @@ export type Database = {
         Insert: {
           created_at?: string;
           current_available_count: number;
-          description?: string | null;
-          event_id?: string;
+          description: string;
+          event_id: string;
           id?: number;
           initial_available_count: number;
           name: string;
@@ -297,7 +300,7 @@ export type Database = {
         Update: {
           created_at?: string;
           current_available_count?: number;
-          description?: string | null;
+          description?: string;
           event_id?: string;
           id?: number;
           initial_available_count?: number;
@@ -390,6 +393,7 @@ export type Database = {
           latitude: number;
           longitude: number;
           name: string;
+          search_vector: unknown | null;
           slug: string;
         };
         Insert: {
@@ -401,6 +405,7 @@ export type Database = {
           latitude: number;
           longitude: number;
           name: string;
+          search_vector?: unknown | null;
           slug: string;
         };
         Update: {
@@ -412,6 +417,7 @@ export type Database = {
           latitude?: number;
           longitude?: number;
           name?: string;
+          search_vector?: unknown | null;
           slug?: string;
         };
         Relationships: [];
@@ -430,6 +436,7 @@ export type Database = {
       };
     };
     Enums: {
+      BankAccType: "SAVINGS" | "JOINT" | "CURRENT";
       City: "MUMBAI" | "LUCKNOW" | "DELHI" | "OTHER";
       EventCategory:
         | "ACTIVITIES"

@@ -4,7 +4,8 @@ import supabase from "@app/lib/supabase";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import { Tables } from "@app/types/database.types";
 import mergeStrings from "@app/utils/mergeStrings";
-import { useRouter } from "next/navigation";
+import { sanitizeRedirect } from "@app/utils/sanitizeRedirectUrl";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 
 export default function UserSignupOrganizer({
@@ -13,6 +14,11 @@ export default function UserSignupOrganizer({
   initialUser: Tables<"users">;
 }) {
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const redirectUrl = sanitizeRedirect(
+    searchParams.get("redirectUrl") ?? "/organizer/account"
+  );
 
   const handleSignup = async () => {
     const toastId = toast.loading("Signing up as organizer...");
@@ -44,7 +50,7 @@ export default function UserSignupOrganizer({
 
       toast.success("Signed up as organizer", { id: toastId });
 
-      router.push("/organizer/account");
+      router.push(redirectUrl);
     } catch (error) {
       if (error instanceof Error) {
         toast.error(`Failed to sign up as organizer: ${error.message}`, {

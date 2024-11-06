@@ -3,10 +3,14 @@
 import React, { FC } from "react";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import CommonLayout from "./CommonLayout";
+import { useParams } from "next/navigation";
+import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
 
 export interface PageAddListing6Props {}
 
 const PageAddListing6: FC<PageAddListing6Props> = () => {
+  const { eventId } = useParams();
+
   return (
     <CommonLayout index="05">
       <>
@@ -16,9 +20,12 @@ const PageAddListing6: FC<PageAddListing6Props> = () => {
             Your event will be reviewed by our team and will be live soon!
           </span>
         </div>
-        <div className="flex justify-end space-x-5">
-          <ButtonPrimary href={"/organizer/dashboard"}>
-            Go back to Dashboard
+        <div className="flex justify-end space-x-5 gap-2">
+          <ButtonSecondary href="/organizer">
+            Go back to dashboard
+          </ButtonSecondary>
+          <ButtonPrimary href={`/organizer/event/${eventId}/preview`}>
+            Preview the event
           </ButtonPrimary>
         </div>
       </>

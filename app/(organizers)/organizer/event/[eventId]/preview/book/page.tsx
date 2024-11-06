@@ -4,7 +4,7 @@ import LikeSaveBtns from "../LikeSaveBtns";
 import BackgroundSection from "@app/components/BackgroundSection/BackgroundSection";
 import SectionSliderNewCategories from "@app/components/SectionSliderNewCategoriesCustom/SectionSliderNewCategoriesCustom";
 import MobileFooterSticky from "../MobileFooterSticky";
-import { getEventFromSlug } from "@app/queries";
+import { getEventFromId, getEventFromSlug } from "@app/queries";
 import { notFound, redirect } from "next/navigation";
 import formatDate from "@app/utils/formatDate";
 import { ENUM_MAP } from "@app/types/hardcoded";
@@ -15,15 +15,13 @@ import { getSessionAndUser } from "@app/lib/auth";
 import { headers } from "next/headers";
 
 const ListingStayDetailPage = async ({
-  params: { slug },
+  params: { eventId },
 }: {
   params: {
-    slug: string;
+    eventId: string;
   };
 }) => {
   const { user, session, error: authError } = await getSessionAndUser();
-
-  console.log({ authError, user, session });
 
   if (authError || !user) {
     const headersList = headers();
@@ -32,7 +30,7 @@ const ListingStayDetailPage = async ({
     redirect(`/auth/login?redirect=${path}`);
   }
 
-  const { data: event, error } = await getEventFromSlug(slug);
+  const { data: event, error } = await getEventFromId(eventId);
   if (error || !event) {
     if (error) {
       console.log("💣💣💣", error);

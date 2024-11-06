@@ -6,9 +6,15 @@ interface ButtonCustomProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
   loading?: boolean;
+  href?: string;
 }
 
-const ButtonCustom = ({ children, loading, ...args }: ButtonCustomProps) => {
+const ButtonCustom = ({
+  children,
+  loading,
+  href,
+  ...args
+}: ButtonCustomProps) => {
   const _renderLoading = () => {
     return (
       <svg

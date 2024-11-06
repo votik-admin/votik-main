@@ -9,7 +9,7 @@ function usePagination<T>({
   page: number;
   pageSize: number;
 }) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [count, setCount] = useState(0);
   const [data, setData] = useState<T[]>([]);
@@ -40,7 +40,7 @@ function usePagination<T>({
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [page]);
 
   return {
     page,
