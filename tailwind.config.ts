@@ -3,6 +3,7 @@ import defaultTheme from "tailwindcss/defaultTheme";
 import tailwindTypography from "@tailwindcss/typography";
 import tailwindForms from "@tailwindcss/forms";
 import tailwindAspectRatio from "@tailwindcss/aspect-ratio";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 // Custom color with css variable color in __theme_color.scss
 function customColors(cssVar: string) {
@@ -42,6 +43,7 @@ module.exports = {
 
     extend: {
       colors: {
+        // chisfis extended colors
         primary: {
           50: customColors("--c-primary-50"),
           100: customColors("--c-primary-100"),
@@ -53,6 +55,9 @@ module.exports = {
           700: customColors("--c-primary-700"),
           800: customColors("--c-primary-800"),
           900: customColors("--c-primary-900"),
+
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
           50: customColors("--c-secondary-50"),
@@ -65,6 +70,9 @@ module.exports = {
           700: customColors("--c-secondary-700"),
           800: customColors("--c-secondary-800"),
           900: customColors("--c-secondary-900"),
+
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
         neutral: {
           50: customColors("--c-neutral-50"),
@@ -78,11 +86,69 @@ module.exports = {
           800: customColors("--c-neutral-800"),
           900: customColors("--c-neutral-900"),
         },
+
+        // shadcn extended colors
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        graph: {
+          red: "#FF6A6A",
+          green: "#1AC069",
+        },
+        dark: {
+          0: "#1E2224",
+          1: "#16181A",
+          2: "#181B1D",
+          3: "#101213",
+          4: "#222629",
+          5: "#1F2224",
+          6: "#2C3235",
+        },
+        light: {
+          0: "#FFFFFF",
+          1: "#FBFBFB",
+          2: "#F6F6F6",
+          3: "#F0EDF4",
+        },
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        chart: {
+          1: "hsl(var(--chart-1))",
+          2: "hsl(var(--chart-2))",
+          3: "hsl(var(--chart-3))",
+          4: "hsl(var(--chart-4))",
+          5: "hsl(var(--chart-5))",
+        },
       },
     },
   },
   variants: {
     extend: {},
   },
-  plugins: [tailwindTypography, tailwindForms, tailwindAspectRatio],
+  plugins: [
+    tailwindTypography,
+    tailwindForms,
+    // tailwindAspectRatio,
+    tailwindcssAnimate,
+  ],
 };

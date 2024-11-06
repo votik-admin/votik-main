@@ -16,6 +16,7 @@ import NextTopLoader from "nextjs-toploader";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
 import SiteHeader from "@app/organizers/components/SiteHeader/SiteHeader";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
 
 const bebasNeue = Bebas_Neue({
   subsets: ["latin"],
@@ -95,17 +96,20 @@ export default async function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${bebasNeue.variable}`}>
-        <NextTopLoader
-          showSpinner={false}
-          color={"#c4fd07"}
-          // color={"#430D7F"}
-        />
-        <div className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
-          <SiteHeader session={session} organizer={organizer} />
-          {children}
-          <Footer />
-        </div>
+        <TooltipProvider>
+          <NextTopLoader
+            showSpinner={false}
+            color={"#c4fd07"}
+            // color={"#430D7F"}
+          />
+          <div className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
+            <SiteHeader session={session} organizer={organizer} />
+            {children}
+            <Footer />
+          </div>
+        </TooltipProvider>
       </body>
+
       <GoogleAnalytics gaId="G-R1RJRTNCKF" />
     </html>
   );
