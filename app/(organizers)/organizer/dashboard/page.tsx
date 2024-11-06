@@ -34,7 +34,6 @@ import {
   ChartTooltipContent,
 } from "@app/components/ui/chart";
 import { Separator } from "@app/components/ui/separator";
-export const description = "A collection of health charts.";
 
 const HomePage = () => {
   return (
