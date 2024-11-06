@@ -148,7 +148,7 @@ module.exports = {
   plugins: [
     tailwindTypography,
     tailwindForms,
-    // tailwindAspectRatio,
+    tailwindAspectRatio,
     tailwindcssAnimate,
   ],
 };
