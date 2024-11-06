@@ -18,6 +18,41 @@ import ReadMoreParagraph from "@app/shared/ReadMoreParagraph/ReadMoreParagraph";
 import Link from "next/link";
 import convertNumbThousand from "@app/utils/convertNumbThousand";
 
+import type { Metadata, ResolvingMetadata } from "next";
+
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const slug = (await params).slug;
+  const { data: event, error } = await getEventFromSlug(slug);
+
+  // optionally access and extend (rather than replace) parent metadata
+  const parentMetadata = await parent;
+  const previousImages = parentMetadata.openGraph?.images || [];
+
+  if (event?.primary_img) {
+    return {
+      title: event?.name,
+      openGraph: {
+        images: [event?.primary_img, ...previousImages],
+      },
+    };
+  }
+
+  // default case
+  return {
+    title: parentMetadata.title,
+    openGraph: {
+      images: previousImages,
+    },
+  };
+}
+
 const ListingStayDetailPage = async ({
   params: { slug },
 }: {
