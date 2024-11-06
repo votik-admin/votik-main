@@ -21,7 +21,7 @@ const sendTemplateEmail = async (
 ): Promise<EmailResponse> => {
   let { toEmail, dynamicData } = emailData;
 
-  // add friendly code
+  // Add QR data to dynamicData
   if (dynamicData?.tickets?.id) {
     const code = encrypt(dynamicData["tickets"]["id"]);
     const url = `${process.env.NEXT_PUBLIC_APP_URL}/api/qr/gen/${code}`;

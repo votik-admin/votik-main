@@ -88,7 +88,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
   const renderButtonOpenHeroSearch = () => {
     return (
       <div
-        className={`w-full relative flex items-center justify-between border border-neutral-200 dark:border-neutral-6000 rounded-full shadow hover:shadow-md transition-all ${
+        className={`w-full relative flex items-center justify-between bg-white text-neutral-950 border border-neutral-200 dark:border-neutral-6000 rounded-full shadow hover:shadow-md transition-all ${
           showHeroSearch
             ? "-translate-x-0 translate-y-20 scale-x-[2.55] scale-y-[1.8] opacity-0 pointer-events-none invisible"
             : "visible"
@@ -108,7 +108,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
           className="flex-shrink-0 ml-auto pr-2 cursor-pointer"
           onClick={() => setShowHeroSearch("location")}
         >
-          <span className="w-8 h-8 flex items-center justify-center rounded-full bg-primary-6000  text-white">
+          <span className="w-8 h-8 flex items-center justify-center rounded-full bg-[#430D7F]  text-white">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24">
               <path
                 stroke="currentColor"
@@ -134,7 +134,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
       {showHeroSearch && <div id="nc-Header-3-anchor"></div>}
       <header ref={headerInnerRef} className={`sticky top-0 z-40 ${className}`}>
         <div
-          className={`bg-white dark:bg-neutral-900 absolute h-full inset-x-0 top-0 transition-transform will-change-[transform,opacity]
+          className={`bg-white dark:bg-black absolute h-full inset-x-0 top-0 transition-transform will-change-[transform,opacity]
           ${showHeroSearch ? "duration-75" : ""} 
           ${showHeroSearch ? "scale-y-[3.4]" : ""}`}
         ></div>

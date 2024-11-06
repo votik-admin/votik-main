@@ -40,7 +40,7 @@ const SectionHeroCategory: FC<SectionHero3Props> = ({
       <div className="bg-gradient-to-t from-black to-black 2xl:to-transparent via-black text-white 2xl:-translate-y-1/2 2xl:-mb-[22rem] pb-1">
         <div className="container relative space-y-24 mb-24 lg:space-y-28 lg:mb-28">
           <SectionSliderNewCategoriesCustomPrefetched
-            heading="Mumbai’s Must-See Events!"
+            heading="Must-See Events!"
             subHeading=""
             categoryCardType="card5"
             itemPerRow={4}

@@ -182,11 +182,6 @@ const SectionChoseTicket = ({
                 />
               </div>
             </div>
-            {errors.firstName && (
-              <p className="text-red-500 mt-2 text-sm">
-                {errors.firstName.message}
-              </p>
-            )}
           </div>
 
           <div>
