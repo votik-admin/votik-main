@@ -69,6 +69,12 @@ const ListingStayDetailPage = async ({
     return notFound();
   }
 
+  const faqs = (Array.isArray(event.faqs) ? event.faqs : []) as {
+    question: string;
+    answer: string;
+  }[];
+  const tnc = (Array.isArray(event.tnc) ? event.tnc : []) as string[];
+
   const renderSection1 = () => {
     const category = event.category as keyof typeof ENUM_MAP;
     const name = ENUM_MAP[category].name;
@@ -234,24 +240,12 @@ const ListingStayDetailPage = async ({
 
         {/* CONTENT */}
         <div>
-          <h4 className="text-lg font-semibold">
-            Are there any age restrictions for the event?
-          </h4>
-          <span className="block mt-3 text-neutral-500 dark:text-neutral-400">
-            Yes, the event is [age-specific/18+ only/open to all ages]. Please
-            check the event details on the ticketing page for specific age
-            restrictions.
-          </span>
-        </div>
-        <div>
-          <h4 className="text-lg font-semibold">
-            Are there any age restrictions for the event?
-          </h4>
-          <span className="block mt-3 text-neutral-500 dark:text-neutral-400">
-            Yes, the event is [age-specific/18+ only/open to all ages]. Please
-            check the event details on the ticketing page for specific age
-            restrictions.
-          </span>
+          {faqs.map((faq, i) => (
+            <div key={i} className="space-y-2">
+              <h4 className="text-lg font-semibold">{faq.question}</h4>
+              <p>{faq.answer}</p>
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -268,12 +262,9 @@ const ListingStayDetailPage = async ({
           <h4 className="text-lg font-semibold"></h4>
           <div className="prose sm:prose">
             <ul className="mt-3 text-neutral-500 dark:text-neutral-400 space-y-2">
-              <li>
-                Ban and I will work together to keep the landscape and
-                environment green and clean by not littering, not using
-                stimulants and respecting people around.
-              </li>
-              <li>Do not sing karaoke past 11:30</li>
+              {tnc.map((t, i) => (
+                <li key={i}>{t}</li>
+              ))}
             </ul>
           </div>
         </div>
@@ -315,8 +306,8 @@ const ListingStayDetailPage = async ({
             renderSectionHighlights()}
           {renderSection7()}
           {/* {renderSection5()} */}
-          {/* {renderSection8()} */}
-          {/* {renderSection9()} */}
+          {faqs.length > 0 && renderSection8()}
+          {tnc.length > 0 && renderSection9()}
         </div>
 
         {/* SIDEBAR */}

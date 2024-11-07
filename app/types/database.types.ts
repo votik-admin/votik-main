@@ -44,6 +44,7 @@ export type Database = {
           created_at: string | null;
           description: string | null;
           expected_footfall: number | null;
+          faqs: Json | null;
           id: string;
           location: string | null;
           name: string | null;
@@ -53,6 +54,7 @@ export type Database = {
           secondary_imgs: string[] | null;
           slug: string | null;
           start_time: string | null;
+          tnc: Json | null;
           venue: string | null;
           venue_layout: string | null;
         };
@@ -63,6 +65,7 @@ export type Database = {
           created_at?: string | null;
           description?: string | null;
           expected_footfall?: number | null;
+          faqs?: Json | null;
           id?: string;
           location?: string | null;
           name?: string | null;
@@ -72,6 +75,7 @@ export type Database = {
           secondary_imgs?: string[] | null;
           slug?: string | null;
           start_time?: string | null;
+          tnc?: Json | null;
           venue?: string | null;
           venue_layout?: string | null;
         };
@@ -82,6 +86,7 @@ export type Database = {
           created_at?: string | null;
           description?: string | null;
           expected_footfall?: number | null;
+          faqs?: Json | null;
           id?: string;
           location?: string | null;
           name?: string | null;
@@ -91,6 +96,7 @@ export type Database = {
           secondary_imgs?: string[] | null;
           slug?: string | null;
           start_time?: string | null;
+          tnc?: Json | null;
           venue?: string | null;
           venue_layout?: string | null;
         };

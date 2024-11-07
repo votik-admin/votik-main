@@ -12,7 +12,6 @@ import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import { notFound, useParams, useRouter } from "next/navigation";
 import supabase from "@app/lib/supabase";
 import { Tables } from "@app/types/database.types";
-import { OrganizerContext } from "@app/contexts/OrganizerContext";
 import toast from "react-hot-toast";
 
 export interface PageAddListing5Props {
@@ -22,6 +21,7 @@ export interface PageAddListing5Props {
 
 type Page5Form = {
   tickets: {
+    id: number | null;
     name: string;
     price: number;
     quantity: number;
@@ -68,6 +68,7 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ tickets, revalidate }) => {
         price: ticket.price,
         quantity: ticket.initial_available_count,
         description: ticket.description,
+        id: ticket.id,
       })),
     },
   });
@@ -83,24 +84,61 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ tickets, revalidate }) => {
       return;
     }
 
-    const ticketTypes = d.tickets;
+    // Update the old tickets and create new tickets
+    const oldTix = tickets
+      .filter((t) => t.id !== null)
+      .map((t) => ({
+        id: t.id,
+        name: t.name,
+        price: t.price,
+        quantity: t.initial_available_count,
+        description: t.description,
+      }));
+
+    for (const ticket of d.tickets) {
+      if (ticket.id !== null) {
+        const oldTicket = oldTix.find((t) => t.id === ticket.id);
+        if (
+          oldTicket?.name === ticket.name &&
+          oldTicket?.price === ticket.price &&
+          oldTicket?.quantity === ticket.quantity &&
+          oldTicket?.description === ticket.description
+        ) {
+          continue;
+        }
+        const toastId = toast.loading("Updating ticket " + ticket.name);
+        if ((oldTicket?.quantity ?? 0) > ticket.quantity) {
+          toast.error("Cannot decrease ticket quantity of " + ticket.name, {
+            id: toastId,
+          });
+          return;
+        }
+        const { data, error } = await supabase
+          .from("tickets")
+          .update({
+            name: ticket.name,
+            price: ticket.price,
+            initial_available_count: ticket.quantity,
+            description: ticket.description,
+          })
+          .eq("id", ticket.id);
+
+        if (error) {
+          console.error("Error updating ticket", error);
+          toast.error(`Error updating ticket: ${error.message}`, {
+            id: toastId,
+          });
+          return;
+        }
+        toast.success("Ticket updated successfully", { id: toastId });
+      }
+    }
+
+    const newTix = d.tickets.filter((t) => t.id === null);
 
     const toastId = toast.loading("Updating event...");
 
-    const { data: deleteData, error: deleteError } = await supabase
-      .from("tickets")
-      .delete()
-      .eq("event_id", eventId);
-
-    if (deleteError) {
-      console.error("Error deleting tickets", deleteError);
-      toast.error(`Error deleting tickets: ${deleteError.message}`, {
-        id: toastId,
-      });
-      return;
-    }
-
-    const newTickets = ticketTypes.map((ticket) => ({
+    const newTickets = newTix.map((ticket) => ({
       event_id: eventId,
       name: ticket.name,
       price: ticket.price,
@@ -127,7 +165,7 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ tickets, revalidate }) => {
         <h2 className="text-3xl font-bold mb-6">Tickets for the Event</h2>
         <div className="border-b-2 border-neutral-200 dark:border-neutral-700 mb-6"></div>
         <div className="space-y-8">
-          {watch("tickets").map((_, index) => (
+          {watch("tickets").map((ticket, index) => (
             <div
               key={index}
               className="p-6 rounded-md shadow-md dark:bg-slate-800 bg-slate-100"
@@ -224,18 +262,20 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ tickets, revalidate }) => {
               </FormItem>
               <div className="flex justify-end mt-4">
                 <div className="flex justify-end">
-                  <button
-                    onClick={() => {
-                      const tickets = watch("tickets");
-                      const updatedTickets = tickets.filter(
-                        (_, ticketIndex) => ticketIndex !== index
-                      );
-                      setValue("tickets", updatedTickets);
-                    }}
-                    className="text-red-500 hover:underline"
-                  >
-                    Remove this ticket type
-                  </button>
+                  {ticket.id === null && (
+                    <button
+                      onClick={() => {
+                        const tickets = watch("tickets");
+                        const updatedTickets = tickets.filter(
+                          (_, ticketIndex) => ticketIndex !== index
+                        );
+                        setValue("tickets", updatedTickets);
+                      }}
+                      className="text-red-500 hover:underline"
+                    >
+                      Remove this ticket type
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -252,6 +292,7 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ tickets, revalidate }) => {
                   price: 0,
                   quantity: 0,
                   description: "",
+                  id: null,
                 },
               ];
               setValue("tickets", newTickets);
@@ -265,7 +306,7 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ tickets, revalidate }) => {
             Go back
           </ButtonSecondary>
           <ButtonPrimary onClick={handleSubmit(onSubmit)} loading={loading}>
-            Publish event
+            Continue
           </ButtonPrimary>
         </div>
       </>

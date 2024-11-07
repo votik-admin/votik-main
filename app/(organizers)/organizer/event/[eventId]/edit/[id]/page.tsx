@@ -7,6 +7,7 @@ import AddEvent3 from "@app/organizers/components/AddYourEvent/PageAddListing3";
 import AddEvent4 from "@app/organizers/components/AddYourEvent/PageAddListing4";
 import AddEvent5 from "@app/organizers/components/AddYourEvent/PageAddListing5";
 import AddEvent6 from "@app/organizers/components/AddYourEvent/PageAddListing6";
+import AddEvent7 from "@app/organizers/components/AddYourEvent/PageAddListing7";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 
@@ -61,7 +62,8 @@ export default async function AddListing({
     3: <AddEvent3 event={data} revalidate={revalidate} />,
     4: <AddEvent4 event={data} revalidate={revalidate} />,
     5: <AddEvent5 tickets={ticketsData} revalidate={revalidate} />,
-    6: <AddEvent6 />,
+    6: <AddEvent6 event={data} revalidate={revalidate} />,
+    7: <AddEvent7 />,
   };
 
   return FormMap[id] || <AddEvent1 event={data} revalidate={revalidate} />;
