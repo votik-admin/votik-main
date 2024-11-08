@@ -39,7 +39,7 @@ const AnalyticsChart = () => {
   return (
     <div className="relative">
       <div className="absolute w-full h-full inset-0 z-10 flex items-center justify-center">
-        <p className="text-xl font-semibold">Coming soon...</p>
+        <p className="text-xl font-semibold">Coming Soon...</p>
       </div>
       <div className="blur chart-wrapper mx-auto flex flex-col flex-wrap items-start justify-center gap-6 sm:flex-row">
         <div className="grid w-full gap-6 sm:grid-cols-2 lg:max-w-[22rem] lg:grid-cols-1 xl:max-w-[25rem]">
