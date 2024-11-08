@@ -26,8 +26,6 @@ import { UserNav } from "@app/(organizers)/organizer/dashboard/components/user-n
 import AnalyticsChart from "./AnalyticsChart";
 import useSWR from "swr";
 import supabase from "@app/lib/supabase";
-import { getAllEvents } from "@app/queries";
-import { Suspense } from "react";
 import { Tables } from "@app/types/database.types";
 
 export default function DashboardPage({
@@ -44,21 +42,27 @@ export default function DashboardPage({
       .from("events")
       .select("*")
       .eq("organizer_id", organizer.id);
-    console.log(data);
     if (error) throw error.message;
     return data;
   });
 
-  const { data, error, isLoading } = useSWR("getAllBookings", async () => {
-    const { data, error } = await supabase.from("ticket_bookings").select("*");
-    console.log(data);
+  const {
+    data: bookingsData,
+    error: bookingError,
+    isLoading: isLoadingBookings,
+  } = useSWR("getAllBookings", async () => {
+    const { data, error } = await supabase
+      .from("ticket_bookings")
+      .select("*, users(*), tickets(*)");
     if (error) throw error.message;
     return data;
   });
+
+  console.log({ bookingsData });
 
   return (
     eventsData &&
-    data && (
+    bookingsData && (
       <div>
         <div className="md:hidden">
           <Image
@@ -222,9 +226,9 @@ export default function DashboardPage({
                   </Card>
                   <Card className="col-span-3">
                     <CardHeader>
-                      <CardTitle>Recent Sales</CardTitle>
+                      <CardTitle>Recent Bookings</CardTitle>
                       <CardDescription>
-                        You made 265 sales this month.
+                        You made {bookingsData.length} sales for this event.
                       </CardDescription>
                     </CardHeader>
                     <CardContent>

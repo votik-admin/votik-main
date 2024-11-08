@@ -40,6 +40,7 @@ import {
 } from "@app/components/ui/select";
 import { Tables } from "@app/types/database.types";
 import { useRouter } from "next/navigation";
+import getInitials from "@app/utils/getInitials";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
@@ -61,98 +62,90 @@ export default function TeamSwitcher({ className, events }: TeamSwitcherProps) {
   ];
 
   const [open, setOpen] = React.useState(false);
-  const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
   const [selectedTeam, setSelectedTeam] = React.useState<Tables<"events">>(
     groups[0].events[0]
   );
-  console.log(events);
 
   return (
-    <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            aria-label="Select a team"
-            className={cn("w-[200px] justify-between", className)}
-          >
-            <Avatar className="mr-2 h-5 w-5">
-              <AvatarImage
-                src={selectedTeam.primary_img || ""}
-                alt={selectedTeam.name || ""}
-                // className="grayscale"
-              />
-              <AvatarFallback>
-                {selectedTeam.name
-                  ?.split(" ")
-                  .map((word) => word[0])
-                  .reduce((char, prev) => prev + char, "")
-                  .toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            {selectedTeam.name}
-            <ChevronsUpDown className="ml-auto opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
-          <Command>
-            <CommandInput placeholder="Search event..." />
-            <CommandList>
-              <CommandEmpty>No event found.</CommandEmpty>
-              {groups.map((group) => (
-                <CommandGroup key={group.label} heading={group.label}>
-                  {group.events.map((event) => (
-                    <CommandItem
-                      key={event.id}
-                      onSelect={() => {
-                        setSelectedTeam(event);
-                        setOpen(false);
-                      }}
-                      className="text-sm"
-                    >
-                      <Avatar className="mr-2 h-5 w-5">
-                        <AvatarImage
-                          src={event.primary_img || ""}
-                          alt={event.name || ""}
-                          // className="grayscale"
-                        />
-                        <AvatarFallback>SC</AvatarFallback>
-                      </Avatar>
-                      {event.name}
-                      <Check
-                        className={cn(
-                          "ml-auto",
-                          selectedTeam.id === event.id
-                            ? "opacity-100"
-                            : "opacity-0"
-                        )}
-                      />
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              ))}
-            </CommandList>
-            <CommandSeparator />
-            <CommandList>
-              <CommandGroup>
-                <DialogTrigger asChild>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          aria-label="Select a team"
+          className={cn("w-[200px] justify-between", className)}
+        >
+          <Avatar className="mr-2 h-5 w-5">
+            <AvatarImage
+              src={selectedTeam.primary_img || ""}
+              alt={selectedTeam.name || ""}
+              // className="grayscale"
+            />
+            <AvatarFallback>
+              {getInitials(selectedTeam.name || "")}
+            </AvatarFallback>
+          </Avatar>
+          {selectedTeam.name}
+          <ChevronsUpDown className="ml-auto opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[200px] p-0">
+        <Command>
+          <CommandInput placeholder="Search event..." />
+          <CommandList>
+            <CommandEmpty>No event found.</CommandEmpty>
+            {groups.map((group) => (
+              <CommandGroup key={group.label} heading={group.label}>
+                {group.events.map((event) => (
                   <CommandItem
+                    key={event.id}
                     onSelect={() => {
+                      setSelectedTeam(event);
                       setOpen(false);
-                      router.push("/organizer/add-event");
                     }}
+                    className="text-sm"
                   >
-                    <PlusCircle className="h-5 w-5" />
-                    Create Event
+                    <Avatar className="mr-2 h-5 w-5">
+                      <AvatarImage
+                        src={event.primary_img || ""}
+                        alt={event.name || ""}
+                        // className="grayscale"
+                      />
+                      <AvatarFallback>
+                        {getInitials(event.name || "")}
+                      </AvatarFallback>
+                    </Avatar>
+                    {event.name}
+                    <Check
+                      className={cn(
+                        "ml-auto",
+                        selectedTeam.id === event.id
+                          ? "opacity-100"
+                          : "opacity-0"
+                      )}
+                    />
                   </CommandItem>
-                </DialogTrigger>
+                ))}
               </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-    </Dialog>
+            ))}
+          </CommandList>
+          <CommandSeparator />
+          <CommandList>
+            <CommandGroup>
+              <CommandItem
+                onSelect={() => {
+                  setOpen(false);
+                  router.push("/organizer/add-event");
+                }}
+              >
+                <PlusCircle className="h-5 w-5" />
+                Create Event
+              </CommandItem>
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 }
