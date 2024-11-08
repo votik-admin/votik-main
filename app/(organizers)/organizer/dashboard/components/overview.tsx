@@ -1,75 +1,113 @@
-"use client"
+"use client";
 
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import { Tables } from "@app/types/database.types";
+import { formatTimeLabel } from "@app/utils/getTimeFromCurrentDate";
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
-const data = [
-  {
-    name: "Jan",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Feb",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Mar",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Apr",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "May",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Jun",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Jul",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Aug",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Sep",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Oct",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Nov",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Dec",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-]
+export function Overview({
+  bookingsData,
+}: {
+  bookingsData: (Tables<"ticket_bookings"> & {
+    events: Tables<"events"> | null;
+    tickets: Tables<"tickets"> | null;
+  })[];
+}) {
+  if (bookingsData.length === 0) return <></>;
 
-export function Overview() {
+  // status in ["BOOKED", "USED"]
+  const lastBooking = new Date(bookingsData[0].payment_successful_timestamp!);
+  const firstBooking = new Date(
+    bookingsData[bookingsData.length - 1].payment_successful_timestamp!
+  );
+  const timeSpan = lastBooking.getTime() - firstBooking.getTime();
+
+  const chartData: { name: string; total: number }[] = [];
+  const f = {
+    lessThanAnHour: {
+      ticks: 60,
+      timeDelta: 1000 * 60,
+      filter: (bookingDate: Date, currentDate: Date) =>
+        bookingDate.getMinutes() === currentDate.getMinutes() &&
+        bookingDate.getHours() === currentDate.getHours() &&
+        bookingDate.getDate() === currentDate.getDate() &&
+        bookingDate.getMonth() === currentDate.getMonth() &&
+        bookingDate.getFullYear() === currentDate.getFullYear(),
+    },
+    lessThanADay: {
+      ticks: 24,
+      timeDelta: 1000 * 60 * 60,
+      filter: (bookingDate: Date, currentDate: Date) =>
+        bookingDate.getHours() === currentDate.getHours() &&
+        bookingDate.getDate() === currentDate.getDate() &&
+        bookingDate.getMonth() === currentDate.getMonth() &&
+        bookingDate.getFullYear() === currentDate.getFullYear(),
+    },
+    lessThanAMonth: {
+      ticks: 30,
+      timeDelta: 1000 * 60 * 60 * 24,
+      filter: (bookingDate: Date, currentDate: Date) =>
+        bookingDate.getDate() === currentDate.getDate() &&
+        bookingDate.getMonth() === currentDate.getMonth() &&
+        bookingDate.getFullYear() === currentDate.getFullYear(),
+    },
+    greaterThanOrEqualToAMonth: {
+      ticks: 12,
+      timeDelta: 1000 * 60 * 60 * 24 * 30,
+      filter: (bookingDate: Date, currentDate: Date) =>
+        bookingDate.getMonth() === currentDate.getMonth() &&
+        bookingDate.getFullYear() === currentDate.getFullYear(),
+    },
+  };
+  const populateChartData = (timeDiff: keyof typeof f) => {
+    for (let i = 0; i < f[timeDiff].ticks; i++) {
+      const currentDate = new Date(
+        firstBooking.getTime() + i * f[timeDiff].timeDelta
+      );
+      const filteredBookings = bookingsData.filter((booking) => {
+        const bookingDate = new Date(booking.payment_successful_timestamp!);
+        return f[timeDiff].filter(bookingDate, currentDate);
+      });
+      const totalBookings = filteredBookings.reduce(
+        (total, booking) =>
+          total + booking.booked_count * (booking.tickets?.price || 0),
+        0
+      );
+
+      chartData.push({
+        name: formatTimeLabel(currentDate, timeSpan),
+        total: totalBookings,
+      });
+    }
+  };
+
+  if (timeSpan < 1000 * 60) {
+    populateChartData("lessThanAnHour");
+  } else if (timeSpan < 1000 * 60 * 60 * 24) {
+    populateChartData("lessThanADay");
+  } else if (timeSpan < 1000 * 60 * 60 * 24 * 30) {
+    populateChartData("lessThanAMonth");
+  } else {
+    populateChartData("greaterThanOrEqualToAMonth");
+  }
+
+  console.log({ chartData });
+
   return (
     <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={data}>
+      <BarChart data={chartData}>
         <XAxis
           dataKey="name"
           stroke="#888888"
           fontSize={12}
-          tickLine={false}
-          axisLine={false}
+          tickLine={true}
+          axisLine={true}
         />
         <YAxis
           stroke="#888888"
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `$${value}`}
+          tickFormatter={(value) => `₹${value}`}
         />
         <Bar
           dataKey="total"
@@ -79,5 +117,5 @@ export function Overview() {
         />
       </BarChart>
     </ResponsiveContainer>
-  )
+  );
 }

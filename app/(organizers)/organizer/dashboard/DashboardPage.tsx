@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import React from "react";
 
 import { Button } from "@app/components/ui/button";
 import {
@@ -27,24 +28,40 @@ import AnalyticsChart from "./AnalyticsChart";
 import useSWR from "swr";
 import supabase from "@app/lib/supabase";
 import { Tables } from "@app/types/database.types";
+import convertNumbThousand from "@app/utils/convertNumbThousand";
 
 export default function DashboardPage({
   organizer,
 }: {
   organizer: Tables<"organizers">;
 }) {
+  const [selectedTeam, setSelectedTeam] = React.useState<
+    Tables<"events"> & { tickets: (Tables<"tickets"> | null)[] }
+  >();
+
   const {
     data: eventsData,
     error: errorData,
     isLoading: isLoadingEvents,
-  } = useSWR("getAllEventsByOrganizer", async () => {
-    const { data, error } = await supabase
-      .from("events")
-      .select("*")
-      .eq("organizer_id", organizer.id);
-    if (error) throw error.message;
-    return data;
-  });
+  } = useSWR(
+    "getAllEventsByOrganizer",
+    async () => {
+      const { data, error } = await supabase
+        .from("events")
+        .select("*, tickets(*)")
+        .eq("organizer_id", organizer.id);
+      if (error) throw error.message;
+      return data;
+    },
+    {
+      onSuccess: (events) => {
+        // start with the first accepted event
+        if (!selectedTeam) {
+          setSelectedTeam(events.filter((event) => event.accepted)[0]);
+        }
+      },
+    }
+  );
 
   const {
     data: bookingsData,
@@ -53,45 +70,84 @@ export default function DashboardPage({
   } = useSWR("getAllBookings", async () => {
     const { data, error } = await supabase
       .from("ticket_bookings")
-      .select("*, users(*), tickets(*)");
+      .select("*, tickets(*), events(*)")
+      .in("status", ["BOOKED", "USED"])
+      .order("payment_successful_timestamp", { ascending: false });
     if (error) throw error.message;
     return data;
   });
 
-  console.log({ bookingsData });
+  // metric 1
+  const totalRevenue = bookingsData
+    ?.filter((booking) => booking.event_id === selectedTeam?.id)
+    .reduce(
+      (acc, booking) =>
+        acc + booking.booked_count * (booking.tickets?.price || 0),
+      0
+    );
+
+  // metric 2
+  const uniqueCustomers = bookingsData
+    ?.filter((booking) => booking.event_id === selectedTeam?.id)
+    .map((booking) => booking.user_id)
+    .filter((value, index, array) => array.indexOf(value) === index).length;
+
+  // metric 3
+  const totalTicketsSold = bookingsData
+    ?.filter((booking) => booking.event_id === selectedTeam?.id)
+    .reduce((acc, booking) => acc + booking.booked_count, 0);
+
+  // metric 4
+  let repeatCustomerRate = 0;
+
+  const repeatCustomerCount = bookingsData
+    ?.map((booking) => booking.user_id)
+    .reduce((acc: string[], userId, index, array) => {
+      if (array.indexOf(userId) !== index && !acc.includes(userId)) {
+        acc.push(userId);
+      }
+      return acc;
+    }, []).length;
+
+  const totalBookings = bookingsData?.filter(
+    (booking) => booking.event_id === selectedTeam?.id
+  ).length;
+
+  if (totalBookings && uniqueCustomers && repeatCustomerCount) {
+    repeatCustomerRate =
+      totalBookings > 0
+        ? Math.floor((repeatCustomerCount / uniqueCustomers) * 100)
+        : 0;
+  }
+
+  console.log({ bookingsData, bookingError });
+
+  if (isLoadingBookings || isLoadingEvents) {
+    return (
+      <div className="py-[16rem] flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     eventsData &&
     bookingsData && (
       <div>
-        <div className="md:hidden">
-          <Image
-            src="/examples/dashboard-light.png"
-            width={1280}
-            height={866}
-            alt="Dashboard"
-            className="block dark:hidden"
-          />
-          <Image
-            src="/examples/dashboard-dark.png"
-            width={1280}
-            height={866}
-            alt="Dashboard"
-            className="hidden dark:block"
-          />
-        </div>
-        <div className="hidden flex-col md:flex">
+        <div className="flex-col flex">
           <div className="flex-1 space-y-4 py-8">
             {/* Dasboard */}
-            <div className="flex items-center justify-between space-y-2">
+            <div className="flex flex-col md:flex-row md:items-center justify-between space-y-2">
               <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-              <div className="flex items-center space-x-2">
+              <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-2">
                 <TeamSwitcher
                   events={eventsData}
                   isLoadingEvents={isLoadingEvents}
+                  selectedTeam={selectedTeam}
+                  setSelectedTeam={setSelectedTeam}
                 />
-                <CalendarDateRangePicker />
-                <Button>Download</Button>
+                {/* <CalendarDateRangePicker /> */}
+                {/* <Button>Download</Button> */}
               </div>
             </div>
 
@@ -100,16 +156,17 @@ export default function DashboardPage({
               <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="analytics">Analytics</TabsTrigger>
-                <TabsTrigger value="reports" disabled>
+                {/* <TabsTrigger value="reports" disabled>
                   Reports
                 </TabsTrigger>
                 <TabsTrigger value="notifications" disabled>
                   Notifications
-                </TabsTrigger>
+                </TabsTrigger> */}
               </TabsList>
 
               {/* Tab - Overview */}
               <TabsContent value="overview" className="space-y-4">
+                {/* Metric Cards */}
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                   <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -130,16 +187,18 @@ export default function DashboardPage({
                       </svg>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-2xl font-bold">$45,231.89</div>
+                      <div className="text-2xl font-bold">
+                        ₹{convertNumbThousand(totalRevenue)}
+                      </div>
                       <p className="text-xs text-muted-foreground">
-                        +20.1% from last month
+                        Cumulative amount collected
                       </p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                       <CardTitle className="text-sm font-medium">
-                        Subscriptions
+                        Customers
                       </CardTitle>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -157,9 +216,11 @@ export default function DashboardPage({
                       </svg>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-2xl font-bold">+2350</div>
+                      <div className="text-2xl font-bold">
+                        {convertNumbThousand(uniqueCustomers)}
+                      </div>
                       <p className="text-xs text-muted-foreground">
-                        +180.1% from last month
+                        Unique ticket buyers
                       </p>
                     </CardContent>
                   </Card>
@@ -183,16 +244,18 @@ export default function DashboardPage({
                       </svg>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-2xl font-bold">+12,234</div>
+                      <div className="text-2xl font-bold">
+                        {convertNumbThousand(totalTicketsSold)}
+                      </div>
                       <p className="text-xs text-muted-foreground">
-                        +19% from last month
+                        Total tickets sold
                       </p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                       <CardTitle className="text-sm font-medium">
-                        Active Now
+                        Repeat Customer Rate
                       </CardTitle>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -208,31 +271,108 @@ export default function DashboardPage({
                       </svg>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-2xl font-bold">+573</div>
+                      <div className="text-2xl font-bold">
+                        {repeatCustomerRate}%
+                      </div>
                       <p className="text-xs text-muted-foreground">
-                        +201 since last hour
+                        Percentage of repeat buyers
                       </p>
                     </CardContent>
                   </Card>
                 </div>
+
+                {/* Tickets Sold */}
+                <div className="space-y-2">
+                  <h2 className="text-xl font-semibold tracking-tight pl-4">
+                    Tickets Sold
+                  </h2>
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    {/* Do not map selecetedTeam.tickets instead as it won't be updated live on refetch */}
+                    {eventsData
+                      .find((event) => event.id === selectedTeam?.id)
+                      ?.tickets?.map((ticket) => {
+                        return (
+                          ticket && (
+                            <Card key={ticket.id}>
+                              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">
+                                  {ticket.name}
+                                </CardTitle>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  className="h-4 w-4 text-muted-foreground"
+                                >
+                                  <rect
+                                    width="20"
+                                    height="14"
+                                    x="2"
+                                    y="5"
+                                    rx="2"
+                                  />
+                                  <path d="M2 10h20" />
+                                </svg>
+                              </CardHeader>
+                              <CardContent>
+                                <div className="text-2xl font-bold">
+                                  {ticket.initial_available_count -
+                                    ticket.current_available_count}
+                                  {" / "}
+                                  {ticket.initial_available_count}
+                                </div>
+                                <p className="text-xs text-muted-foreground">
+                                  {Math.floor(
+                                    ((ticket.initial_available_count -
+                                      ticket.current_available_count) /
+                                      ticket.initial_available_count) *
+                                      100
+                                  )}
+                                  % tickets sold
+                                </p>
+                              </CardContent>
+                            </Card>
+                          )
+                        );
+                      })}
+                  </div>
+                </div>
+
+                {/* Chart & Table */}
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                  {/* Chart */}
                   <Card className="col-span-4">
                     <CardHeader>
                       <CardTitle>Overview</CardTitle>
                     </CardHeader>
                     <CardContent className="pl-2">
-                      <Overview />
+                      <Overview
+                        bookingsData={bookingsData.filter(
+                          (booking) => booking.event_id === selectedTeam?.id
+                        )}
+                      />
                     </CardContent>
                   </Card>
+                  {/* Table */}
                   <Card className="col-span-3">
                     <CardHeader>
                       <CardTitle>Recent Bookings</CardTitle>
                       <CardDescription>
-                        You made {bookingsData.length} sales for this event.
+                        You made {totalTicketsSold}{" "}
+                        {totalTicketsSold === 1 ? "sale" : "sales"} for this
+                        event.
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <RecentSales />
+                      <RecentSales
+                        bookings={bookingsData.filter(
+                          (booking) => booking.event_id === selectedTeam?.id
+                        )}
+                      />
                     </CardContent>
                   </Card>
                 </div>

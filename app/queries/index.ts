@@ -39,6 +39,12 @@ const search = (tableName: "events" | "venues", query: string) =>
     .select("name, slug")
     .textSearch("search_vector", query.split(" ").filter(Boolean).join(" | "));
 
+const getAllEventsByOrganizer = (organizer_id: string) =>
+  supabase
+    .from("events")
+    .select("*, tickets(*)")
+    .eq("organizer_id", organizer_id);
+
 export {
   getAllEvents,
   getAllVenues,
@@ -48,4 +54,7 @@ export {
   getEventsFromCategory,
   getCategoryFromSlug,
   search,
+
+  // Organiser
+  getAllEventsByOrganizer,
 };

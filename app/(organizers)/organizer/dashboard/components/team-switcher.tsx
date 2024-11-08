@@ -47,11 +47,22 @@ type PopoverTriggerProps = React.ComponentPropsWithoutRef<
 >;
 
 interface TeamSwitcherProps extends PopoverTriggerProps {
-  events: Tables<"events">[];
+  events: (Tables<"events"> & { tickets: (Tables<"tickets"> | null)[] })[];
   isLoadingEvents: boolean;
+  selectedTeam?: Tables<"events"> & { tickets: (Tables<"tickets"> | null)[] };
+  setSelectedTeam: React.Dispatch<
+    React.SetStateAction<
+      (Tables<"events"> & { tickets: (Tables<"tickets"> | null)[] }) | undefined
+    >
+  >;
 }
 
-export default function TeamSwitcher({ className, events }: TeamSwitcherProps) {
+export default function TeamSwitcher({
+  className,
+  events,
+  selectedTeam,
+  setSelectedTeam,
+}: TeamSwitcherProps) {
   const router = useRouter();
 
   const acceptedEvents = events.filter((event) => event.accepted);
@@ -62,9 +73,6 @@ export default function TeamSwitcher({ className, events }: TeamSwitcherProps) {
   ];
 
   const [open, setOpen] = React.useState(false);
-  const [selectedTeam, setSelectedTeam] = React.useState<Tables<"events">>(
-    groups[0].events[0]
-  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -74,19 +82,19 @@ export default function TeamSwitcher({ className, events }: TeamSwitcherProps) {
           role="combobox"
           aria-expanded={open}
           aria-label="Select a team"
-          className={cn("w-[200px] justify-between", className)}
+          className={cn("w-[200px] justify-between overflow-hidden", className)}
         >
           <Avatar className="mr-2 h-5 w-5">
             <AvatarImage
-              src={selectedTeam.primary_img || ""}
-              alt={selectedTeam.name || ""}
+              src={selectedTeam?.primary_img || ""}
+              alt={selectedTeam?.name || ""}
               // className="grayscale"
             />
             <AvatarFallback>
-              {getInitials(selectedTeam.name || "")}
+              {getInitials(selectedTeam?.name || "")}
             </AvatarFallback>
           </Avatar>
-          {selectedTeam.name}
+          {selectedTeam?.name}
           <ChevronsUpDown className="ml-auto opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -120,7 +128,7 @@ export default function TeamSwitcher({ className, events }: TeamSwitcherProps) {
                     <Check
                       className={cn(
                         "ml-auto",
-                        selectedTeam.id === event.id
+                        selectedTeam?.id === event.id
                           ? "opacity-100"
                           : "opacity-0"
                       )}
