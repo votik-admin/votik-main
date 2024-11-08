@@ -228,6 +228,11 @@ export const NAVIGATION_DEMO: NavItemType[] = [
       },
       {
         id: ncNanoId(),
+        href: "/organizer/dashboard",
+        name: "Dashboard",
+      },
+      {
+        id: ncNanoId(),
         href: "/organizer/account",
         name: "Manage Organiser Account",
       },
