@@ -45,7 +45,7 @@ const MobileFooterSticky = ({
                 if (authError || !user) {
                   // get the window path and encode it
                   const path = encodeURIComponent(window.location.pathname);
-                  router.push(`/login?redirect=${path}`);
+                  router.push(`/auth/login?redirect=${path}`);
                   return;
                 }
                 const { data, error } = await getUserFromUserTable(user!.id);

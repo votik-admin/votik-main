@@ -80,21 +80,17 @@ const ListingStayDetailPage = async ({
     const name = ENUM_MAP[category].name;
     const href = `/events/category/${ENUM_MAP[category].slug}`;
     const color = ENUM_MAP[category].color;
+
     return (
       <div className="listingSection__wrap !space-y-6">
         {/* 1 */}
         <div className="flex justify-between items-center">
-          <Badge
-            // TODO: proper slug instead of toLowerCase
-            name={name}
-            href={href}
-            color={color}
-          />
+          <Badge name={name} href={href} color={color} />
           <LikeSaveBtns event={event} />
         </div>
 
         {/* 2 */}
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold break-words">
           {event.name}
         </h2>
 
