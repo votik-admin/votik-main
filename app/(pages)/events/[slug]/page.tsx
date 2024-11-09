@@ -35,21 +35,17 @@ export async function generateMetadata(
   const parentMetadata = await parent;
 
   const previousImages = parentMetadata.openGraph?.images || [];
-
-  if (event?.primary_img) {
-    return {
-      title: event?.name,
-      openGraph: {
-        images: [...previousImages, event?.primary_img],
-      },
-    };
-  }
-
-  // default case
   return {
-    title: parentMetadata.title,
+    title: event?.name,
+    description: event?.description,
     openGraph: {
-      images: previousImages,
+      images: event?.primary_img
+        ? [
+            ...previousImages,
+            event?.primary_img,
+            ...(event?.secondary_imgs || []),
+          ]
+        : previousImages,
     },
   };
 }

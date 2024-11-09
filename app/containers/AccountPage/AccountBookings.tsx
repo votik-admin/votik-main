@@ -27,7 +27,8 @@ const TicketTimeline = ["Upcoming", "Past", "Cancelled"] as const;
 const TicketTab = ({ type }: { type: (typeof TicketTimeline)[number] }) => {
   const baseQuery = supabase
     .from("ticket_bookings")
-    .select(`*, events!inner(*), tickets!inner(*)`); // !inner is required, see https://stackoverflow.com/questions/69137919/filtering-in-join-in-supabase
+    .select(`*, events!inner(*), tickets!inner(*)`) // !inner is required, see https://stackoverflow.com/questions/69137919/filtering-in-join-in-supabase
+    .in("status", ["BOOKED", "USED"]);
 
   const [actualData, setActualData] = useState<{ [ticketId: string]: Ticket }>(
     {}

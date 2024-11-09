@@ -35,6 +35,7 @@ const widgetMenus: WidgetFooterMenu[] = [
     title: "Organizer",
     menus: [
       { href: "/organizer/add-event", label: "List Your Event" },
+      { href: "/organizer/dashboard", label: "Dashboard" },
       { href: "/organizer/account", label: "Manage Organiser Account" },
       { href: "/organizer/signup", label: "Signup as an Organiser" },
       { href: "/organizer/scan", label: "Scan Ticket" },

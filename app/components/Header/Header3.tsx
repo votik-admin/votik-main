@@ -111,7 +111,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
           className="flex-shrink-0 ml-auto pr-2 cursor-pointer"
           onClick={() => setShowHeroSearch("location")}
         >
-          <span className="w-8 h-8 flex items-center justify-center rounded-full bg-[#430D7F]  text-white">
+          <span className="w-8 h-8 flex items-center justify-center rounded-full bg-[#430D7F] text-white">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24">
               <path
                 stroke="currentColor"

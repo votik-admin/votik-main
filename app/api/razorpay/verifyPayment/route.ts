@@ -96,28 +96,30 @@ export async function POST(request: Request) {
       )
       .eq("razorpay_order_id", orderCreationId);
 
+    const sendAllMails = [];
     if (dynamicDatas) {
       for (const dynamicData of dynamicDatas) {
         const toEmail = accountDetails.email;
         if (toEmail) {
-          // do not await
-          // sending emails is asynchronous
-          sendTemplateEmail({
-            toEmail,
-            dynamicData: {
-              ...dynamicData,
-              // override users details with form submitted at checkout
-              users: {
-                first_name: accountDetails.firstName,
-                last_name: accountDetails.lastName,
-                email: accountDetails.email,
-                phone_number: accountDetails.phoneNumber,
+          sendAllMails.push(
+            sendTemplateEmail({
+              toEmail,
+              dynamicData: {
+                ...dynamicData,
+                // override users details with form submitted at checkout
+                users: {
+                  first_name: accountDetails.firstName,
+                  last_name: accountDetails.lastName,
+                  email: accountDetails.email,
+                  phone_number: accountDetails.phoneNumber,
+                },
               },
-            },
-          });
+            })
+          );
         }
       }
     }
+    await Promise.all(sendAllMails);
 
     return Response.json(
       { data, message: "Payment verified!", error: null },

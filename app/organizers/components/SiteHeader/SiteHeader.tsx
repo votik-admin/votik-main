@@ -18,8 +18,8 @@ const OPTIONS = {
 };
 let OBSERVER: IntersectionObserver | null = null;
 const PAGES_HIDE_HEADER_BORDER: PathName[] = [
-  "/", // 💡 "/" is the new and default "/home-3",
-  "/events", // "/listing-stay-detail",
+  "/",
+  "/events",
   "/listing-car-detail",
   "/listing-experiences-detail",
 ];

@@ -20,6 +20,7 @@ const sendTemplateEmail = async (
   emailData: EmailData
 ): Promise<EmailResponse> => {
   let { toEmail, dynamicData } = emailData;
+  console.log({ toEmail });
 
   // Add QR data to dynamicData
   if (dynamicData?.tickets?.id) {
@@ -53,6 +54,7 @@ const sendTemplateEmail = async (
 
   try {
     const res = await sgMail.send(msg);
+    console.log(res[0].statusCode);
     const succes = res[0].statusCode === 202;
 
     if (succes) {

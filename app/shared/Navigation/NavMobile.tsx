@@ -144,8 +144,8 @@ const NavMobile: React.FC<NavMobileProps> = ({
         <Logo />
         <div className="flex flex-col mt-5 text-neutral-700 dark:text-neutral-300 text-sm">
           <span>
-            Discover the most outstanding articles on all topics of life. Write
-            your stories and share them
+            Connect with friends and enjoy unforgettable experiences with fast &
+            easy booking.
           </span>
 
           <div className="flex justify-between items-center mt-4">
