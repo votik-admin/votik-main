@@ -29,7 +29,7 @@ export default function ViewBooking({
   useEffect(() => {
     const fetchBookingHash = async () => {
       setLoading(true);
-      const response = await fetch(`/api/qr/${event.id}`, {
+      const response = await fetch(`/api/qr/${data.id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

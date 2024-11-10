@@ -31,6 +31,12 @@ const getEventFromId = (id: string) =>
     .eq("id", id)
     .single();
 
+const getBouncersForEvent = (eventId: string) =>
+  supabase
+    .from("bouncer_logins")
+    .select("*, events(*)")
+    .eq("event_id", eventId);
+
 const getUserFromAuthTable = () => supabase.auth.getUser();
 const getUserFromUserTable = (id: string) =>
   supabase.from("users").select("*").eq("id", id).single();
@@ -72,4 +78,5 @@ export {
 
   // Organiser
   getAllEventsByOrganizer,
+  getBouncersForEvent,
 };

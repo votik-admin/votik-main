@@ -33,7 +33,7 @@ const QrCodeScanner = () => {
       });
 
       if (!res.ok) {
-        throw new Error("Failed to mark ticket as used");
+        throw new Error((await res.json()).error);
       }
 
       await res.json();
@@ -41,8 +41,11 @@ const QrCodeScanner = () => {
       setScanResult(null);
       setBookingDetails(null);
       toast.success("Ticket marked as used", { id: toastId });
-    } catch (err) {
-      toast.error("Failed to mark ticket as used", { id: toastId });
+      videoRef.current?.play();
+    } catch (err: any) {
+      toast.error(`Failed to mark ticket as used: ${err.message}`, {
+        id: toastId,
+      });
       console.error(err);
     } finally {
       setLoading(false);
@@ -50,7 +53,11 @@ const QrCodeScanner = () => {
   };
 
   const handleScan = (result: string) => {
-    console.log({ result });
+    setError(null);
+    setBookingDetails(null);
+    setBookingLoading(false);
+    setScanResult(null);
+    console.log("result", result);
     if (result && !scanResult) {
       if (!result.startsWith("VOTIK")) {
         setError("Invalid QR code");
@@ -76,6 +83,8 @@ const QrCodeScanner = () => {
         if (!response.ok) {
           setError("Failed to fetch booking details");
           setBookingLoading(false);
+          videoRef.current?.play();
+          setScanResult(null);
           toast.error("Failed to fetch booking details", { id: toastId });
           return;
         }
@@ -106,86 +115,79 @@ const QrCodeScanner = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (bookingDetails === null) {
-      videoRef.current?.play();
-    }
-  }, [bookingDetails]);
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <div className="flex flex-col p-6 rounded-lg w-11/12 max-w-md shadow-md gap-5">
-        <h2 className="text-xl font-semibold text-white text-center mb-4">
-          Scan Tickets
-        </h2>
-        <div className="rounded overflow-hidden">
-          <video
-            ref={videoRef}
-            className="w-full rounded qr-video"
-            style={{ borderRadius: "0.5rem" }}
-          />
-        </div>
-        {scanResult ? (
-          bookingLoading ? (
-            <div className="text-center text-white">
-              Loading booking details...
-            </div>
-          ) : (
-            bookingDetails && (
-              <div className="text-white">
-                <h3 className="text-lg font-semibold">Booking Details</h3>
-                <div className="flex flex-col gap-2">
-                  <div>
-                    <span className="font-semibold">Name:</span>{" "}
-                    {bookingDetails.users.first_name}{" "}
-                    {bookingDetails.users.last_name}
-                  </div>
-                  <div>
-                    <span className="font-semibold">Email:</span>{" "}
-                    {bookingDetails.users.email}
-                  </div>
-                  <div>
-                    <span className="font-semibold">Phone:</span>{" "}
-                    {bookingDetails.users.phone_number}
-                  </div>
-                  <div>
-                    <span className="font-semibold">Tickets:</span>{" "}
-                    {bookingDetails.booked_count}
-                  </div>
-                  <div>
-                    <span className="font-semibold">Ticket Type:</span>{" "}
-                    {bookingDetails.tickets.name}
-                  </div>
+    <div className="flex flex-col p-6 rounded-lg w-11/12 gap-5 m-auto">
+      <h2 className="text-xl font-semibold text-white text-center mb-4">
+        Scan Tickets
+      </h2>
+      <div className="rounded overflow-hidden">
+        <video
+          ref={videoRef}
+          className="w-full rounded qr-video"
+          style={{ borderRadius: "0.5rem" }}
+        />
+      </div>
+      {scanResult ? (
+        bookingLoading ? (
+          <div className="text-center text-white">
+            Loading booking details...
+          </div>
+        ) : (
+          bookingDetails && (
+            <div className="text-white">
+              <h3 className="text-lg font-semibold">Booking Details</h3>
+              <div className="flex flex-col gap-2">
+                <div>
+                  <span className="font-semibold">Name:</span>{" "}
+                  {bookingDetails.users.first_name}{" "}
+                  {bookingDetails.users.last_name}
                 </div>
-                <div className="flex gap-4 mt-4">
-                  <ButtonPrimary
-                    onClick={() => markUsed(scanResult)}
-                    loading={loading}
-                    disabled={loading}
-                  >
-                    Mark as used
-                  </ButtonPrimary>
-                  <ButtonSecondary
-                    onClick={() => {
-                      setScanResult(null);
-                      setBookingDetails(null);
-                    }}
-                    disabled={loading}
-                    loading={loading}
-                  >
-                    Cancel
-                  </ButtonSecondary>
+                <div>
+                  <span className="font-semibold">Email:</span>{" "}
+                  {bookingDetails.users.email}
+                </div>
+                <div>
+                  <span className="font-semibold">Phone:</span>{" "}
+                  {bookingDetails.users.phone_number}
+                </div>
+                <div>
+                  <span className="font-semibold">Tickets:</span>{" "}
+                  {bookingDetails.booked_count}
+                </div>
+                <div>
+                  <span className="font-semibold">Ticket Type:</span>{" "}
+                  {bookingDetails.tickets.name}
                 </div>
               </div>
-            )
+              <div className="flex gap-4 mt-4">
+                <ButtonPrimary
+                  onClick={() => markUsed(scanResult)}
+                  loading={loading}
+                  disabled={loading}
+                >
+                  Mark as used
+                </ButtonPrimary>
+                <ButtonSecondary
+                  onClick={() => {
+                    setScanResult(null);
+                    setBookingDetails(null);
+                    videoRef.current?.play();
+                  }}
+                  disabled={loading}
+                  loading={loading}
+                >
+                  Cancel
+                </ButtonSecondary>
+              </div>
+            </div>
           )
-        ) : (
-          <div className="text-center text-white">
-            Scan a QR code to get started
-          </div>
-        )}
-        {error && <div className="text-red-500 text-center mt-4">{error}</div>}
-      </div>
+        )
+      ) : (
+        <div className="text-center text-white">
+          Scan a QR code to get started
+        </div>
+      )}
+      {error && <div className="text-red-500 text-center mt-4">{error}</div>}
     </div>
   );
 };
