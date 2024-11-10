@@ -28,14 +28,6 @@ export interface AccountPageProps {
 
 type OrganizerDetailsForm = Tables<"organizers">;
 
-function isEmail(email: unknown): boolean {
-  if (typeof email !== "string") {
-    return false;
-  }
-  // Check if the email is valid
-  return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
-}
-
 function isValidGSTIN(gstin: string): boolean {
   const gstinRegex = /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}$/;
 

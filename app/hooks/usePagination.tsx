@@ -23,7 +23,8 @@ function usePagination<T>({
     try {
       // Fetch paginated data
       const { data: pageData, error: dataError } = await query.range(
-        (page - 1) * pageSize,
+        // (page - 1) * pageSize,
+        0,
         page * pageSize - 1
       );
 

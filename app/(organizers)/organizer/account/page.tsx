@@ -12,7 +12,8 @@ export default async function Page() {
     const headersList = headers();
     const header_url = headersList.get("x-url") || "";
     const path = new URL(header_url).pathname;
-    redirect(`/auth/login?redirect=${path}`);
+    if (error || !session) redirect(`/auth/login?redirect=${path}`);
+    if (!organizer) redirect(`/organizer/signup?redirect=${path}`);
   }
 
   return (

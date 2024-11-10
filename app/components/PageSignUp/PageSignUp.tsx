@@ -422,7 +422,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
           <span className="block text-center text-neutral-700 dark:text-neutral-300">
             Already have an account? {` `}
             <Link
-              href="/auth/login"
+              href={`/auth/login?redirect=${redirectUrl}`}
               className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
             >
               Sign in

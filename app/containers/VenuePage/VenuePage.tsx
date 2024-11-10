@@ -66,22 +66,26 @@ const EventTab = ({
   return (
     <Tab.Panel className="mt-8">
       <div className="mt-8 grid grid-cols-1 gap-6 md:gap-7 sm:grid-cols-2">
-        {loading &&
-          Array.from({ length: 4 }).map((_, id) => (
+        {data.length === 0 &&
+          loading &&
+          Array.from({ length: 2 }).map((_, id) => (
             <CardCategoryCustomSkeleton key={id} />
           ))}
         {data &&
           data.map((event) => (
             <CardCategoryCustom key={event.id} taxonomy={event} />
           ))}
-        {data.length === 0 && (
+        {!loading && data.length === 0 && (
           <p className="text-lg text-neutral-500 dark:text-neutral-400 text-center w-full">
             No events found
           </p>
         )}
       </div>
       <div className="flex mt-11 justify-center items-center">
-        <ButtonSecondary onClick={() => setPage((prev) => prev + 1)}>
+        <ButtonSecondary
+          onClick={() => setPage((prev) => prev + 1)}
+          loading={loading}
+        >
           Show me more
         </ButtonSecondary>
       </div>
