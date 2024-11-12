@@ -1,9 +1,8 @@
 import PageLogin from "@app/components/PageLogin/PageLogin";
 import SessionProvider from "@app/contexts/SessionContext";
 import { getSessionAndUser } from "@app/lib/auth";
-import { createClient } from "@app/lib/supabase/server";
-import { Database } from "@app/types/database.types";
 import { sanitizeRedirect } from "@app/utils/sanitizeRedirectUrl";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -20,9 +19,14 @@ export default async function Login() {
     redirect("/user/account");
   }
 
+  const revalidate = async () => {
+    "use server";
+    revalidatePath("(pages)/auth/login", "page");
+  };
+
   return (
     <SessionProvider initialSession={session} initialUser={user}>
-      <PageLogin />
+      <PageLogin revalidate={revalidate} />
     </SessionProvider>
   );
 }

@@ -167,7 +167,7 @@ const PayPage = async ({
             </div>
           </div>
         </div>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end sm:gap-6 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end sm:gap-6 gap-4 items-stretch">
           <Link href="/">
             <ButtonSecondary>Explore more events</ButtonSecondary>
           </Link>

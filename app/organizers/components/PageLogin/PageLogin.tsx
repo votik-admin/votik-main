@@ -67,6 +67,9 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
       if (phoneLogin) {
         const { data, error } = await supabase.auth.signInWithOtp({
           phone: sanitizePhone(formData.phone),
+          options: {
+            shouldCreateUser: false,
+          },
         });
         otpTimer.current = setInterval(() => {
           setOtpTimerValue((prev) => {
@@ -98,6 +101,7 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
         }
 
         toast.success("Logged in successfully!", { id: toastId });
+        router.replace(redirectUrl);
       }
     } catch (error: any) {
       toast.error(`Login failed: ${error.message}`, { id: toastId });
@@ -129,6 +133,9 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
     try {
       const { data, error } = await supabase.auth.signInWithOtp({
         phone: sanitizePhone(watch("phone")),
+        options: {
+          shouldCreateUser: false,
+        },
       });
 
       otpTimer.current = setInterval(() => {

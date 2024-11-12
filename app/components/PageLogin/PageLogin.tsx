@@ -25,6 +25,7 @@ import sanitizePhone, { checkPhone } from "@app/utils/sanitizePhone";
 
 export interface PageLoginProps {
   className?: string;
+  revalidate: () => void;
 }
 
 const loginSocials: {
@@ -46,7 +47,7 @@ type LoginForm = {
   otp: string;
 };
 
-const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
+const PageLogin: FC<PageLoginProps> = ({ className = "", revalidate }) => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -57,6 +58,10 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
   const [otpTimerValue, setOtpTimerValue] = React.useState(300);
   const [otpSent, setOtpSent] = React.useState(false);
   const [otpExpired, setOtpExpired] = React.useState(false);
+
+  useEffect(() => {
+    revalidate();
+  }, []);
 
   const {
     register: registerOld,
@@ -83,6 +88,9 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
       if (phoneLogin) {
         const { data, error } = await supabase.auth.signInWithOtp({
           phone: sanitizePhone(formData.phone),
+          options: {
+            shouldCreateUser: false,
+          },
         });
 
         if (error) {
@@ -115,6 +123,7 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
         }
 
         toast.success("Logged in successfully!", { id: toastId });
+        router.push(redirectUrl);
       }
     } catch (error: any) {
       toast.error(`Login failed: ${error.message}`, { id: toastId });
@@ -146,6 +155,9 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
     try {
       const { data, error } = await supabase.auth.signInWithOtp({
         phone: sanitizePhone(watch("phone")),
+        options: {
+          shouldCreateUser: false,
+        },
       });
 
       otpTimer.current = setInterval(() => {
@@ -211,9 +223,6 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
                     }
 
                     toast.success("Logged in successfully!", { id: toastId });
-
-                    console.log("redirectUrl", redirectUrl);
-
                     router.replace(redirectUrl);
                   } catch (err: any) {
                     toast.error(err.message, { id: toastId });

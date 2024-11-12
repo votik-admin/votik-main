@@ -183,7 +183,7 @@ export default function ViewBooking({
                 <div className="relative inline-flex items-center justify-center w-full max-w-5xl py-5 sm:py-8 h-screen align-middle mx-auto">
                   <div className="absolute right-2 top-2 md:top-4 md:right-4 z-50">
                     <ButtonClose
-                      className="sm:w-12 sm:h-12"
+                      className="sm:w-12 sm:h-12 bg-neutral-50 dark:bg-neutral-700"
                       onClick={() => setOpen(false)}
                     />
                   </div>

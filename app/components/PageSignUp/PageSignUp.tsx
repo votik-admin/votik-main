@@ -158,6 +158,9 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
     try {
       const { data, error } = await supabase.auth.signInWithOtp({
         phone: sanitizePhone(watch("phone")),
+        options: {
+          shouldCreateUser: false,
+        },
       });
 
       otpTimer.current = setInterval(() => {

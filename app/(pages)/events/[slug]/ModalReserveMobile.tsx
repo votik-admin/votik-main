@@ -9,7 +9,7 @@ import { Tables } from "@app/types/database.types";
 interface ModalReserveMobileProps {
   tickets?: Tables<"tickets">[];
   event_id?: string;
-  user: Tables<"users">;
+  user: Tables<"users"> | null;
   onClose?: () => void;
   renderChildren?: (p: { openModal: () => void }) => React.ReactNode;
 }
@@ -71,7 +71,7 @@ const ModalReserveMobile: FC<ModalReserveMobileProps> = ({
 
                     <div className="flex-1 pt-12 flex flex-col">
                       <div className="flex-1 bg-white dark:bg-neutral-900 px-4">
-                        {tickets && (
+                        {tickets && user && (
                           <SectionChoseTicket
                             user={user}
                             tickets={tickets}

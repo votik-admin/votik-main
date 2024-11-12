@@ -93,20 +93,17 @@ export default async function RootLayout({
   const { session, user } = await getSessionAndUser();
 
   return (
-    <html lang="en" className="dark">
-      <body className={`${bebasNeue.variable}`}>
-        <NextTopLoader
-          showSpinner={false}
-          color={"#c4fd07"}
-          // color={"#430D7F"}
-        />
-        <div className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
-          <SiteHeader session={session} user={user} />
-          {children}
-          <Footer />
-        </div>
-      </body>
-      <GoogleAnalytics gaId="G-R1RJRTNCKF" />
-    </html>
+    <>
+      <NextTopLoader
+        showSpinner={false}
+        color={"#c4fd07"}
+        // color={"#430D7F"}
+      />
+      <div className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
+        <SiteHeader session={session} user={user} />
+        {children}
+        <Footer />
+      </div>
+    </>
   );
 }

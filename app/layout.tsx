@@ -1,4 +1,6 @@
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
+import Head from "next/head";
 
 import "react-next-dates/dist/style.css";
 
@@ -14,7 +16,11 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <Head>
+        <meta name="mobile-web-app-capable" content="yes" />
+      </Head>
       <body>{children}</body>
+      <GoogleAnalytics gaId="G-R1RJRTNCKF" />
     </html>
   );
 }

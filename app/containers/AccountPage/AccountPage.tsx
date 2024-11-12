@@ -24,6 +24,7 @@ import { enIN } from "date-fns/locale";
 
 export interface AccountPageProps {
   className?: string;
+  revalidate: () => void;
 }
 
 function isEmail(email: unknown): boolean {
@@ -36,7 +37,11 @@ function isEmail(email: unknown): boolean {
 
 type UserDetailsForm = Tables<"users">;
 
-const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
+const AccountPage: FC<AccountPageProps> = ({ className = "", revalidate }) => {
+  useEffect(() => {
+    revalidate();
+  }, []);
+
   const { user: u } = useContext(SessionContext);
 
   const user = u!;

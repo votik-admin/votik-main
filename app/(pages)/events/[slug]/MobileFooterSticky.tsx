@@ -34,7 +34,7 @@ const MobileFooterSticky = ({
         <ModalReserveMobile
           tickets={tickets}
           event_id={event_id}
-          user={user!}
+          user={user}
           renderChildren={({ openModal }) => (
             <ButtonCustom
               onClick={async () => {
