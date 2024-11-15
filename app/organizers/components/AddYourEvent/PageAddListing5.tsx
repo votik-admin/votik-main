@@ -68,7 +68,7 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ tickets, revalidate }) => {
         price: ticket.price,
         quantity: ticket.initial_available_count,
         description: ticket.description,
-        id: ticket.id,
+        id: ticket.id ?? null,
       })),
     },
   });
@@ -96,6 +96,7 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ tickets, revalidate }) => {
       }));
 
     for (const ticket of d.tickets) {
+      console.log("Ticket", ticket);
       if (ticket.id !== null) {
         const oldTicket = oldTix.find((t) => t.id === ticket.id);
         if (
@@ -137,6 +138,8 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ tickets, revalidate }) => {
     const newTix = d.tickets.filter((t) => t.id === null);
 
     const toastId = toast.loading("Updating event...");
+
+    console.log("New tickets", newTix);
 
     const newTickets = newTix.map((ticket) => ({
       event_id: eventId,

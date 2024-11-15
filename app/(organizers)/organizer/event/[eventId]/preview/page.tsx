@@ -19,6 +19,7 @@ import Link from "next/link";
 import convertNumbThousand from "@app/utils/convertNumbThousand";
 
 import type { Metadata, ResolvingMetadata } from "next";
+import { createClient } from "@app/lib/supabase/server";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -31,7 +32,14 @@ const ListingStayDetailPage = async ({
     eventId: string;
   };
 }) => {
-  const { data: event, error } = await getEventFromId(eventId);
+  const supabase = createClient();
+
+  const { data: event, error } = await supabase
+    .from("events")
+    .select("*, organizers(*), venues(*), tickets(*)")
+    .eq("id", eventId)
+    .single();
+
   if (error || !event) {
     if (error) {
       console.log("💣💣💣", error);
