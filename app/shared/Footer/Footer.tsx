@@ -1,8 +1,11 @@
+"use client";
+
 import Logo from "@app/shared/Logo/Logo";
 import { CustomLink } from "@app/data/types";
 import Link from "next/link";
 import React from "react";
 import SocialsList1 from "../SocialsList1/SocialsList1";
+import { usePathname } from "next/navigation";
 
 export interface WidgetFooterMenu {
   id: string;
@@ -52,6 +55,13 @@ const widgetMenus: WidgetFooterMenu[] = [
 ];
 
 const Footer: React.FC = () => {
+  const pathName = usePathname();
+
+  if (pathName.includes("/chat")) {
+    // Hide footer in chat page
+    return null;
+  }
+
   const renderWidgetMenuItem = (menu: WidgetFooterMenu, index: number) => {
     return (
       <div key={index} className="text-sm">

@@ -137,8 +137,27 @@ const AccountPage: FC<AccountPageProps> = ({ className = "", revalidate }) => {
       })
       .eq("id", user.id);
 
+    // Upsert the public profile
+    const { error: publicProfileError } = await supabase
+      .from("users_public")
+      .upsert(
+        {
+          id: user.id,
+          avatar_url: avatarUrl,
+          username: data.username,
+        },
+        {
+          onConflict: "id",
+        }
+      );
+
     if (error) {
       toast.error(error.message, { id: toastId });
+      return;
+    }
+
+    if (publicProfileError) {
+      toast.error(publicProfileError.message, { id: toastId });
       return;
     }
 
@@ -189,6 +208,19 @@ const AccountPage: FC<AccountPageProps> = ({ className = "", revalidate }) => {
       .update({ avatar_url: publicUrl })
       .eq("id", user.id);
 
+    // Upsert the public profile
+    const { error: publicProfileError } = await supabase
+      .from("users_public")
+      .upsert(
+        {
+          id: user.id,
+          avatar_url: publicUrl,
+        },
+        {
+          onConflict: "id",
+        }
+      );
+
     if (updateError) {
       // Delete the uploaded image
       await supabase.storage
@@ -198,6 +230,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "", revalidate }) => {
       toast.error(updateError.message, { id: uploaderToast });
       return;
     }
+
     setAvatarUrl(publicUrl);
     toast.success("Image uploaded successfully", { id: uploaderToast });
   };

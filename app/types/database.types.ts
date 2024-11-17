@@ -184,6 +184,38 @@ export type Database = {
           }
         ];
       };
+      messages: {
+        Row: {
+          content: string | null;
+          created_at: string;
+          event_id: string;
+          id: string;
+          sender_id: string;
+        };
+        Insert: {
+          content?: string | null;
+          created_at?: string;
+          event_id?: string;
+          id?: string;
+          sender_id?: string;
+        };
+        Update: {
+          content?: string | null;
+          created_at?: string;
+          event_id?: string;
+          id?: string;
+          sender_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "messages_event_id_fkey";
+            columns: ["event_id"];
+            isOneToOne: false;
+            referencedRelation: "events";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       organizers: {
         Row: {
           addr: string | null;
@@ -241,6 +273,27 @@ export type Database = {
           profile_complete?: boolean;
           slug?: string | null;
           state?: string | null;
+        };
+        Relationships: [];
+      };
+      participants: {
+        Row: {
+          created_at: string;
+          event_id: string;
+          joined_at: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          event_id?: string;
+          joined_at?: string;
+          user_id?: string;
+        };
+        Update: {
+          created_at?: string;
+          event_id?: string;
+          joined_at?: string;
+          user_id?: string;
         };
         Relationships: [];
       };
@@ -421,6 +474,30 @@ export type Database = {
           slug?: string | null;
           state?: string | null;
           username?: string;
+        };
+        Relationships: [];
+      };
+      users_public: {
+        Row: {
+          avatar_url: string | null;
+          created_at: string;
+          id: string;
+          name: string | null;
+          username: string | null;
+        };
+        Insert: {
+          avatar_url?: string | null;
+          created_at?: string;
+          id?: string;
+          name?: string | null;
+          username?: string | null;
+        };
+        Update: {
+          avatar_url?: string | null;
+          created_at?: string;
+          id?: string;
+          name?: string | null;
+          username?: string | null;
         };
         Relationships: [];
       };
