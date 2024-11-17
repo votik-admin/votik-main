@@ -1,3 +1,4 @@
+import { createClient } from "@app/lib/supabase/server";
 import { createServiceClient } from "@app/lib/supabase/serverAdmin";
 import ManageBouncers from "@app/organizers/components/ManageBouncers/ManageBouncers";
 import { getBouncersForEvent, getEventFromId } from "@app/queries";
@@ -12,7 +13,9 @@ export default async function Page({
 }) {
   const supabase = createServiceClient();
 
-  const { data: event, error } = await supabase
+  const supabaseClient = createClient();
+
+  const { data: event, error } = await supabaseClient
     .from("events")
     .select("*")
     .eq("id", eventId)
