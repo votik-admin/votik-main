@@ -12,7 +12,12 @@ export default async function Page({
 }) {
   const supabase = createServiceClient();
 
-  const { data: event, error } = await getEventFromId(eventId);
+  const { data: event, error } = await supabase
+    .from("events")
+    .select("*")
+    .eq("id", eventId)
+    .single();
+
   if (error || !event) {
     if (error) {
       console.log("💣💣💣", error);
