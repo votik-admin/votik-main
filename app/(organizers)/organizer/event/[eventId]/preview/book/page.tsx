@@ -13,6 +13,7 @@ import ReadMoreParagraph from "@app/shared/ReadMoreParagraph/ReadMoreParagraph";
 import SectionChoseTicket from "./SectionChoseTicket";
 import { getSessionAndUser } from "@app/lib/auth";
 import { headers } from "next/headers";
+import { createClient } from "@app/lib/supabase/server";
 
 const ListingStayDetailPage = async ({
   params: { eventId },
@@ -21,6 +22,8 @@ const ListingStayDetailPage = async ({
     eventId: string;
   };
 }) => {
+  const supabase = createClient();
+
   const { user, session, error: authError } = await getSessionAndUser();
 
   if (authError || !user) {
@@ -30,7 +33,12 @@ const ListingStayDetailPage = async ({
     redirect(`/auth/login?redirect=${path}`);
   }
 
-  const { data: event, error } = await getEventFromId(eventId);
+  const { data: event, error } = await supabase
+    .from("events")
+    .select("*, organizers(*), venues(*), tickets(*)")
+    .eq("id", eventId)
+    .single();
+
   if (error || !event) {
     if (error) {
       console.log("💣💣💣", error);

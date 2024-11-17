@@ -95,7 +95,7 @@ const ManageBouncers: FC<BouncerUpdateProps> = ({ bouncers, event }) => {
             });
 
             if (!r.ok) {
-              rej(new Error("Failed to add bouncer"));
+              rej(new Error(`Failed to add bouncer: ${r.statusText}`));
             }
 
             res({});
