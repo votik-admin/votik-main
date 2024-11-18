@@ -14,6 +14,7 @@ import SectionChoseTicket from "./SectionChoseTicket";
 import { getSessionAndUser } from "@app/lib/auth";
 import { headers } from "next/headers";
 import { createClient } from "@app/lib/supabase/server";
+import Ribbon from "@app/components/Ribbon";
 
 const ListingStayDetailPage = async ({
   params: { eventId },
@@ -113,9 +114,10 @@ const ListingStayDetailPage = async ({
 
   return (
     <div
-      className={`ListingDetailPage nc-ListingStayDetailPage`}
+      className={`ListingDetailPage nc-ListingStayDetailPage relative overflow-hidden`}
       data-nc-id="ListingStayDetailPage"
     >
+      <Ribbon text="Preview" className="top-20 -right-3 z-50" />
       <main className="container relative z-10 mt-11 flex flex-col lg:flex-row ">
         {/* CONTENT */}
         <div className="w-full lg:w-3/5 xl:w-1/2 space-y-8 lg:space-y-10 lg:pr-10">

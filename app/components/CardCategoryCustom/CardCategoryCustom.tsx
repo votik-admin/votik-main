@@ -12,15 +12,17 @@ export interface CardCategoryCustomProps {
   taxonomy: Tables<"events"> & {
     tickets: { price: number }[];
   };
+  preview?: boolean;
 }
 
 const CardCategoryCustom: FC<CardCategoryCustomProps> = ({
   className = "",
   taxonomy,
+  preview,
 }) => {
-  const { slug, name, city, location, start_time, primary_img, tickets } =
+  const { id, slug, name, city, location, start_time, primary_img, tickets } =
     taxonomy;
-  const href = `/events/${slug}`;
+  const href = preview ? `/organizer/event/${id}/preview` : `/events/${slug}`;
 
   return (
     <div className="rounded-2xl overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700">

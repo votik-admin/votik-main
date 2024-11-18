@@ -41,13 +41,10 @@ export const POST = async (req: Request, res: Response) => {
   const { data: newLogin, error } = await supabaseAdmin
     .from("bouncer_logins")
     .insert([{ username, password: hashedPassword, event_id: eventId }])
-    .single();
+    .select("*");
 
-  if (error || !newLogin) {
-    return Response.json(
-      { error: "Failed to create bouncer" },
-      { status: 500 }
-    );
+  if (error) {
+    return Response.json({ error: error.message }, { status: 500 });
   }
 
   return Response.json({ session: newLogin, error: null }, { status: 200 });

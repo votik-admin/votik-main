@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import FormItem from "../AddYourEvent/FormItem";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
+import { useRouter } from "next/navigation";
 
 export interface BouncerUpdateProps {
   bouncers: {
@@ -40,7 +41,7 @@ const ManageBouncers: FC<BouncerUpdateProps> = ({ bouncers, event }) => {
     },
   });
 
-  console.log({ bouncers });
+  const router = useRouter();
 
   const [loading, setLoading] = useState(false);
 
@@ -95,8 +96,16 @@ const ManageBouncers: FC<BouncerUpdateProps> = ({ bouncers, event }) => {
             });
 
             if (!r.ok) {
-              rej(new Error(`Failed to add bouncer: ${r.statusText}`));
+              try {
+                const data = await r.json();
+                rej(new Error(`Failed to add bouncer: ${data.error}`));
+              } catch (e) {
+                console.error(e);
+                rej(new Error(`Failed to add bouncer: ${r.statusText}`));
+              }
             }
+
+            router.refresh();
 
             res({});
           }),

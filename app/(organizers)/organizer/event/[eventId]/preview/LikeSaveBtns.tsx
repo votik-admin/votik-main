@@ -2,9 +2,15 @@
 import { Tables } from "@app/types/database.types";
 import React from "react";
 
-const LikeSaveBtns = ({ event }: { event: Tables<"events"> }) => {
+const LikeSaveBtns = ({
+  event,
+  className,
+}: {
+  event: Tables<"events">;
+  className?: string;
+}) => {
   return (
-    <div className="flow-root">
+    <div className={`flow-root ${className}`}>
       <div className="flex text-neutral-700 dark:text-neutral-300 text-sm -mx-3 -my-1.5">
         <span
           className="py-1.5 px-3 flex rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer"

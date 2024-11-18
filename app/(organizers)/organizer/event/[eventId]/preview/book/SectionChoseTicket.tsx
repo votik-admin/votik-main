@@ -1,6 +1,7 @@
 "use client";
 import Label from "@app/components/Label/Label";
 import NcInputNumber from "@app/components/NcInputNumber/NcInputNumber";
+import Ribbon from "@app/components/Ribbon";
 import ButtonCustom from "@app/shared/Button/ButtonCustom";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import Input from "@app/shared/Input/Input";

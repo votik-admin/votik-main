@@ -96,3 +96,30 @@ label:has(+ input:required):after {
   content: " *";
   color: red;
 }
+
+.triangle-container {
+  position: relative;
+  width: 300px; /* Adjust width */
+  height: 300px; /* Adjust height */
+  background-color: #f0f0f0;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 0); /* Triangle shape */
+  border: 2px solid #ccc; /* Optional border */
+}
+
+.ribbon {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  background-color: #ff6347; /* Ribbon color */
+  color: white;
+  padding: 8px 20px;
+  transform: rotate(45deg);
+  font-weight: bold;
+  text-align: center;
+}
+
+.triangle-content {
+  position: relative;
+  z-index: 1;
+  padding: 20px; /* Adjust padding for your content */
+}

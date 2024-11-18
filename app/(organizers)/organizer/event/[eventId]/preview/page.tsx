@@ -1,13 +1,11 @@
 import React, { FC } from "react";
 import Avatar from "@app/shared/Avatar/Avatar";
 import Badge from "@app/shared/Badge/Badge";
-import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
 import LikeSaveBtns from "./LikeSaveBtns";
 import BackgroundSection from "@app/components/BackgroundSection/BackgroundSection";
 import SectionSliderNewCategories from "@app/components/SectionSliderNewCategoriesCustom/SectionSliderNewCategoriesCustom";
 import MobileFooterSticky from "./MobileFooterSticky";
 import GoogleMap from "./GoogleMap";
-import { getEventFromId, getEventFromSlug } from "@app/queries";
 import { notFound } from "next/navigation";
 import formatDate from "@app/utils/formatDate";
 import { ENUM_MAP } from "@app/types/hardcoded";
@@ -20,6 +18,7 @@ import convertNumbThousand from "@app/utils/convertNumbThousand";
 
 import type { Metadata, ResolvingMetadata } from "next";
 import { createClient } from "@app/lib/supabase/server";
+import Ribbon from "@app/components/Ribbon";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -53,7 +52,8 @@ const ListingStayDetailPage = async ({
     const href = `/events/category/${ENUM_MAP[category].slug}`;
     const color = ENUM_MAP[category].color;
     return (
-      <div className="listingSection__wrap !space-y-6">
+      <div className="listingSection__wrap !space-y-6 relative overflow-hidden">
+        <Ribbon text="Preview" className="top-20 -right-5 z-0" />
         {/* 1 */}
         <div className="flex justify-between items-center">
           <Badge
@@ -62,7 +62,7 @@ const ListingStayDetailPage = async ({
             href={href}
             color={color}
           />
-          <LikeSaveBtns event={event} />
+          <LikeSaveBtns event={event} className="z-10 mr-6" />
         </div>
 
         {/* 2 */}
