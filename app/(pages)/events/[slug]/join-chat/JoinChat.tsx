@@ -32,7 +32,7 @@ export default function JoinChat({ eventId }: { eventId: string }) {
 
       toast.success("Successfully joined chat", { id: toastId });
 
-      router.push(`/events/${eventId}/chat`);
+      router.push(`/user/chat`);
     } catch (error: any) {
       console.error("Error joining chat:", error);
       toast.error("Error joining chat: " + error.message, { id: toastId });

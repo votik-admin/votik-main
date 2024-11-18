@@ -52,7 +52,7 @@ export default async function Page({
   if (!chatUserError && chatUser) {
     console.error("User is already a participant:", chatUser);
     // Redirect to the chat room if the user is already a participant
-    redirect(`/events/${slug}/chat`);
+    redirect(`/user/chat`);
   }
 
   if (fetchError || !data) {
