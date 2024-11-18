@@ -1,15 +1,15 @@
-import ChatBox from "@app/components/Chat/ChatRoom";
+import { Chat } from "@app/components/chat";
 import ChatSessionProvider from "@app/contexts/UserContext";
 import { getSessionAndUser } from "@app/lib/auth";
 import { createClient } from "@app/lib/supabase/server";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
-export default async function ChatRoom({
-  params: { slug },
+export default async function Page({
+  params: { eventId },
 }: {
   params: {
-    slug: string;
+    eventId: string;
   };
 }) {
   // Check if the user is logged in
@@ -25,17 +25,6 @@ export default async function ChatRoom({
   // Fetch the public user data
   const supabase = createClient();
 
-  const { data: event, error: eventError } = await supabase
-    .from("events")
-    .select("*")
-    .eq("slug", slug)
-    .single();
-
-  if (eventError || !event) {
-    console.error("Event not found:", eventError);
-    return notFound();
-  }
-
   const { data, error: fetchError } = await supabase
     .from("users_public")
     .select("*")
@@ -47,22 +36,20 @@ export default async function ChatRoom({
     redirect(`/user/account`);
   }
 
-  // Check if the user is a participant in the event
-  const { data: chatUser, error: chatUserError } = await supabase
-    .from("participants")
+  const { data: eventData, error: eventError } = await supabase
+    .from("events")
     .select("*")
-    .eq("user_id", user.id)
-    .eq("event_id", event.id);
+    .eq("id", eventId)
+    .single();
 
-  // Ask the user to join the event if they are not a participant
-  if (chatUserError || !chatUser) {
-    console.error("User is not a participant:", chatUserError);
-    redirect(`/events/${slug}/join-chat`);
+  if (eventError || !eventData) {
+    console.error("Event not found:", eventError);
+    return notFound();
   }
 
   return (
     <ChatSessionProvider initialSession={session} initialUser={data}>
-      <ChatBox event={event} />
+      <Chat />
     </ChatSessionProvider>
   );
 }

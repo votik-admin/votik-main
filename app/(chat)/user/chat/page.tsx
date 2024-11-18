@@ -1,4 +1,4 @@
-import { Chat } from "@app/components/chat";
+import { ChatList } from "@app/components/chats-list";
 import ChatSessionProvider from "@app/contexts/UserContext";
 import { getSessionAndUser } from "@app/lib/auth";
 import { createClient } from "@app/lib/supabase/server";
@@ -32,7 +32,7 @@ export default async function Page() {
 
   return (
     <ChatSessionProvider initialSession={session} initialUser={data}>
-      <Chat />
+      <ChatList />
     </ChatSessionProvider>
   );
 }
