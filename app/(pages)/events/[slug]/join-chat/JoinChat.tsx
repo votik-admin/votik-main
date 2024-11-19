@@ -7,7 +7,13 @@ import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 
-export default function JoinChat({ eventId }: { eventId: string }) {
+export default function JoinChat({
+  eventId,
+  notAuthorized,
+}: {
+  eventId: string;
+  notAuthorized: boolean;
+}) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -38,6 +44,17 @@ export default function JoinChat({ eventId }: { eventId: string }) {
       toast.error("Error joining chat: " + error.message, { id: toastId });
     }
   };
+
+  if (!user || notAuthorized) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen gap-2">
+        <h1 className="text-3xl text-red-500 font-semibold">Not Authorized</h1>
+        <p className="text-center">
+          You need to be logged in and have booked a ticket to join the chat
+        </p>
+      </div>
+    );
+  }
 
   return (
     <>

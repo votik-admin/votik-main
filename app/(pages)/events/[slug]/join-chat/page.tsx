@@ -59,9 +59,23 @@ export default async function Page({
     redirect(`/user/account`);
   }
 
+  let notAuthorized = false;
+
+  // Check if the user has any bookings
+  const { data: bookings, error: bookingError } = await supabase
+    .from("ticket_bookings")
+    .select("*")
+    .eq("user_id", user.id)
+    .eq("event_id", event.id);
+
+  if (bookingError || (bookings && bookings.length === 0)) {
+    console.error("User has no bookings:", bookingError);
+    notAuthorized = true;
+  }
+
   return (
     <ChatSessionProvider initialSession={session} initialUser={data}>
-      <JoinChat eventId={event.id} />
+      <JoinChat eventId={event.id} notAuthorized={notAuthorized} />
     </ChatSessionProvider>
   );
 }
