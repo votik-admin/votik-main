@@ -19,6 +19,8 @@ import supabase from "@app/lib/supabase";
 import Avatar from "@app/shared/Avatar/Avatar";
 import { Tables } from "@app/types/database.types";
 import { useRouter } from "next/navigation";
+import debounce from "lodash.debounce";
+import SwitchDarkMode from "@app/shared/SwitchDarkMode/SwitchDarkMode";
 
 type EventChat = Tables<"events"> & {
   messages: ChatMessage[];
@@ -35,6 +37,9 @@ export function ChatList() {
   const user = u!;
 
   const [events, setEvents] = useState<EventChat[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<EventChat[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
 
   const router = useRouter();
 
@@ -78,6 +83,7 @@ export function ChatList() {
       );
 
       setEvents(eventChats);
+      setFilteredEvents(eventChats);
     };
 
     fetchMessages();
@@ -127,6 +133,18 @@ export function ChatList() {
     };
   }, []);
 
+  useEffect(() => {
+    const filtered = events.filter(
+      (event) =>
+        event.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (event.messages.length > 0 &&
+          event.messages[event.messages.length - 1].content
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()))
+    );
+    setFilteredEvents(filtered);
+  }, [searchQuery, events]);
+
   const formatTime = (dateString: string) => {
     return new Date(dateString).toLocaleTimeString("en-US", {
       hour: "2-digit",
@@ -139,61 +157,96 @@ export function ChatList() {
     router.push(`/user/chat/${event.id}`);
   };
 
+  const debouncedSearch = debounce((query: string) => {
+    setSearchQuery(query);
+  }, 300);
+
   return (
-    <div className="w-full bg-white dark:bg-gray-800 border-r dark:border-gray-700">
-      <div className="p-4 bg-gray-50 dark:bg-gray-800 flex justify-between items-center gap-6">
+    <div className="w-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 overflow-hidden h-max-screen">
+      {/* Header */}
+      <div className="p-4 bg-gray-50 dark:bg-gray-800 flex justify-between items-center">
         <Avatar
           imgUrl={user.avatar_url ?? undefined}
-          sizeClass="w-8 h-8 sm:w-9 sm:h-9"
+          sizeClass="w-10 h-10 rounded-full"
           userName={user.username ?? "Kevin"}
         />
-        {/* Votik logo */}
-        <div className="relative z-10 hidden md:flex flex-1">
-          <Logo />
-        </div>
-        <div className="flex space-x-2">
-          <Button variant="ghost" size="icon">
-            <Search className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+        <Logo />
+        <div className="flex space-x-4 items-center">
+          <SwitchDarkMode />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              setShowSearch((prev) => !prev);
+            }}
+          >
+            <Search className="h-6 w-6 text-gray-700 dark:text-gray-300" />
           </Button>
-          <Button variant="ghost" size="icon">
-            <MoreVertical className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-          </Button>
+          {/* <Button variant="ghost" size="icon">
+            <MoreVertical className="h-6 w-6 text-gray-700 dark:text-gray-300" />
+          </Button> */}
         </div>
       </div>
-      <ScrollArea className="h-[calc(100vh-72px)]">
-        {events.length === 0 && (
+
+      {/* Search Bar */}
+      {showSearch && (
+        <div className="p-4">
+          <Input
+            placeholder="Search chats..."
+            onChange={(e) => debouncedSearch(e.target.value)}
+            className="w-full"
+          />
+        </div>
+      )}
+
+      {/* Chat List */}
+      <ScrollArea
+        className={`${
+          showSearch ? "h-[calc(100vh-144px)]" : "h-[calc(100vh-80px)]"
+        }`}
+      >
+        {filteredEvents.length === 0 ? (
           <div className="flex-1 flex items-center justify-center">
             <p className="text-gray-500 dark:text-gray-400 py-40">
               No discussions yet
             </p>
           </div>
-        )}
-        {events.map((event) => (
-          <div
-            key={event.id}
-            className={`flex items-center p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 gap-4`}
-            onClick={() => handleSelectChat(event)}
-          >
-            <Avatar imgUrl={event.primary_img ?? undefined} />
-            <div className="flex-1">
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 max-w-[200px] truncate">
-                {event.name}
-              </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 max-w-[200px] truncate">
-                {event.messages.length > 0
-                  ? event.messages[event.messages.length - 1].content
-                  : "No messages"}
-              </p>
+        ) : (
+          filteredEvents.map((event) => (
+            <div
+              key={event.id}
+              className="flex items-center px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+              onClick={() => handleSelectChat(event)}
+            >
+              {/* Avatar */}
+              <Avatar
+                imgUrl={event.primary_img ?? undefined}
+                sizeClass="w-12 h-12 rounded-full"
+              />
+
+              {/* Chat Info */}
+              <div className="flex-1 ml-4">
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate">
+                  {event.name}
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                  {event.messages.length > 0
+                    ? event.messages[event.messages.length - 1].content
+                    : "No messages yet"}
+                </p>
+              </div>
+
+              {/* Time */}
+              {event.messages.length > 0 && (
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {formatTime(
+                    event.messages[event.messages.length - 1].created_at
+                  )}
+                </span>
+              )}
             </div>
-            {event.messages.length > 0 && (
-              <span className="text-xs text-gray-400 dark:text-gray-500">
-                {formatTime(
-                  event.messages[event.messages.length - 1].created_at
-                )}
-              </span>
-            )}
-          </div>
-        ))}
+          ))
+        )}
       </ScrollArea>
     </div>
   );
