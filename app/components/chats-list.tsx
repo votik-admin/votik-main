@@ -162,9 +162,9 @@ export function ChatList() {
   }, 300);
 
   return (
-    <div className="w-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 overflow-hidden h-max-screen">
+    <div className="w-full bg-white dark:bg-[#1A0C2E] border-r border-purple-200 dark:border-purple-700 overflow-hidden h-max-screen">
       {/* Header */}
-      <div className="p-4 bg-gray-50 dark:bg-gray-800 flex justify-between items-center">
+      <div className="p-4 bg-purple-50 dark:bg-[#2A1442] flex justify-between items-center">
         <Avatar
           imgUrl={user.avatar_url ?? undefined}
           sizeClass="w-10 h-10 rounded-full"
@@ -180,11 +180,8 @@ export function ChatList() {
               setShowSearch((prev) => !prev);
             }}
           >
-            <Search className="h-6 w-6 text-gray-700 dark:text-gray-300" />
+            <Search className="h-6 w-6 text-purple-700 dark:text-purple-300" />
           </Button>
-          {/* <Button variant="ghost" size="icon">
-            <MoreVertical className="h-6 w-6 text-gray-700 dark:text-gray-300" />
-          </Button> */}
         </div>
       </div>
 
@@ -194,7 +191,7 @@ export function ChatList() {
           <Input
             placeholder="Search chats..."
             onChange={(e) => debouncedSearch(e.target.value)}
-            className="w-full"
+            className="w-full bg-white dark:bg-[#3A0244] text-purple-900 dark:text-purple-100 border-purple-300 dark:border-purple-700"
           />
         </div>
       )}
@@ -207,7 +204,7 @@ export function ChatList() {
       >
         {filteredEvents.length === 0 ? (
           <div className="flex-1 flex items-center justify-center">
-            <p className="text-gray-500 dark:text-gray-400 py-40">
+            <p className="text-purple-500 dark:text-purple-400 py-40">
               No discussions yet
             </p>
           </div>
@@ -215,7 +212,7 @@ export function ChatList() {
           filteredEvents.map((event) => (
             <div
               key={event.id}
-              className="flex items-center px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+              className="px-4 py-3 cursor-pointer hover:bg-purple-100 dark:hover:bg-[#3A0244] rounded-lg grid grid-cols-[auto,minmax(0,1fr),auto] gap-4 items-center max-w-full"
               onClick={() => handleSelectChat(event)}
             >
               {/* Avatar */}
@@ -226,10 +223,10 @@ export function ChatList() {
 
               {/* Chat Info */}
               <div className="flex-1 ml-4">
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate">
+                <h3 className="font-semibold text-purple-900 dark:text-purple-100 max-w-full truncate">
                   {event.name}
                 </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                <p className="text-sm text-purple-600 dark:text-purple-400 truncate">
                   {event.messages.length > 0
                     ? event.messages[event.messages.length - 1].content
                     : "No messages yet"}
@@ -238,7 +235,7 @@ export function ChatList() {
 
               {/* Time */}
               {event.messages.length > 0 && (
-                <span className="text-xs text-gray-500 dark:text-gray-400">
+                <span className="text-xs text-purple-500 dark:text-purple-300">
                   {formatTime(
                     event.messages[event.messages.length - 1].created_at
                   )}

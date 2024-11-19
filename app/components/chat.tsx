@@ -258,33 +258,38 @@ export function Chat() {
   return (
     <div className="h-screen">
       {event ? (
-        <div className="grid grid-rows-[auto_1fr_auto] h-full">
-          <div className="p-4 bg-[#008069] dark:bg-[#202c33] flex justify-between items-center">
-            <div className="flex items-center gap-4">
+        <div className="grid grid-rows-[auto_1fr_auto] h-screen">
+          {/* Header */}
+          <div className="p-2 sm:p-4 bg-[#6A0DAD] dark:bg-[#3A0244] flex justify-between items-center max-w-screen overflow-hidden">
+            <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => router.push("/user/chat")}
-                className="hover:bg-[#ffffff1a]"
+                className="hover:bg-[#7C38BC1a] shrink-0"
               >
                 <ChevronLeft className="h-5 w-5 text-white" />
               </Button>
 
-              <div className="flex items-center gap-3 flex-1">
-                <Avatar
-                  imgUrl={event.primary_img ?? undefined}
-                  userName={event.name ?? undefined}
-                />
-                <div>
-                  <h2 className="font-semibold text-white">{event.name}</h2>
-                  <span className="text-xs text-gray-200">
+              <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                <div className="shrink-0">
+                  <Avatar
+                    imgUrl={event.primary_img ?? undefined}
+                    userName={event.name ?? undefined}
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h2 className="font-semibold text-white text-sm sm:text-base truncate">
+                    {event.name}
+                  </h2>
+                  <span className="text-xs text-purple-200 hidden sm:inline-block">
                     {event.messages.length} messages
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1 sm:gap-3 shrink-0">
               {!isSearching && (
                 <>
                   <Button
@@ -294,78 +299,78 @@ export function Chat() {
                       setIsSearching(true);
                       setTimeout(() => searchInputRef.current?.focus(), 0);
                     }}
-                    className="hover:bg-[#ffffff1a]"
+                    className="hover:bg-[#7C38BC1a]"
                   >
                     <Search className="h-5 w-5 text-white" />
                   </Button>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="hover:bg-[#ffffff1a]"
+                    className="hover:bg-[#7C38BC1a]"
                   >
                     <MoreVertical className="h-5 w-5 text-white" />
                   </Button>
                 </>
               )}
-
-              {isSearching && (
-                <div className="flex items-center gap-2 flex-1 bg-[#202c33] rounded-lg p-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => {
-                      setIsSearching(false);
-                      setSearchQuery("");
-                      setSearchResults([]);
-                    }}
-                    className="hover:bg-[#ffffff1a]"
-                  >
-                    <X className="h-5 w-5 text-white" />
-                  </Button>
-                  <input
-                    ref={searchInputRef}
-                    type="text"
-                    placeholder="Search messages..."
-                    value={searchQuery}
-                    onChange={(e) => handleSearch(e.target.value)}
-                    className="flex-1 bg-transparent text-white placeholder-gray-400 focus:outline-none"
-                  />
-                  {searchResults.length > 0 && (
-                    <div className="flex items-center gap-2 text-white text-sm">
-                      <span>{`${currentSearchIndex + 1}/${
-                        searchResults.length
-                      }`}</span>
-                      <div className="flex gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={handlePrevSearchResult}
-                          className="hover:bg-[#ffffff1a] h-8 w-8"
-                        >
-                          <ChevronLeft className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={handleNextSearchResult}
-                          className="hover:bg-[#ffffff1a] h-8 w-8"
-                        >
-                          <ChevronLeft className="h-4 w-4 rotate-180" />
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
+            {isSearching && (
+              <div className="flex items-center gap-2 flex-1 bg-[#3A0244] rounded-lg p-2 max-w-[calc(100vw-2rem)] m-auto">
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  className="flex-1 bg-transparent text-white placeholder-purple-300 focus:outline-none min-w-0"
+                />
+                {searchResults.length > 0 && (
+                  <div className="flex items-center gap-2 text-white text-sm shrink-0">
+                    <span className="hidden sm:inline">{`${
+                      currentSearchIndex + 1
+                    }/${searchResults.length}`}</span>
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handlePrevSearchResult}
+                        className="hover:bg-[#7C38BC1a] h-8 w-8"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleNextSearchResult}
+                        className="hover:bg-[#7C38BC1a] h-8 w-8"
+                      >
+                        <ChevronLeft className="h-4 w-4 rotate-180" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    setIsSearching(false);
+                    setSearchQuery("");
+                    setSearchResults([]);
+                  }}
+                  className="hover:bg-[#7C38BC1a] shrink-0"
+                >
+                  <X className="h-5 w-5 text-white" />
+                </Button>
+              </div>
+            )}
           </div>
 
+          {/* Messages Area */}
           <ScrollArea
-            className="flex-1 p-4 bg-[#efeae2] dark:bg-[#0b141a]"
+            className="flex-1 p-2 sm:p-4 bg-[#E6E6FA] dark:bg-[#1A0C2E]"
             onScroll={handleScroll}
             ref={scrollRef}
           >
-            <div className="space-y-4">
+            <div className="space-y-2 sm:space-y-4">
               {event.messages.map((message, i) => {
                 const isOwnMessage = message.sender_id === user.id;
                 const showSender =
@@ -382,32 +387,33 @@ export function Chat() {
                     } transition-colors duration-300`}
                   >
                     <div
-                      className={`flex flex-col max-w-[65%] ${
+                      className={`flex flex-col max-w-[85%] sm:max-w-[65%] ${
                         isOwnMessage ? "items-end" : "items-start"
                       }`}
                     >
                       {showSender && (
-                        <span className="text-xs text-gray-500 dark:text-gray-400 ml-2 mb-1">
+                        <span className="text-xs text-purple-600 dark:text-purple-400 ml-2 mb-1">
                           {message.sender.username}
                         </span>
                       )}
                       <div
                         className={`rounded-lg px-3 py-2 shadow-sm ${
                           isOwnMessage
-                            ? "bg-[#d9fdd3] dark:bg-[#005c4b]"
-                            : "bg-white dark:bg-[#202c33]"
+                            ? // Deeper purple hues
+                              "bg-[#d8a7ff] dark:bg-[#4A0E6E]"
+                            : "bg-[#F0E6FF] dark:bg-[#2A1442]"
                         }`}
                       >
-                        <p className="text-sm whitespace-pre-wrap text-gray-800 dark:text-white">
+                        <p className="text-sm whitespace-pre-wrap text-gray-900 dark:text-white">
                           {message.content}
                         </p>
                         <div className="flex justify-end items-center mt-1 space-x-1">
-                          <span className="text-[11px] text-gray-500 dark:text-gray-400">
+                          <span className="text-[11px] text-purple-700 dark:text-purple-300">
                             {formatTime(message.created_at)}
                           </span>
                           {isOwnMessage && (
                             <svg
-                              className="w-4 h-4 text-[#53bdeb]"
+                              className="w-4 h-4 text-[#6A1B9A]"
                               viewBox="0 0 16 15"
                               fill="currentColor"
                             >
@@ -424,10 +430,11 @@ export function Chat() {
             <div ref={messagesEndRef} />
           </ScrollArea>
 
+          {/* Scroll to Bottom Button */}
           {isScrolled && !isSearching && (
             <button
               onClick={scrollToBottom}
-              className="fixed bottom-24 right-8 p-2 bg-white dark:bg-[#202c33] text-[#00a884] dark:text-[#00a884] rounded-full shadow-lg hover:bg-gray-100 dark:hover:bg-[#2a3942] focus:outline-none focus:ring-2 focus:ring-[#00a884] dark:focus:ring-[#00a884] transition-all duration-200"
+              className="fixed bottom-20 sm:bottom-24 right-4 sm:right-8 p-2 bg-[#F0E6FF] dark:bg-[#2A1442] text-[#6A0DAD] dark:text-[#9C51DB] rounded-full shadow-lg hover:bg-purple-100 dark:hover:bg-[#3A0244] focus:outline-none focus:ring-2 focus:ring-[#6A0DAD] dark:focus:ring-[#9C51DB] transition-all duration-200"
             >
               <svg
                 className="w-5 h-5"
@@ -443,7 +450,7 @@ export function Chat() {
                 />
               </svg>
               {event.messages.length - searchResults.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#00a884] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-[#6A1B9A] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {event.messages.length - searchResults.length}
                 </span>
               )}
@@ -451,13 +458,13 @@ export function Chat() {
           )}
 
           {/* Message Input Area */}
-          <div className="bg-[#f0f2f5] dark:bg-[#202c33] px-4 py-3">
-            <div className="flex items-end space-x-2 max-w-7xl mx-auto">
-              <div className="flex items-center space-x-2">
+          <div className="bg-[#F0E6FF] dark:bg-[#2A1442] px-2 sm:px-4 py-2 sm:py-3">
+            <div className="flex items-end gap-2 max-w-7xl mx-auto">
+              <div className="flex items-center gap-1 sm:gap-2 shrink-0">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-[#8696a0] hover:bg-[#ffffff1a] dark:hover:bg-[#ffffff1a]"
+                  className="text-purple-600 hover:bg-[#7C38BC1a] dark:hover:bg-[#7C38BC1a] hidden sm:inline-flex"
                 >
                   <Paperclip className="h-5 w-5" />
                 </Button>
@@ -471,9 +478,9 @@ export function Chat() {
                   onKeyDown={handleKeyDown}
                   placeholder="Type a message"
                   rows={1}
-                  className="w-full bg-white dark:bg-[#2a3942] text-gray-900 dark:text-white rounded-lg pl-4 pr-12 py-3 focus:outline-none focus:ring-1 focus:ring-[#00a884] dark:focus:ring-[#00a884] border-none placeholder-gray-500 dark:placeholder-gray-400 resize-none min-h-[40px] max-h-[150px] leading-5"
+                  className="w-full bg-white dark:bg-[#3A0244] text-gray-900 dark:text-white rounded-lg pl-3 sm:pl-4 pr-10 sm:pr-12 py-2 sm:py-3 focus:outline-none focus:ring-1 focus:ring-[#6A0DAD] dark:focus:ring-[#9C51DB] border-none placeholder-purple-500 dark:placeholder-purple-300 resize-none min-h-[40px] max-h-[150px] text-sm sm:text-base leading-5"
                 />
-                <button className="absolute right-3 bottom-2 p-1 text-[#8696a0] hover:text-[#00a884] transition-colors duration-200">
+                <button className="absolute right-2 sm:right-3 bottom-1.5 sm:bottom-2 p-1 text-purple-600 hover:text-[#6A1B9A] transition-colors duration-200">
                   <svg
                     viewBox="0 0 24 24"
                     width="24"
@@ -488,11 +495,11 @@ export function Chat() {
                 </button>
               </div>
 
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-1 sm:gap-2 shrink-0">
                 {inputMessage.trim() ? (
                   <Button
                     onClick={() => handleSendMessage()}
-                    className="p-2 rounded-full bg-[#00a884] hover:bg-[#008f72] text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00a884] dark:focus:ring-offset-[#202c33]"
+                    className="p-2 rounded-full bg-[#6A1B9A] hover:bg-[#4A0E6E] text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#6A1B9A] dark:focus:ring-offset-[#2A1442]"
                   >
                     <Send className="h-5 w-5" />
                   </Button>
@@ -500,7 +507,7 @@ export function Chat() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-[#8696a0] hover:bg-[#ffffff1a] dark:hover:bg-[#ffffff1a]"
+                    className="text-purple-600 hover:bg-[#7C38BC1a] dark:hover:bg-[#7C38BC1a]"
                   >
                     <Mic className="h-5 w-5" />
                   </Button>
@@ -508,35 +515,20 @@ export function Chat() {
               </div>
             </div>
 
-            {/* Typing indicator */}
             <div className="flex justify-center">
-              <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              <div className="mt-1 text-xs text-purple-600 dark:text-purple-400 hidden sm:block">
                 Press Enter to send • Shift + Enter for new line
               </div>
             </div>
           </div>
-
-          {/* Optional: Add typing indicator */}
-          {/* {isTyping && (
-            <div className="absolute bottom-20 left-4 bg-white dark:bg-[#202c33] px-4 py-2 rounded-lg shadow-lg">
-              <div className="flex items-center space-x-2">
-                <div className="flex space-x-1">
-                  <span className="bg-gray-400 rounded-full w-2 h-2 animate-bounce" style={{ animationDelay: "0ms" }} />
-                  <span className="bg-gray-400 rounded-full w-2 h-2 animate-bounce" style={{ animationDelay: "150ms" }} />
-                  <span className="bg-gray-400 rounded-full w-2 h-2 animate-bounce" style={{ animationDelay: "300ms" }} />
-                </div>
-                <span className="text-sm text-gray-500">Someone is typing...</span>
-              </div>
-            </div>
-          )} */}
         </div>
       ) : (
-        <div className="flex-1 flex items-center justify-center bg-[#f0f2f5] dark:bg-[#111b21] h-full">
-          <div className="text-center space-y-4">
-            <div className="w-16 h-16 mx-auto bg-[#00a884] rounded-full flex items-center justify-center">
-              <Search className="h-8 w-8 text-white" />
+        <div className="flex-1 flex items-center justify-center bg-[#F0E6FF] dark:bg-[#1A0C2E] h-full">
+          <div className="text-center space-y-4 p-4">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-[#6A1B9A] rounded-full flex items-center justify-center">
+              <Search className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
             </div>
-            <p className="text-gray-500 dark:text-gray-400">
+            <p className="text-purple-600 dark:text-purple-400 text-sm sm:text-base">
               Select a chat to start messaging
             </p>
           </div>
