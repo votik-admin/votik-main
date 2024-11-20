@@ -47,6 +47,18 @@ export default async function Page({
     return notFound();
   }
 
+  const { data: participantData, error: participantError } = await supabase
+    .from("participants")
+    .select("*")
+    .eq("user_id", user.id)
+    .eq("event_id", eventId)
+    .single();
+
+  if (participantError || !participantData) {
+    // Can't access the chat if the user is not a participant
+    redirect(`/events/${eventData.slug}/join-chat`);
+  }
+
   return (
     <ChatSessionProvider initialSession={session} initialUser={data}>
       <Chat />

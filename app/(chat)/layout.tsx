@@ -90,6 +90,7 @@ export default async function RootLayout({
       <NextTopLoader
         showSpinner={false}
         color={"#c4fd07"}
+        zIndex={9999}
         // color={"#430D7F"}
       />
       <div className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">

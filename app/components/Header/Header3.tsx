@@ -70,7 +70,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
   const renderHeroSearch = () => {
     return (
       <div
-        className={`absolute inset-x-0 top-0 transition-all will-change-[transform,opacity] z-[100] ${
+        className={`absolute inset-x-0 top-0 transition-all will-change-[transform,opacity] z-[40] ${
           showHeroSearch
             ? "visible"
             : "-translate-x-0 -translate-y-[90px] scale-x-[0.395] scale-y-[0.6] opacity-0 invisible pointer-events-none"
