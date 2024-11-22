@@ -1,12 +1,12 @@
 export default function getTimeFromCurrentDate(date: Date) {
   const currentDate = new Date();
   const timeDiff = currentDate.getTime() - date.getTime();
-  const seconds = Math.floor(timeDiff / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-  const months = Math.floor(days / 30);
-  const years = Math.floor(months / 12);
+  const seconds = Math.round(timeDiff / 1000);
+  const minutes = Math.round(seconds / 60);
+  const hours = Math.round(minutes / 60);
+  const days = Math.round(hours / 24);
+  const months = Math.round(days / 30);
+  const years = Math.round(months / 12);
   if (years > 0) {
     return `${years} year${years > 1 ? "s" : ""} ago`;
   } else if (months > 0) {

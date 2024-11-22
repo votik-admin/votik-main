@@ -63,6 +63,8 @@ export default function DashboardPage({
     }
   );
 
+  console.log({ selectedTeam });
+
   const {
     data: bookingsData,
     error: bookingError,
@@ -163,6 +165,10 @@ export default function DashboardPage({
                   Notifications
                 </TabsTrigger> */}
               </TabsList>
+
+              <h2 className="text-xl font-semibold tracking-tight pl-4">
+                {selectedTeam?.name}
+              </h2>
 
               {/* Tab - Overview */}
               <TabsContent value="overview" className="space-y-4">
@@ -380,7 +386,9 @@ export default function DashboardPage({
 
               {/* Tab - Analytics */}
               <TabsContent value="analytics">
-                <AnalyticsChart />
+                {selectedTeam?.slug && (
+                  <AnalyticsChart slug={selectedTeam?.slug} />
+                )}
               </TabsContent>
 
               {/* Add other tabs here */}

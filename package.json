@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@glidejs/glide": "^3.6.2",
+    "@google-analytics/data": "^4.9.0",
     "@headlessui/react": "1.7.7",
     "@heroicons/react": "^2.1.5",
     "@hookform/error-message": "^2.0.1",

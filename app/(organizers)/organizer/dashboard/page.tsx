@@ -6,7 +6,7 @@ import DashboardPage from "./DashboardPage";
 const HomePage = async () => {
   const { session, organizer, error } = await getSessionAndOrganizer();
   if (!session || !organizer || error) {
-    redirect("/auth/login");
+    redirect("/organizer/signup");
   }
 
   return (

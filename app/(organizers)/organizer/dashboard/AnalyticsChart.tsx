@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import * as protos from "@google-analytics/data/build/protos/protos";
 
 import {
   Area,
@@ -34,15 +35,334 @@ import {
   ChartTooltipContent,
 } from "@app/components/ui/chart";
 import { Separator } from "@app/components/ui/separator";
+import useSWR from "swr";
+import Spinner from "@app/components/Spinner/Spinner";
+import getTimeFromCurrentDate, {
+  formatTimeLabel,
+} from "@app/utils/getTimeFromCurrentDate";
+import formatTime from "@app/utils/formatTime";
 
-const AnalyticsChart = () => {
+export type AnalyticsResponse = {
+  data: protos.google.analytics.data.v1beta.IRunReportResponse | null;
+  error: string | null;
+  message: string | null;
+};
+
+const metrics = {
+  activeUsers: {
+    name: "Active Users",
+    description: "Number of active users",
+  },
+  sessions: {
+    name: "Sessions",
+    description: "Number of sessions",
+  },
+  screenPageViews: {
+    name: "Views",
+    description: "Number of views",
+  },
+  screenPageViewsPerUser: {
+    name: "Views Per User",
+    description: "Average Views per User",
+    formatter: (value: string) => Number(value).toFixed(2),
+  },
+  engagedSessions: {
+    name: "Engaged Sessions",
+    description:
+      "The number of sessions that lasted longer than 10 seconds, or had a key event, or had 2 or more screen views",
+  },
+  bounceRate: {
+    name: "Bounce Rate",
+    description: "The percentage of sessions that were not engaged",
+    formatter: (value: string) => `${Math.round(Number(value) * 100)}%`,
+  },
+  eventCount: {
+    name: "Event Count",
+    description:
+      "Number of events (click, first_visit, form_start, form_submit, page_view, scroll, session_start, user_engagement)",
+  },
+  dauPerMau: {
+    name: "DAU per MAU",
+    description:
+      "The rolling percent of 30-day active users who are also 1-day active users",
+  },
+  dauPerWau: {
+    name: "DAU per WAU",
+    description:
+      "The rolling percent of 7-day active users who are also 1-day active users",
+  },
+  sessionsPerUser: {
+    name: "Sessions per User",
+    description: "The average number of sessions per user",
+    formatter: (value: string) => Number(value).toFixed(2),
+  },
+  averageSessionDuration: {
+    name: "Average Session Duration",
+    description: "The average duration of users sessions",
+    formatter: (value: string) => formatTime(Number(value)),
+  },
+  userEngagementDuration: {
+    name: "User Engagement Duration",
+    description:
+      "The total amount of time your event was in the foreground of users` devices.",
+    formatter: (value: string) => formatTime(Number(value)),
+  },
+} as Record<
+  string,
+  { name: string; description: string; formatter?: (value: string) => string }
+>;
+
+const AnalyticsChart = ({ slug }: { slug: string }) => {
+  const dateRanges = [{ startDate: "2024-03-31", endDate: "today" }];
+  const eventSlug = slug;
+
+  const [
+    averageEngagementTimePerActiveUser,
+    setAverageEngagementTimePerActiveUser,
+  ] = useState("");
+
+  const {
+    data: dataAnalytics,
+    error: errorAnalytics,
+    isLoading: isLoadingAnalytics,
+  } = useSWR(`getAnalytics-${eventSlug}`, () =>
+    fetch("/api/analytics", {
+      method: "POST",
+      body: JSON.stringify({
+        dateRanges,
+        metrics: [
+          { name: "activeUsers" },
+          // { name: "newUsers" },
+          { name: "screenPageViews" }, // views
+          { name: "screenPageViewsPerUser" }, // views/users
+          { name: "sessions" },
+          { name: "engagedSessions" },
+          { name: "bounceRate" },
+          { name: "sessionsPerUser" },
+          { name: "averageSessionDuration" },
+          { name: "eventCount" },
+          { name: "userEngagementDuration" }, // from
+          // { name: "dauPerMau" },
+          // { name: "dauPerWau" },
+        ],
+        eventSlug,
+      }),
+    }).then((res) => res.json() as Promise<AnalyticsResponse>)
+  );
+
+  useEffect(() => {
+    const activeUsersIndex = dataAnalytics?.data?.metricHeaders?.findIndex(
+      (metric) => metric.name === "activeUsers"
+    );
+    const userEngagementDurationIndex =
+      dataAnalytics?.data?.metricHeaders?.findIndex(
+        (metric) => metric.name === "userEngagementDuration"
+      );
+
+    if (
+      typeof activeUsersIndex === "number" &&
+      typeof userEngagementDurationIndex === "number"
+    ) {
+      const activeUsers = Number(
+        dataAnalytics?.data?.rows?.[0]?.metricValues?.[activeUsersIndex].value
+      );
+      const userEngagementDuration = Number(
+        dataAnalytics?.data?.rows?.[0]?.metricValues?.[
+          userEngagementDurationIndex
+        ].value
+      );
+
+      if (activeUsers && userEngagementDuration) {
+        setAverageEngagementTimePerActiveUser(
+          formatTime(userEngagementDuration / activeUsers)
+        );
+      }
+    }
+  }, [dataAnalytics]);
+
+  const {
+    data: dataUsersByCity,
+    error: errorUsersByCity,
+    isLoading: isLoadingUsersByCity,
+  } = useSWR(`getUsersByCity-${eventSlug}`, () =>
+    fetch("/api/analytics", {
+      method: "POST",
+      body: JSON.stringify({
+        dateRanges,
+        dimensions: [{ name: "city" }],
+        metrics: [{ name: "activeUsers" }],
+        eventSlug,
+      }),
+    }).then((res) => res.json() as Promise<AnalyticsResponse>)
+  );
+
+  const {
+    data: dataUsersByBrowser,
+    error: errorUsersByBrowser,
+    isLoading: isLoadingUsersByBrowser,
+  } = useSWR(`getUsersByCity-${eventSlug}`, () =>
+    fetch("/api/analytics", {
+      method: "POST",
+      body: JSON.stringify({
+        dateRanges,
+        dimensions: [{ name: "city" }],
+        metrics: [{ name: "activeUsers" }],
+        eventSlug,
+      }),
+    }).then((res) => res.json() as Promise<AnalyticsResponse>)
+  );
+
+  const {
+    data: dataUsersByGender,
+    error: errorUsersByGender,
+    isLoading: isLoadingUsersByGender,
+  } = useSWR(`getUsersByGender-${eventSlug}`, () =>
+    fetch("/api/analytics", {
+      method: "POST",
+      body: JSON.stringify({
+        dateRanges,
+        dimensions: [{ name: "userGender" }],
+        metrics: [{ name: "activeUsers" }],
+        eventSlug,
+      }),
+    }).then((res) => res.json() as Promise<AnalyticsResponse>)
+  );
+
+  console.log({
+    dataAnalytics,
+    dataUsersByCity,
+    dataUsersByBrowser,
+    dataUsersByGender,
+  });
+
+  if (isLoadingAnalytics || isLoadingUsersByCity || isLoadingUsersByBrowser) {
+    return (
+      <div className="flex py-24 items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
   return (
     <div className="relative">
-      <div className="absolute w-full h-full inset-0 z-10 flex items-center justify-center">
-        <p className="text-xl font-semibold">Coming Soon...</p>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {/* {dataAnalytics?.data &&
+          Array.from({
+            length: dataAnalytics?.data?.metricHeaders?.length || 0,
+          }).map((_, i) => {
+            const metric = dataAnalytics?.data?.metricHeaders?.[i]
+              .name as keyof typeof metrics;
+            const value =
+              dataAnalytics?.data?.rows?.[0]?.metricValues?.[i].value || "";
+            return (
+              <Card key={i}>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    {metrics[metric].name}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {metrics[metric].formatter
+                      ? metrics[metric].formatter(value)
+                      : value}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {metrics[metric].description}
+                  </p>
+                </CardContent>
+              </Card>
+            );
+          })} */}
+        {/* Average engagement time per active user */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Average Engagement Time
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {averageEngagementTimePerActiveUser}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Average engagement time per active user
+            </p>
+          </CardContent>
+        </Card>
       </div>
-      <div className="blur chart-wrapper mx-auto flex flex-col flex-wrap items-start justify-center gap-6 sm:flex-row">
-        <div className="grid w-full gap-6 sm:grid-cols-2 lg:max-w-[22rem] lg:grid-cols-1 xl:max-w-[25rem]">
+      <div className="pt-6 chart-wrapper mx-auto flex flex-col flex-wrap items-start justify-center gap-6 sm:flex-row">
+        <div className="grid w-full gap-6 sm:grid-cols-2 lg:max-w-[22rem] lg:grid-cols-1 xl:max-w-[30rem]">
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle>Geographic Location</CardTitle>
+              <CardDescription>
+                Track where users are visitng your event page.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex gap-4 p-4 pb-2 w-full">
+              <ChartContainer
+                config={{
+                  move: {
+                    label: "Move",
+                    color: "hsl(var(--chart-1))",
+                  },
+                  stand: {
+                    label: "Stand",
+                    color: "hsl(var(--chart-2))",
+                  },
+                  exercise: {
+                    label: "Exercise",
+                    color: "hsl(var(--chart-3))",
+                  },
+                }}
+                className="w-full"
+                style={{
+                  height: `${
+                    (dataUsersByCity?.data?.rows?.length || 0) * 2
+                  }rem`,
+                }}
+              >
+                <BarChart
+                  className="w-full"
+                  margin={{
+                    left: 36,
+                    right: 0,
+                    top: 0,
+                    bottom: 10,
+                  }}
+                  data={dataUsersByCity?.data?.rows?.map((data, index) => ({
+                    city: data?.dimensionValues?.[0].value,
+                    value: Number(data.metricValues?.[0].value),
+                    label: data.metricValues?.[0].value,
+                    fill: `hsl(var(--chart-${(index + 1) % 6}))`,
+                  }))}
+                  layout="vertical"
+                  barSize={32}
+                  barGap={2}
+                >
+                  <XAxis type="number" dataKey="value" hide />
+                  <YAxis
+                    dataKey="city"
+                    type="category"
+                    tickLine={false}
+                    tickMargin={4}
+                    axisLine={false}
+                    className="capitalize"
+                  />
+                  <Bar dataKey="value" radius={5}>
+                    <LabelList
+                      position="insideLeft"
+                      dataKey="label"
+                      fill="white"
+                      offset={8}
+                      fontSize={12}
+                    />
+                  </Bar>
+                </BarChart>
+              </ChartContainer>
+            </CardContent>
+          </Card>
           <Card className="lg:max-w-md" x-chunk="charts-01-chunk-0">
             <CardHeader className="space-y-0 pb-2">
               <CardDescription>Today</CardDescription>
@@ -487,111 +807,6 @@ const AnalyticsChart = () => {
                 </BarChart>
               </ChartContainer>
             </CardContent>
-          </Card>
-          <Card className="max-w-xs" x-chunk="charts-01-chunk-4">
-            <CardContent className="flex gap-4 p-4 pb-2">
-              <ChartContainer
-                config={{
-                  move: {
-                    label: "Move",
-                    color: "hsl(var(--chart-1))",
-                  },
-                  stand: {
-                    label: "Stand",
-                    color: "hsl(var(--chart-2))",
-                  },
-                  exercise: {
-                    label: "Exercise",
-                    color: "hsl(var(--chart-3))",
-                  },
-                }}
-                className="h-[140px] w-full"
-              >
-                <BarChart
-                  margin={{
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    bottom: 10,
-                  }}
-                  data={[
-                    {
-                      activity: "stand",
-                      value: (8 / 12) * 100,
-                      label: "8/12 hr",
-                      fill: "var(--color-stand)",
-                    },
-                    {
-                      activity: "exercise",
-                      value: (46 / 60) * 100,
-                      label: "46/60 min",
-                      fill: "var(--color-exercise)",
-                    },
-                    {
-                      activity: "move",
-                      value: (245 / 360) * 100,
-                      label: "245/360 kcal",
-                      fill: "var(--color-move)",
-                    },
-                  ]}
-                  layout="vertical"
-                  barSize={32}
-                  barGap={2}
-                >
-                  <XAxis type="number" dataKey="value" hide />
-                  <YAxis
-                    dataKey="activity"
-                    type="category"
-                    tickLine={false}
-                    tickMargin={4}
-                    axisLine={false}
-                    className="capitalize"
-                  />
-                  <Bar dataKey="value" radius={5}>
-                    <LabelList
-                      position="insideLeft"
-                      dataKey="label"
-                      fill="white"
-                      offset={8}
-                      fontSize={12}
-                    />
-                  </Bar>
-                </BarChart>
-              </ChartContainer>
-            </CardContent>
-            <CardFooter className="flex flex-row border-t p-4">
-              <div className="flex w-full items-center gap-2">
-                <div className="grid flex-1 auto-rows-min gap-0.5">
-                  <div className="text-xs text-muted-foreground">Move</div>
-                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                    562
-                    <span className="text-sm font-normal text-muted-foreground">
-                      kcal
-                    </span>
-                  </div>
-                </div>
-                <Separator orientation="vertical" className="mx-2 h-10 w-px" />
-                <div className="grid flex-1 auto-rows-min gap-0.5">
-                  <div className="text-xs text-muted-foreground">Exercise</div>
-                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                    73
-                    <span className="text-sm font-normal text-muted-foreground">
-                      min
-                    </span>
-                  </div>
-                </div>
-                <Separator orientation="vertical" className="mx-2 h-10 w-px" />
-                <div className="grid flex-1 auto-rows-min gap-0.5">
-                  <div className="text-xs text-muted-foreground">Stand</div>
-                  <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                    14
-                    <span className="text-sm font-normal text-muted-foreground">
-                      hr
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </CardFooter>
           </Card>
         </div>
         <div className="grid w-full flex-1 gap-6">
