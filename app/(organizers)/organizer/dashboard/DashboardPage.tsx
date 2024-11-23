@@ -372,9 +372,11 @@ export default function DashboardPage({
                     </CardHeader>
                     <CardContent>
                       <RecentSales
-                        bookings={bookingsData.filter(
-                          (booking) => booking.event_id === selectedTeam?.id
-                        )}
+                        bookings={bookingsData
+                          .filter(
+                            (booking) => booking.event_id === selectedTeam?.id
+                          )
+                          .slice(0, 5)}
                       />
                     </CardContent>
                   </Card>

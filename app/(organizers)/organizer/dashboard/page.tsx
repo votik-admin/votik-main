@@ -10,7 +10,7 @@ const HomePage = async () => {
   }
 
   return (
-    <div className="bg-white dark:bg-black">
+    <div className="">
       <div className="container">
         <DashboardPage organizer={organizer} />
       </div>

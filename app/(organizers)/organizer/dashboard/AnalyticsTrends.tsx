@@ -299,563 +299,495 @@ const AnalyticsTrends = ({ slug }: { slug: string }) => {
   }
 
   return (
-    <div className="relative">
-      <div className="pt-6 chart-wrapper mx-auto flex flex-col flex-wrap items-start justify-center gap-6 sm:flex-row">
-        <div className="grid w-full gap-6 sm:grid-cols-2 lg:max-w-[22rem] lg:grid-cols-1 xl:max-w-[25rem]">
-          <Card className="max-w-xs" x-chunk="charts-01-chunk-7">
-            <CardHeader>
-              <CardTitle>Active users</CardTitle>
-              <CardDescription>
-                Track how total users accumulate over time
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-0">
-              <ChartContainer
-                config={{
-                  value: {
-                    label: "Users",
-                    color: "hsl(var(--chart-2))",
-                  },
+    <div className="chart-wrapper mx-auto flex flex-col flex-wrap items-start justify-center gap-6 sm:flex-row">
+      <div className="grid w-full gap-6 sm:grid-cols-2 lg:max-w-[22rem] lg:grid-cols-1 xl:max-w-[25rem]">
+        <Card className="max-w-md" x-chunk="charts-01-chunk-7">
+          <CardHeader>
+            <CardTitle>Active users</CardTitle>
+            <CardDescription>
+              Track how total users accumulate over time
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <ChartContainer
+              config={{
+                value: {
+                  label: "Users",
+                  color: "hsl(var(--chart-2))",
+                },
+              }}
+            >
+              <AreaChart
+                accessibilityLayer
+                data={dataUsersByDate?.data?.rows?.map((data, index) => ({
+                  key:
+                    data.dimensionValues?.[0].value +
+                    "-" +
+                    data.dimensionValues?.[1].value +
+                    "-" +
+                    data.dimensionValues?.[2].value,
+                  value: Number(data.metricValues?.[0].value),
+                }))}
+                margin={{
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
                 }}
               >
-                <AreaChart
-                  accessibilityLayer
-                  data={dataUsersByDate?.data?.rows?.map((data, index) => ({
-                    key:
-                      data.dimensionValues?.[0].value +
-                      "-" +
-                      data.dimensionValues?.[1].value +
-                      "-" +
-                      data.dimensionValues?.[2].value,
-                    value: Number(data.metricValues?.[0].value),
-                  }))}
-                  margin={{
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
+                <XAxis dataKey="key" hide />
+                <YAxis domain={["dataMin - 5", "dataMax + 2"]} hide />
+                <defs>
+                  <linearGradient id="fillTime" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor="var(--color-value)"
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="var(--color-value)"
+                      stopOpacity={0.1}
+                    />
+                  </linearGradient>
+                </defs>
+                <Area
+                  dataKey="value"
+                  type="natural"
+                  fill="url(#fillTime)"
+                  fillOpacity={0.4}
+                  stroke="var(--color-value)"
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent nameKey="value" />}
+                />
+              </AreaChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+        <Card className="flex flex-col lg:max-w-md" x-chunk="charts-01-chunk-1">
+          <CardHeader>
+            <CardTitle>Views</CardTitle>
+            <CardDescription>
+              Track how total views accumulate over time
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-1 items-center">
+            <ChartContainer
+              config={{
+                resting: {
+                  label: "Views",
+                  color: "hsl(var(--chart-1))",
+                },
+              }}
+              className="w-full"
+            >
+              <LineChart
+                accessibilityLayer
+                margin={{
+                  left: 14,
+                  right: 14,
+                  top: 10,
+                }}
+                // MM-DD-YYYY format
+                // hence 1,0,2 instead of 0,1,2
+                data={dataUsersByViews?.data?.rows?.map((data, index) => ({
+                  date:
+                    data.dimensionValues?.[1].value +
+                    "-" +
+                    data.dimensionValues?.[0].value +
+                    "-" +
+                    data.dimensionValues?.[2].value,
+                  resting: Number(data.metricValues?.[0].value),
+                }))}
+              >
+                <CartesianGrid
+                  strokeDasharray="4 4"
+                  vertical={false}
+                  stroke="hsl(var(--muted-foreground))"
+                  strokeOpacity={0.5}
+                />
+                <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  tickFormatter={(value) => {
+                    return new Date(value).toLocaleDateString("en-US", {
+                      day: "numeric",
+                      month: "short",
+                    });
                   }}
-                >
-                  <XAxis dataKey="key" hide />
-                  <YAxis domain={["dataMin - 5", "dataMax + 2"]} hide />
-                  <defs>
-                    <linearGradient id="fillTime" x1="0" y1="0" x2="0" y2="1">
-                      <stop
-                        offset="5%"
-                        stopColor="var(--color-value)"
-                        stopOpacity={0.8}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor="var(--color-value)"
-                        stopOpacity={0.1}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <Area
-                    dataKey="value"
-                    type="natural"
-                    fill="url(#fillTime)"
-                    fillOpacity={0.4}
-                    stroke="var(--color-value)"
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent nameKey="value" />}
-                  />
-                </AreaChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-          <Card
-            className="flex flex-col lg:max-w-md"
-            x-chunk="charts-01-chunk-1"
-          >
-            <CardHeader>
-              <CardTitle>Views</CardTitle>
-              <CardDescription>
-                Track how total views accumulate over time
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-1 items-center">
-              <ChartContainer
-                config={{
-                  resting: {
-                    label: "Views",
-                    color: "hsl(var(--chart-1))",
-                  },
-                }}
-                className="w-full"
-              >
-                <LineChart
-                  accessibilityLayer
-                  margin={{
-                    left: 14,
-                    right: 14,
-                    top: 10,
+                />
+                <Line
+                  dataKey="resting"
+                  type="natural"
+                  fill="var(--color-resting)"
+                  stroke="var(--color-resting)"
+                  strokeWidth={2}
+                  dot={false}
+                  activeDot={{
+                    fill: "var(--color-resting)",
+                    stroke: "var(--color-resting)",
+                    r: 4,
                   }}
-                  // MM-DD-YYYY format
-                  // hence 1,0,2 instead of 0,1,2
-                  data={dataUsersByViews?.data?.rows?.map((data, index) => ({
-                    date:
-                      data.dimensionValues?.[1].value +
-                      "-" +
-                      data.dimensionValues?.[0].value +
-                      "-" +
-                      data.dimensionValues?.[2].value,
-                    resting: Number(data.metricValues?.[0].value),
-                  }))}
-                >
-                  <CartesianGrid
-                    strokeDasharray="4 4"
-                    vertical={false}
-                    stroke="hsl(var(--muted-foreground))"
-                    strokeOpacity={0.5}
-                  />
-                  <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
-                  <XAxis
-                    dataKey="date"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    tickFormatter={(value) => {
-                      return new Date(value).toLocaleDateString("en-US", {
-                        day: "numeric",
-                        month: "short",
-                      });
-                    }}
-                  />
-                  <Line
-                    dataKey="resting"
-                    type="natural"
-                    fill="var(--color-resting)"
-                    stroke="var(--color-resting)"
-                    strokeWidth={2}
-                    dot={false}
-                    activeDot={{
-                      fill: "var(--color-resting)",
-                      stroke: "var(--color-resting)",
-                      r: 4,
-                    }}
-                  />
-                  <ChartTooltip
-                    content={
-                      <ChartTooltipContent
-                        indicator="line"
-                        labelFormatter={(value) => {
-                          return new Date(value).toLocaleDateString("en-US", {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          });
-                        }}
-                      />
-                    }
-                    cursor={false}
-                  />
-                </LineChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-        </div>
-        <div className="grid w-full flex-1 gap-6 lg:max-w-[20rem]">
-          <Card className="max-w-xs lg:max-w-md w-full">
-            <CardHeader>
-              <CardTitle>Traffic Sources</CardTitle>
-              <CardDescription>
-                {/* See firstUserPrimaryChannelGroup in */}
-                {/* https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema#dimensions */}
-                Track how many users are coming from Direct Search, Organic
-                Search, Paid Social, Organic Social, Email, Affiliates, Referral
-                or Paid Search.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex gap-4 p-4 pb-2">
-              <ChartContainer
-                config={Object.fromEntries(
-                  (dataUsersByChannel?.data?.rows || [])?.map((data, index) => [
-                    data.dimensionValues?.[0].value,
-                    {
-                      label: capitalize(data.dimensionValues?.[0].value),
-                      color: `hsl(var(--chart-${(index + 1) % 6}))`,
-                    },
-                  ])
-                )}
-                className="mx-auto aspect-square h-[300px] w-full"
-              >
-                <PieChart>
-                  <Pie
-                    data={dataUsersByChannel?.data?.rows?.map(
-                      (data, index) => ({
-                        key: data?.dimensionValues?.[0].value,
-                        value: Number(data.metricValues?.[0].value),
-                        label: data.metricValues?.[0].value,
-                        fill: `hsl(var(--chart-${(index + 1) % 6}))`,
-                      })
-                    )}
-                    nameKey="key"
-                    dataKey="value"
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent hideLabel />}
-                  />
-                  <ChartLegend
-                    content={<ChartLegendContent />}
-                    className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
-                  />
-                </PieChart>
-              </ChartContainer>
-              {/* <ChartContainer
-                config={{
-                  move: {
-                    label: "Move",
-                    color: "hsl(var(--chart-1))",
+                />
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      indicator="line"
+                      labelFormatter={(value) => {
+                        return new Date(value).toLocaleDateString("en-US", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        });
+                      }}
+                    />
+                  }
+                  cursor={false}
+                />
+              </LineChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </div>
+      <div className="grid w-full flex-1 gap-6 lg:max-w-[25rem]">
+        <Card className="max-w-xs lg:max-w-md w-full">
+          <CardHeader>
+            <CardTitle>Traffic Sources</CardTitle>
+            <CardDescription>
+              {/* See firstUserPrimaryChannelGroup in */}
+              {/* https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema#dimensions */}
+              Track how many users are coming from Direct Search, Organic
+              Search, Paid Social, Organic Social, Email, Affiliates, Referral
+              or Paid Search.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex gap-4 p-4 pb-2">
+            <ChartContainer
+              config={Object.fromEntries(
+                (dataUsersByChannel?.data?.rows || [])?.map((data, index) => [
+                  data.dimensionValues?.[0].value,
+                  {
+                    label: capitalize(data.dimensionValues?.[0].value),
+                    color: `hsl(var(--chart-${(index + 1) % 6}))`,
                   },
-                  stand: {
-                    label: "Stand",
-                    color: "hsl(var(--chart-2))",
-                  },
-                  exercise: {
-                    label: "Exercise",
-                    color: "hsl(var(--chart-3))",
-                  },
-                }}
-                className="w-full"
-                style={{
-                  height: `${
-                    (dataUsersByChannel?.data?.rows?.length || 0) * 2
-                  }rem`,
-                }}
-              >
-                <BarChart
-                  margin={{
-                    left: 12,
-                    right: 0,
-                    top: 0,
-                    bottom: 10,
-                  }}
+                ])
+              )}
+              className="mx-auto aspect-square h-[300px] w-full"
+            >
+              <PieChart>
+                <Pie
                   data={dataUsersByChannel?.data?.rows?.map((data, index) => ({
                     key: data?.dimensionValues?.[0].value,
                     value: Number(data.metricValues?.[0].value),
                     label: data.metricValues?.[0].value,
                     fill: `hsl(var(--chart-${(index + 1) % 6}))`,
                   }))}
-                  layout="vertical"
-                  barSize={32}
-                  barGap={2}
-                >
-                  <XAxis type="number" dataKey="value" hide />
-                  <YAxis
-                    dataKey="key"
-                    type="category"
-                    tickLine={false}
-                    tickMargin={4}
-                    axisLine={false}
-                    className="capitalize"
-                  />
-                  <Bar dataKey="value" radius={5}>
-                    <LabelList
-                      position="insideLeft"
-                      dataKey="label"
-                      fill="white"
-                      offset={8}
-                      fontSize={12}
-                    />
-                  </Bar>
-                </BarChart>
-              </ChartContainer> */}
-            </CardContent>
-          </Card>
-          <Card className="max-w-xs lg:max-w-md w-full">
-            <CardHeader>
-              <CardTitle>Geographic Location</CardTitle>
-              <CardDescription>
-                Track where users are visitng your event page.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex gap-4 p-4 pb-2">
-              <ChartContainer
-                config={{
-                  move: {
-                    label: "Move",
-                    color: "hsl(var(--chart-1))",
-                  },
-                  stand: {
-                    label: "Stand",
-                    color: "hsl(var(--chart-2))",
-                  },
-                  exercise: {
-                    label: "Exercise",
-                    color: "hsl(var(--chart-3))",
-                  },
+                  nameKey="key"
+                  dataKey="value"
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent hideLabel />}
+                />
+                <ChartLegend
+                  content={<ChartLegendContent />}
+                  className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
+                />
+              </PieChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+        <Card className="max-w-xs lg:max-w-md w-full">
+          <CardHeader>
+            <CardTitle>Geographic Location</CardTitle>
+            <CardDescription>
+              Track where users are visitng your event page.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex gap-4 p-4 pb-2">
+            <ChartContainer
+              config={{
+                move: {
+                  label: "Move",
+                  color: "hsl(var(--chart-1))",
+                },
+                stand: {
+                  label: "Stand",
+                  color: "hsl(var(--chart-2))",
+                },
+                exercise: {
+                  label: "Exercise",
+                  color: "hsl(var(--chart-3))",
+                },
+              }}
+              className="w-full max-w-xs"
+              style={{
+                height: `${(dataUsersByCity?.data?.rows?.length || 0) * 2}rem`,
+              }}
+            >
+              <BarChart
+                margin={{
+                  left: 36,
+                  right: 0,
+                  top: 0,
+                  bottom: 10,
                 }}
-                className="w-full"
-                style={{
-                  height: `${
-                    (dataUsersByCity?.data?.rows?.length || 0) * 2
-                  }rem`,
-                }}
+                data={dataUsersByCity?.data?.rows?.map((data, index) => ({
+                  key: data?.dimensionValues?.[0].value,
+                  value: Number(data.metricValues?.[0].value),
+                  label: data.metricValues?.[0].value,
+                  fill: `hsl(var(--chart-${(index + 1) % 6}))`,
+                }))}
+                layout="vertical"
+                barSize={32}
+                barGap={2}
               >
-                <BarChart
-                  margin={{
-                    left: 36,
-                    right: 0,
-                    top: 0,
-                    bottom: 10,
-                  }}
-                  data={dataUsersByCity?.data?.rows?.map((data, index) => ({
-                    key: data?.dimensionValues?.[0].value,
-                    value: Number(data.metricValues?.[0].value),
-                    label: data.metricValues?.[0].value,
-                    fill: `hsl(var(--chart-${(index + 1) % 6}))`,
-                  }))}
-                  layout="vertical"
-                  barSize={32}
-                  barGap={2}
-                >
-                  <XAxis type="number" dataKey="value" hide />
-                  <YAxis
-                    dataKey="key"
-                    type="category"
-                    tickLine={false}
-                    tickMargin={4}
-                    axisLine={false}
-                    className="capitalize"
+                <XAxis type="number" dataKey="value" hide />
+                <YAxis
+                  dataKey="key"
+                  type="category"
+                  tickLine={false}
+                  tickMargin={4}
+                  axisLine={false}
+                  className="capitalize"
+                />
+                <Bar dataKey="value" radius={5}>
+                  <LabelList
+                    position="insideLeft"
+                    dataKey="label"
+                    fill="white"
+                    offset={8}
+                    fontSize={12}
                   />
-                  <Bar dataKey="value" radius={5}>
-                    <LabelList
-                      position="insideLeft"
-                      dataKey="label"
-                      fill="white"
-                      offset={8}
-                      fontSize={12}
-                    />
-                  </Bar>
-                </BarChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-        </div>
-        <div className="grid w-full flex-1 gap-6">
-          <Card className="max-w-xs" x-chunk="charts-01-chunk-5">
-            <CardHeader className="p-4 pb-0">
-              <CardTitle>Platform metrics</CardTitle>
-              <CardDescription>
-                Breakdown of how many users are visiting the event page from
-                mobile v/s desktop v/s tablet.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex gap-4 p-4">
-              <div className="grid items-center gap-2">
-                {dataUsersByDeviceCategory?.data?.rows?.map((data, index) => (
-                  <div
-                    key={index}
-                    className="grid flex-1 auto-rows-min gap-0.5"
-                  >
-                    <div className="text-sm text-muted-foreground capitalize">
-                      {data.dimensionValues?.[0].value}
-                    </div>
-                    <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
-                      {data.metricValues?.[0].value}
-                      <span className="text-sm font-normal text-muted-foreground">
-                        users
-                      </span>
-                    </div>
+                </Bar>
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </div>
+      <div className="grid w-full flex-1 gap-6">
+        <Card
+          className="max-w-xs lg:max-w-md w-full"
+          x-chunk="charts-01-chunk-5"
+        >
+          <CardHeader>
+            <CardTitle>Platform metrics</CardTitle>
+            <CardDescription>
+              Breakdown of how many users are visiting the event page from
+              mobile v/s desktop v/s tablet.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex gap-4">
+            <div className="grid items-center gap-2">
+              {dataUsersByDeviceCategory?.data?.rows?.map((data, index) => (
+                <div key={index} className="grid flex-1 auto-rows-min gap-0.5">
+                  <div className="text-sm text-muted-foreground capitalize">
+                    {data.dimensionValues?.[0].value}
                   </div>
-                ))}
-              </div>
-              <ChartContainer
-                config={Object.fromEntries(
-                  (dataUsersByDeviceCategory?.data?.rows || [])?.map(
-                    (data, index) => [
-                      data.dimensionValues?.[0].value,
-                      {
-                        label: capitalize(data.dimensionValues?.[0].value),
-                        color: `hsl(var(--chart-${(index + 1) % 6}))`,
-                      },
-                    ]
-                  )
+                  <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
+                    {data.metricValues?.[0].value}
+                    <span className="text-sm font-normal text-muted-foreground">
+                      users
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <ChartContainer
+              config={Object.fromEntries(
+                (dataUsersByDeviceCategory?.data?.rows || [])?.map(
+                  (data, index) => [
+                    data.dimensionValues?.[0].value,
+                    {
+                      label: capitalize(data.dimensionValues?.[0].value),
+                      color: `hsl(var(--chart-${(index + 1) % 6}))`,
+                    },
+                  ]
+                )
+              )}
+              className="mx-auto aspect-square w-full max-w-[80%]"
+            >
+              <RadialBarChart
+                margin={{
+                  left: -10,
+                  right: -10,
+                  top: -10,
+                  bottom: -10,
+                }}
+                data={dataUsersByDeviceCategory?.data?.rows?.map(
+                  (data, index) => ({
+                    key: data.dimensionValues?.[0].value,
+                    value: data.metricValues?.[0].value,
+                    fill: `hsl(var(--chart-${(index + 1) % 6}))`,
+                  })
                 )}
-                className="mx-auto aspect-square w-full max-w-[80%]"
+                innerRadius="20%"
+                barSize={24}
+                startAngle={90}
+                endAngle={450}
               >
-                <RadialBarChart
-                  margin={{
-                    left: -10,
-                    right: -10,
-                    top: -10,
-                    bottom: -10,
-                  }}
-                  data={dataUsersByDeviceCategory?.data?.rows?.map(
-                    (data, index) => ({
-                      key: data.dimensionValues?.[0].value,
-                      value: data.metricValues?.[0].value,
-                      fill: `hsl(var(--chart-${(index + 1) % 6}))`,
-                    })
-                  )}
-                  innerRadius="20%"
-                  barSize={24}
-                  startAngle={90}
-                  endAngle={450}
-                >
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent nameKey="key" hideLabel />}
-                  />
-                  <PolarAngleAxis
-                    type="number"
-                    // domain={[0, activeUsers]}
-                    dataKey="value"
-                    tick={false}
-                  />
-                  <RadialBar dataKey="value" background cornerRadius={5} />
-                </RadialBarChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-          <Card className="max-w-xs">
-            <CardHeader>
-              <CardTitle>Browser metrics</CardTitle>
-              <CardDescription>
-                Track where users are visitng your event page.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex gap-4 p-4 pb-2">
-              <ChartContainer
-                config={{
-                  move: {
-                    label: "Move",
-                    color: "hsl(var(--chart-1))",
-                  },
-                  stand: {
-                    label: "Stand",
-                    color: "hsl(var(--chart-2))",
-                  },
-                  exercise: {
-                    label: "Exercise",
-                    color: "hsl(var(--chart-3))",
-                  },
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent nameKey="key" hideLabel />}
+                />
+                <PolarAngleAxis
+                  type="number"
+                  // domain={[0, activeUsers]}
+                  dataKey="value"
+                  tick={false}
+                />
+                <RadialBar dataKey="value" background cornerRadius={5} />
+              </RadialBarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+        <Card className="max-w-xs lg:max-w-md w-full">
+          <CardHeader>
+            <CardTitle>Browser metrics</CardTitle>
+            <CardDescription>
+              Track where users are visitng your event page.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex gap-4 p-4 pb-2">
+            <ChartContainer
+              config={{
+                move: {
+                  label: "Move",
+                  color: "hsl(var(--chart-1))",
+                },
+                stand: {
+                  label: "Stand",
+                  color: "hsl(var(--chart-2))",
+                },
+                exercise: {
+                  label: "Exercise",
+                  color: "hsl(var(--chart-3))",
+                },
+              }}
+              className="w-full"
+              style={{
+                height: `${
+                  (dataUsersByBrowser?.data?.rows?.length || 0) * 3
+                }rem`,
+              }}
+            >
+              <BarChart
+                className=""
+                margin={{
+                  left: 12,
+                  right: 0,
+                  top: 0,
+                  bottom: 10,
                 }}
-                className="w-full"
-                style={{
-                  height: `${
-                    (dataUsersByBrowser?.data?.rows?.length || 0) * 3
-                  }rem`,
-                }}
+                data={dataUsersByBrowser?.data?.rows?.map((data, index) => ({
+                  key: data?.dimensionValues?.[0].value,
+                  value: Number(data.metricValues?.[0].value),
+                  label: data.metricValues?.[0].value,
+                  fill: `hsl(var(--chart-${(index + 1) % 6}))`,
+                }))}
+                layout="vertical"
+                barSize={32}
+                barGap={2}
               >
-                <BarChart
-                  className=""
-                  margin={{
-                    left: 12,
-                    right: 0,
-                    top: 0,
-                    bottom: 10,
-                  }}
-                  data={dataUsersByBrowser?.data?.rows?.map((data, index) => ({
+                <XAxis type="number" dataKey="value" hide />
+                <YAxis
+                  dataKey="key"
+                  type="category"
+                  tickLine={false}
+                  tickMargin={4}
+                  axisLine={false}
+                  className="capitalize"
+                />
+                <Bar dataKey="value" radius={5}>
+                  <LabelList
+                    position="insideLeft"
+                    dataKey="label"
+                    fill="white"
+                    offset={8}
+                    fontSize={12}
+                  />
+                </Bar>
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+        <Card className="max-w-xs lg:max-w-md w-full">
+          <CardHeader>
+            <CardTitle>Device Category</CardTitle>
+            <CardDescription>
+              Manufacturer or branded name of user's device.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex gap-4 p-4 pb-2">
+            <ChartContainer
+              config={{
+                move: {
+                  label: "Move",
+                  color: "hsl(var(--chart-1))",
+                },
+                stand: {
+                  label: "Stand",
+                  color: "hsl(var(--chart-2))",
+                },
+                exercise: {
+                  label: "Exercise",
+                  color: "hsl(var(--chart-3))",
+                },
+              }}
+              className="w-full"
+              style={{
+                height: `${
+                  (dataUsersByDeviceBranding?.data?.rows?.length || 0) * 2
+                }rem`,
+              }}
+            >
+              <BarChart
+                className=""
+                margin={{
+                  left: 12,
+                  right: 0,
+                  top: 0,
+                  bottom: 10,
+                }}
+                data={dataUsersByDeviceBranding?.data?.rows?.map(
+                  (data, index) => ({
                     key: data?.dimensionValues?.[0].value,
                     value: Number(data.metricValues?.[0].value),
                     label: data.metricValues?.[0].value,
                     fill: `hsl(var(--chart-${(index + 1) % 6}))`,
-                  }))}
-                  layout="vertical"
-                  barSize={32}
-                  barGap={2}
-                >
-                  <XAxis type="number" dataKey="value" hide />
-                  <YAxis
-                    dataKey="key"
-                    type="category"
-                    tickLine={false}
-                    tickMargin={4}
-                    axisLine={false}
-                    className="capitalize"
-                  />
-                  <Bar dataKey="value" radius={5}>
-                    <LabelList
-                      position="insideLeft"
-                      dataKey="label"
-                      fill="white"
-                      offset={8}
-                      fontSize={12}
-                    />
-                  </Bar>
-                </BarChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-          <Card className="max-w-xs">
-            <CardHeader>
-              <CardTitle>Device Category</CardTitle>
-              <CardDescription>
-                Manufacturer or branded name of user's device.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex gap-4 p-4 pb-2">
-              <ChartContainer
-                config={{
-                  move: {
-                    label: "Move",
-                    color: "hsl(var(--chart-1))",
-                  },
-                  stand: {
-                    label: "Stand",
-                    color: "hsl(var(--chart-2))",
-                  },
-                  exercise: {
-                    label: "Exercise",
-                    color: "hsl(var(--chart-3))",
-                  },
-                }}
-                className="w-full"
-                style={{
-                  height: `${
-                    (dataUsersByDeviceBranding?.data?.rows?.length || 0) * 2
-                  }rem`,
-                }}
+                  })
+                )}
+                layout="vertical"
+                barSize={32}
+                barGap={2}
               >
-                <BarChart
-                  className=""
-                  margin={{
-                    left: 12,
-                    right: 0,
-                    top: 0,
-                    bottom: 10,
-                  }}
-                  data={dataUsersByDeviceBranding?.data?.rows?.map(
-                    (data, index) => ({
-                      key: data?.dimensionValues?.[0].value,
-                      value: Number(data.metricValues?.[0].value),
-                      label: data.metricValues?.[0].value,
-                      fill: `hsl(var(--chart-${(index + 1) % 6}))`,
-                    })
-                  )}
-                  layout="vertical"
-                  barSize={32}
-                  barGap={2}
-                >
-                  <XAxis type="number" dataKey="value" hide />
-                  <YAxis
-                    dataKey="key"
-                    type="category"
-                    tickLine={false}
-                    tickMargin={4}
-                    axisLine={false}
-                    className="capitalize"
+                <XAxis type="number" dataKey="value" hide />
+                <YAxis
+                  dataKey="key"
+                  type="category"
+                  tickLine={false}
+                  tickMargin={4}
+                  axisLine={false}
+                  className="capitalize"
+                />
+                <Bar dataKey="value" radius={5}>
+                  <LabelList
+                    position="insideLeft"
+                    dataKey="label"
+                    fill="white"
+                    offset={8}
+                    fontSize={12}
                   />
-                  <Bar dataKey="value" radius={5}>
-                    <LabelList
-                      position="insideLeft"
-                      dataKey="label"
-                      fill="white"
-                      offset={8}
-                      fontSize={12}
-                    />
-                  </Bar>
-                </BarChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-        </div>
+                </Bar>
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
