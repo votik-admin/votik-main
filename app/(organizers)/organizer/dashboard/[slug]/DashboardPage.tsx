@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Button } from "@app/components/ui/button";
 import {
@@ -30,15 +30,28 @@ import supabase from "@app/lib/supabase";
 import { Tables } from "@app/types/database.types";
 import convertNumbThousand from "@app/utils/convertNumbThousand";
 import AnalyticsTrends from "./AnalyticsTrends";
+import Spinner from "@app/components/Spinner/Spinner";
 
 export default function DashboardPage({
   organizer,
+  slug,
 }: {
   organizer: Tables<"organizers">;
+  slug?: string;
 }) {
   const [selectedTeam, setSelectedTeam] = React.useState<
     Tables<"events"> & { tickets: (Tables<"tickets"> | null)[] }
   >();
+
+  useEffect(() => {
+    if (slug) {
+      setSelectedTeam(
+        eventsData
+          ?.filter((event) => event.accepted)
+          .find((event) => event.slug === slug)
+      );
+    }
+  }, [slug]);
 
   const {
     data: eventsData,
@@ -56,15 +69,19 @@ export default function DashboardPage({
     },
     {
       onSuccess: (events) => {
-        // start with the first accepted event
-        if (!selectedTeam) {
+        if (slug) {
+          setSelectedTeam(
+            events
+              .filter((event) => event.accepted)
+              .find((event) => event.slug === slug)
+          );
+        } else if (!selectedTeam) {
+          // start with the first accepted event
           setSelectedTeam(events.filter((event) => event.accepted)[0]);
         }
       },
     }
   );
-
-  console.log({ selectedTeam });
 
   const {
     data: bookingsData,
@@ -127,8 +144,8 @@ export default function DashboardPage({
 
   if (isLoadingBookings || isLoadingEvents) {
     return (
-      <div className="py-[16rem] flex items-center justify-center">
-        Loading...
+      <div className="flex py-24 items-center justify-center">
+        <Spinner />
       </div>
     );
   }
