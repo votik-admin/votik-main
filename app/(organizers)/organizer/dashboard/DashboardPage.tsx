@@ -29,6 +29,7 @@ import useSWR from "swr";
 import supabase from "@app/lib/supabase";
 import { Tables } from "@app/types/database.types";
 import convertNumbThousand from "@app/utils/convertNumbThousand";
+import AnalyticsTrends from "./AnalyticsTrends";
 
 export default function DashboardPage({
   organizer,
@@ -140,7 +141,9 @@ export default function DashboardPage({
           <div className="flex-1 space-y-4 py-8">
             {/* Dasboard */}
             <div className="flex flex-col md:flex-row md:items-center justify-between space-y-2">
-              <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+              <h2 className="text-3xl font-bold tracking-tight">
+                {selectedTeam?.name}
+              </h2>
               <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-2">
                 <TeamSwitcher
                   events={eventsData}
@@ -158,17 +161,11 @@ export default function DashboardPage({
               <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="analytics">Analytics</TabsTrigger>
-                {/* <TabsTrigger value="reports" disabled>
-                  Reports
-                </TabsTrigger>
-                <TabsTrigger value="notifications" disabled>
+                <TabsTrigger value="trends">Trends</TabsTrigger>
+                {/* <TabsTrigger value="notifications" disabled>
                   Notifications
                 </TabsTrigger> */}
               </TabsList>
-
-              <h2 className="text-xl font-semibold tracking-tight pl-4">
-                {selectedTeam?.name}
-              </h2>
 
               {/* Tab - Overview */}
               <TabsContent value="overview" className="space-y-4">
@@ -388,6 +385,13 @@ export default function DashboardPage({
               <TabsContent value="analytics">
                 {selectedTeam?.slug && (
                   <AnalyticsChart slug={selectedTeam?.slug} />
+                )}
+              </TabsContent>
+
+              {/* Tab - Trends */}
+              <TabsContent value="trends">
+                {selectedTeam?.slug && (
+                  <AnalyticsTrends slug={selectedTeam?.slug} />
                 )}
               </TabsContent>
 
