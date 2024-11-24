@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Button } from "@app/components/ui/button";
 import {
@@ -29,15 +29,29 @@ import useSWR from "swr";
 import supabase from "@app/lib/supabase";
 import { Tables } from "@app/types/database.types";
 import convertNumbThousand from "@app/utils/convertNumbThousand";
+import AnalyticsTrends from "./AnalyticsTrends";
+import Spinner from "@app/components/Spinner/Spinner";
 
 export default function DashboardPage({
   organizer,
+  slug,
 }: {
   organizer: Tables<"organizers">;
+  slug?: string;
 }) {
   const [selectedTeam, setSelectedTeam] = React.useState<
     Tables<"events"> & { tickets: (Tables<"tickets"> | null)[] }
   >();
+
+  useEffect(() => {
+    if (slug) {
+      setSelectedTeam(
+        eventsData
+          ?.filter((event) => event.accepted)
+          .find((event) => event.slug === slug)
+      );
+    }
+  }, [slug]);
 
   const {
     data: eventsData,
@@ -55,8 +69,14 @@ export default function DashboardPage({
     },
     {
       onSuccess: (events) => {
-        // start with the first accepted event
-        if (!selectedTeam) {
+        if (slug) {
+          setSelectedTeam(
+            events
+              .filter((event) => event.accepted)
+              .find((event) => event.slug === slug)
+          );
+        } else if (!selectedTeam) {
+          // start with the first accepted event
           setSelectedTeam(events.filter((event) => event.accepted)[0]);
         }
       },
@@ -124,8 +144,8 @@ export default function DashboardPage({
 
   if (isLoadingBookings || isLoadingEvents) {
     return (
-      <div className="py-[16rem] flex items-center justify-center">
-        Loading...
+      <div className="flex py-24 items-center justify-center">
+        <Spinner />
       </div>
     );
   }
@@ -138,7 +158,9 @@ export default function DashboardPage({
           <div className="flex-1 space-y-4 py-8">
             {/* Dasboard */}
             <div className="flex flex-col md:flex-row md:items-center justify-between space-y-2">
-              <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+              <h2 className="text-3xl font-bold tracking-tight">
+                {selectedTeam?.name}
+              </h2>
               <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-2">
                 <TeamSwitcher
                   events={eventsData}
@@ -156,10 +178,8 @@ export default function DashboardPage({
               <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="analytics">Analytics</TabsTrigger>
-                {/* <TabsTrigger value="reports" disabled>
-                  Reports
-                </TabsTrigger>
-                <TabsTrigger value="notifications" disabled>
+                <TabsTrigger value="trends">Trends</TabsTrigger>
+                {/* <TabsTrigger value="notifications" disabled>
                   Notifications
                 </TabsTrigger> */}
               </TabsList>
@@ -369,9 +389,11 @@ export default function DashboardPage({
                     </CardHeader>
                     <CardContent>
                       <RecentSales
-                        bookings={bookingsData.filter(
-                          (booking) => booking.event_id === selectedTeam?.id
-                        )}
+                        bookings={bookingsData
+                          .filter(
+                            (booking) => booking.event_id === selectedTeam?.id
+                          )
+                          .slice(0, 5)}
                       />
                     </CardContent>
                   </Card>
@@ -380,7 +402,16 @@ export default function DashboardPage({
 
               {/* Tab - Analytics */}
               <TabsContent value="analytics">
-                <AnalyticsChart />
+                {selectedTeam?.slug && (
+                  <AnalyticsChart slug={selectedTeam?.slug} />
+                )}
+              </TabsContent>
+
+              {/* Tab - Trends */}
+              <TabsContent value="trends">
+                {selectedTeam?.slug && (
+                  <AnalyticsTrends slug={selectedTeam?.slug} />
+                )}
               </TabsContent>
 
               {/* Add other tabs here */}

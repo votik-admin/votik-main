@@ -1,7 +1,8 @@
 import { getSessionAndOrganizer } from "@app/lib/auth";
 import { redirect } from "next/navigation";
 import React from "react";
-import DashboardPage from "./DashboardPage";
+import DataTable from "./DataTable";
+import RenderDataTable from "./components/RenderDataTable";
 import { headers } from "next/headers";
 
 const HomePage = async () => {
@@ -16,10 +17,8 @@ const HomePage = async () => {
   }
 
   return (
-    <div className="bg-white dark:bg-black">
-      <div className="container">
-        <DashboardPage organizer={organizer} />
-      </div>
+    <div className="container">
+      <RenderDataTable organizer={organizer} />
     </div>
   );
 };
