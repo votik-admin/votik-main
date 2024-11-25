@@ -6,7 +6,7 @@ import Select from "@app/shared/Select/Select";
 import CommonLayout from "./CommonLayout";
 import FormItem from "./FormItem";
 import EventTypes from "@app/data/event-create";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormRegister } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import supabase from "@app/lib/supabase";
 import toast from "react-hot-toast";
@@ -15,6 +15,8 @@ import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import { useParams, useRouter } from "next/navigation";
 import { Tables } from "@app/types/database.types";
 import Textarea from "@app/shared/Textarea/Textarea";
+import { DatePicker, DateTimePicker } from "react-next-dates";
+import { enIN } from "date-fns/locale";
 
 export interface PageAddListing1Props {
   event: Tables<"events">;
@@ -55,21 +57,35 @@ const EventListing1: FC<PageAddListing1Props> = ({ event, revalidate }) => {
     revalidate();
   }, []);
 
-  const { register, setValue, formState, handleSubmit, watch } =
-    useForm<Page1Form>({
-      defaultValues: {
-        eventCategory: event.category || "MUSIC",
-        eventName: event.name || "",
-        description: event.description || "",
-        attendees: event.expected_footfall || 0,
-        startTime: formatTimeStringToLibrary(event.start_time || ""),
-      },
-    });
+  const {
+    register: registerOld,
+    setValue,
+    formState,
+    handleSubmit,
+    watch,
+  } = useForm<Page1Form>({
+    defaultValues: {
+      eventCategory: event.category || "MUSIC",
+      eventName: event.name || "",
+      description: event.description || "",
+      attendees: event.expected_footfall || 0,
+      startTime: formatTimeStringToLibrary(event.start_time || ""),
+    },
+  });
+
+  const register: UseFormRegister<Page1Form> = (name, options) => ({
+    ...registerOld(name, options),
+    required: !!options?.required,
+  });
 
   const onSubmit = async (d: Page1Form) => {
     setLoading(true);
     const toastId = toast.loading("Updating event...");
     try {
+      if (d.startTime === "") {
+        toast.error("Start time is required", { id: toastId });
+        return;
+      }
       const { data, error } = await supabase
         .from("events")
         .update({
@@ -172,7 +188,7 @@ const EventListing1: FC<PageAddListing1Props> = ({ event, revalidate }) => {
             />
           </FormItem>
           <FormItem label="Start time" desc="When will your event start?">
-            <Input
+            {/* <Input
               type="datetime-local"
               {...register("startTime", {
                 required: "Start time is required",
@@ -184,7 +200,24 @@ const EventListing1: FC<PageAddListing1Props> = ({ event, revalidate }) => {
                   return true;
                 },
               })}
-            />
+            /> */}
+            <DateTimePicker
+              date={
+                watch("startTime") ? new Date(watch("startTime")) : undefined
+              }
+              onChange={(date) => {
+                setValue("startTime", date?.toISOString() || "");
+              }}
+              // Indian locale
+              locale={enIN}
+            >
+              {({ dateInputProps, timeInputProps }) => (
+                <div className="flex space-x-2 sm:flex-row flex-col gap-2">
+                  <input required {...dateInputProps} />
+                  <input required {...timeInputProps} />
+                </div>
+              )}
+            </DateTimePicker>
             <ErrorMessage
               render={(data) => (
                 <p className="text-red-500 mt-2 text-sm">{data.message}</p>

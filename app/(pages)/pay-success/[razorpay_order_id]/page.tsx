@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import formatDate from "@app/utils/formatDate";
 import Link from "next/link";
 import ConfettiBoom from "@app/shared/Confetti/Confetti";
+import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
 
 const PayPage = async ({
   params: { razorpay_order_id },
@@ -166,9 +167,12 @@ const PayPage = async ({
             </div>
           </div>
         </div>
-        <div>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end sm:gap-6 gap-4 items-stretch">
           <Link href="/">
-            <ButtonPrimary>Explore more events</ButtonPrimary>
+            <ButtonSecondary>Explore more events</ButtonSecondary>
+          </Link>
+          <Link href={`/user/account/bookings/${data[0].id}`}>
+            <ButtonPrimary>View your booking</ButtonPrimary>
           </Link>
         </div>
       </div>

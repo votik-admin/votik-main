@@ -14,6 +14,7 @@ import HeroSearchForm2MobileFactory from "@app/components/HeroSearchForm2Mobile/
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import { Database } from "@app/types/database.types";
 import { SessionContext } from "@app/contexts/SessionContext";
+import { usePathname } from "next/navigation";
 
 interface Header3Props {
   className?: string;
@@ -23,6 +24,8 @@ let WIN_PREV_POSITION = 0;
 
 const Header3: FC<Header3Props> = ({ className = "" }) => {
   const { user } = useContext(SessionContext);
+
+  const path = usePathname();
 
   const headerInnerRef = useRef<HTMLDivElement>(null);
 
@@ -67,7 +70,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
   const renderHeroSearch = () => {
     return (
       <div
-        className={`absolute inset-x-0 top-0 transition-all will-change-[transform,opacity] ${
+        className={`absolute inset-x-0 top-0 transition-all will-change-[transform,opacity] z-[40] ${
           showHeroSearch
             ? "visible"
             : "-translate-x-0 -translate-y-[90px] scale-x-[0.395] scale-y-[0.6] opacity-0 invisible pointer-events-none"
@@ -132,7 +135,10 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
         }`}
       ></div>
       {showHeroSearch && <div id="nc-Header-3-anchor"></div>}
-      <header ref={headerInnerRef} className={`sticky top-0 z-40 ${className}`}>
+      <header
+        ref={headerInnerRef}
+        className={`sticky top-0 z-[100] ${className}`}
+      >
         <div
           className={`bg-white dark:bg-black absolute h-full inset-x-0 top-0 transition-transform will-change-[transform,opacity]
           ${showHeroSearch ? "duration-75" : ""} 
@@ -193,7 +199,16 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
                 {user ? (
                   <AvatarDropdown user={user} />
                 ) : (
-                  <ButtonPrimary href="/auth/signup">Sign up</ButtonPrimary>
+                  <ButtonPrimary
+                    href={(() => {
+                      if (path.includes("/auth")) {
+                        return "/auth/signup";
+                      }
+                      return `/auth/signup?redirect=${path}`;
+                    })()}
+                  >
+                    Sign up
+                  </ButtonPrimary>
                 )}
                 <div className="hidden md:block">
                   <MenuBar />

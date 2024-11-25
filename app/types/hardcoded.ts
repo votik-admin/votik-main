@@ -1,5 +1,5 @@
 import { TwMainColor } from "@app/data/types";
-import { Database } from "./database.types";
+import { Database, Enums } from "./database.types";
 
 const EVENTS = [
   "COMEDY",
@@ -12,6 +12,12 @@ const EVENTS = [
   "EXPERIENCES",
   "OTHER",
 ] as Database["public"]["Enums"]["EventCategory"][];
+
+const BANK_ACC_TYPES = [
+  "CURRENT",
+  "JOINT",
+  "SAVINGS",
+] as Enums<"BankAccType">[];
 
 const ENUM_MAP = {
   COMEDY: { name: "Comedy", slug: "comedy", color: "blue" },
@@ -28,4 +34,4 @@ const ENUM_MAP = {
   { name: string; slug: string; color: TwMainColor }
 >;
 
-export { EVENTS, ENUM_MAP };
+export { EVENTS, ENUM_MAP, BANK_ACC_TYPES };

@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, UseFormRegister } from "react-hook-form";
 import facebookSvg from "@app/images/Facebook.svg";
 import twitterSvg from "@app/images/Twitter.svg";
 import googleSvg from "@app/images/Google.svg";
@@ -10,8 +10,9 @@ import Image from "next/image";
 import Link from "next/link";
 import supabase from "@app/lib/supabase";
 import toast, { Toaster } from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SignInWithOAuthCredentials } from "@supabase/supabase-js";
+import { sanitizeRedirect } from "@app/utils/sanitizeRedirectUrl";
 
 export interface PageSignUpProps {
   className?: string;
@@ -25,12 +26,20 @@ type FormValues = {
 const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
   const router = useRouter();
 
+  const searchParams = useSearchParams();
+  const redirectUrl = sanitizeRedirect(searchParams.get("redirectUrl") ?? "/");
+
   const {
-    register,
+    register: registerOld,
     handleSubmit,
     formState: { errors },
     watch,
   } = useForm<FormValues>();
+
+  const register: UseFormRegister<FormValues> = (name, options) => ({
+    ...registerOld(name, options),
+    required: !!options?.required,
+  });
 
   const onSubmit: SubmitHandler<FormValues> = async (d) => {
     const toastId = toast.loading("Signing up...");
@@ -45,7 +54,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
 
       toast.success("Password reset successfully!", { id: toastId });
 
-      router.push("/auth/login");
+      router.push(`/auth/login?redirectUrl=${redirectUrl}`);
     } catch (err: any) {
       toast.error(err.message, { id: toastId });
     }

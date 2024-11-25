@@ -14,6 +14,7 @@ import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import { Database } from "@app/types/database.types";
 import { SessionContext } from "@app/contexts/SessionContext";
 import { OrganizerContext } from "@app/contexts/OrganizerContext";
+import { usePathname } from "next/navigation";
 
 interface Header3Props {
   className?: string;
@@ -25,6 +26,8 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
   const { organizer } = useContext(OrganizerContext);
 
   const headerInnerRef = useRef<HTMLDivElement>(null);
+
+  const path = usePathname();
 
   const [showHeroSearch, setShowHeroSearch] =
     useState<StaySearchFormFields | null>();
@@ -132,7 +135,10 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
         }`}
       ></div>
       {showHeroSearch && <div id="nc-Header-3-anchor"></div>}
-      <header ref={headerInnerRef} className={`sticky top-0 z-40 ${className}`}>
+      <header
+        ref={headerInnerRef}
+        className={`sticky top-0 z-[100] ${className}`}
+      >
         <div
           className={`bg-white dark:bg-black absolute h-full inset-x-0 top-0 transition-transform will-change-[transform,opacity]
           ${showHeroSearch ? "duration-75" : ""}
@@ -178,7 +184,14 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
                 {organizer ? (
                   <AvatarDropdown organizer={organizer} />
                 ) : (
-                  <ButtonPrimary href="/auth/signup">
+                  <ButtonPrimary
+                    href={(() => {
+                      if (path.includes("/auth")) {
+                        return "/auth/signup";
+                      }
+                      return `/auth/signup?redirect=${path}`;
+                    })()}
+                  >
                     Organizer sign up
                   </ButtonPrimary>
                 )}

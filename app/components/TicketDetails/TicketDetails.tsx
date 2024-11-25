@@ -1,3 +1,5 @@
+"use client";
+
 import React, { FC, useEffect, useState } from "react";
 import NcImage from "@app/shared/NcImage/NcImage";
 import Link from "next/link";
@@ -9,6 +11,7 @@ import ButtonClose from "@app/shared/ButtonClose/ButtonClose";
 import Ticket from "@app/components/Ticket/Ticket";
 import MobileTicket from "../Ticket/MobileTicket";
 import generateBookingId from "@app/utils/generateCustomBookingId";
+import { useRouter } from "next/navigation";
 
 export interface TicketDetailsProps {
   className?: string;
@@ -22,9 +25,11 @@ const TicketDetails: FC<TicketDetailsProps> = ({
   className = "",
   taxonomy,
 }) => {
-  const { slug, name, city, location, start_time, primary_img } =
-    taxonomy.events;
-  const href = `/events/${slug}`;
+  const event = taxonomy.events;
+
+  const router = useRouter();
+
+  const { name, city, location, start_time, primary_img } = event;
 
   const [open, setOpen] = useState(false);
 
@@ -67,7 +72,7 @@ const TicketDetails: FC<TicketDetailsProps> = ({
       </div>
 
       <div className="truncate bg-white p-4">
-        <Link href={href}>
+        <Link href={`/user/account/bookings/${taxonomy.id}`}>
           <h2 className="text-base sm:text-lg text-neutral-900 font-semibold truncate line-clamp-2 text-wrap hover:underline decoration-dashed decoration-slate-400 underline-offset-4">
             {name}
           </h2>
@@ -79,115 +84,14 @@ const TicketDetails: FC<TicketDetailsProps> = ({
           {location}
         </span>
         <div className="mt-4 flex items-stretch">
-          <ButtonCustom
-            className="w-full"
-            onClick={() => {
-              setOpen(true);
-            }}
+          <Link
+            href={`/user/account/bookings/${taxonomy.id}`}
+            className="font-bebasNeue text-[22px] flex items-center justify-center bg-[#430D7F] text-[#C3FD07] px-4 py-2 rounded-lg hover:shadow w-full"
           >
-            VIEW TICKET
-          </ButtonCustom>
+            VIEW BOOKING
+          </Link>
         </div>
       </div>
-      {
-        // Modal with transition
-        <Transition appear show={open} as={React.Fragment}>
-          <Dialog
-            as="div"
-            className="fixed inset-0 z-50 overflow-y-auto dark bg-neutral-800 text-neutral-200 hiddenScrollbar"
-            onClose={() => setOpen(false)}
-          >
-            <div className="min-h-screen px-4 text-center">
-              <Transition.Child
-                as={React.Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0"
-                enterTo="opacity-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
-                <Dialog.Overlay className="fixed inset-0 bg-white dark:bg-neutral-800" />
-              </Transition.Child>
-
-              <span
-                className="inline-block h-screen align-middle"
-                aria-hidden="true"
-              >
-                &#8203;
-              </span>
-
-              <Transition.Child
-                as={React.Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <div className="relative inline-flex items-center justify-center w-full max-w-5xl py-5 sm:py-8 h-screen align-middle mx-auto">
-                  <div className="absolute right-2 top-2 md:top-4 md:right-4 z-50">
-                    <ButtonClose
-                      className="sm:w-12 sm:h-12"
-                      onClick={() => setOpen(false)}
-                    />
-                  </div>
-
-                  {/* For larger screens */}
-                  <div className="hidden md:block">
-                    {loading || !bookingHash ? (
-                      <NcImage className="animate-pulse" src="" />
-                    ) : (
-                      <Ticket
-                        ticket={{
-                          name: name!,
-                          date: formatDate(start_time),
-                          venue: (location ? location + ", " : "") + city,
-                          price: taxonomy.tickets.price,
-                          convenienceFree: 0,
-                          amount: taxonomy.tickets.price,
-                          bookingId: bookingHash,
-                          count: taxonomy.booked_count,
-                          imgSrc: primary_img!,
-                        }}
-                      />
-                    )}
-                  </div>
-
-                  {/* For smaller screens */}
-                  <div className="md:hidden">
-                    {
-                      // If loading, show a loading animation
-                      loading || !bookingHash ? (
-                        <NcImage
-                          className="animate-pulse"
-                          src=""
-                          alt="loading"
-                        />
-                      ) : (
-                        <MobileTicket
-                          ticket={{
-                            name: name!,
-                            date: formatDate(start_time),
-                            venue: (location ? location + ", " : "") + city,
-                            price: taxonomy.tickets.price,
-                            convenienceFree: 0,
-                            amount: taxonomy.tickets.price,
-                            bookingId: bookingHash,
-                            count: taxonomy.booked_count,
-                            imgSrc: primary_img!,
-                          }}
-                        />
-                      )
-                    }
-                  </div>
-                </div>
-              </Transition.Child>
-            </div>
-          </Dialog>
-        </Transition>
-      }
     </div>
   );
 };

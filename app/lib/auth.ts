@@ -1,7 +1,7 @@
 import { Database, Tables } from "@app/types/database.types";
 import supabase from "./supabase";
-import { createClient } from "./supabase/server";
 import { PostgrestError, Session } from "@supabase/supabase-js";
+import { createClient } from "./supabase/server";
 
 export async function getUser() {
   const {

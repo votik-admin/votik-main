@@ -7,6 +7,13 @@ const getAllEvents = () =>
     .select("*, tickets(price)")
     .order("created_at", { ascending: false });
 
+const getEventsByOrganizer = (organizerId: string) =>
+  supabase
+    .from("events")
+    .select("*, tickets(price)")
+    .eq("organizer_id", organizerId)
+    .order("created_at", { ascending: false });
+
 const getAllVenues = () =>
   supabase.from("venues").select("*").order("created_at", { ascending: false });
 
@@ -16,6 +23,19 @@ const getEventFromSlug = (slug: string) =>
     .select("*, organizers(*), venues(*), tickets(*)")
     .eq("slug", slug)
     .single();
+
+const getEventFromId = (id: string) =>
+  supabase
+    .from("events")
+    .select("*, organizers(*), venues(*), tickets(*)")
+    .eq("id", id)
+    .single();
+
+const getBouncersForEvent = (eventId: string) =>
+  supabase
+    .from("bouncer_logins")
+    .select("*, events(*)")
+    .eq("event_id", eventId);
 
 const getUserFromAuthTable = () => supabase.auth.getUser();
 const getUserFromUserTable = (id: string) =>
@@ -49,6 +69,7 @@ export {
   getAllEvents,
   getAllVenues,
   getEventFromSlug,
+  getEventFromId,
   getUserFromAuthTable,
   getUserFromUserTable,
   getEventsFromCategory,
@@ -57,4 +78,5 @@ export {
 
   // Organiser
   getAllEventsByOrganizer,
+  getBouncersForEvent,
 };

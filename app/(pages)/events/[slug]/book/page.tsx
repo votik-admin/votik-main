@@ -12,6 +12,7 @@ import NcImage from "@app/shared/NcImage/NcImage";
 import ReadMoreParagraph from "@app/shared/ReadMoreParagraph/ReadMoreParagraph";
 import SectionChoseTicket from "./SectionChoseTicket";
 import { getSessionAndUser } from "@app/lib/auth";
+import { headers } from "next/headers";
 
 const ListingStayDetailPage = async ({
   params: { slug },
@@ -21,8 +22,14 @@ const ListingStayDetailPage = async ({
   };
 }) => {
   const { user, session, error: authError } = await getSessionAndUser();
+
+  console.log({ authError, user, session });
+
   if (authError || !user) {
-    redirect("/auth/login");
+    const headersList = headers();
+    const header_url = headersList.get("x-url") || "";
+    const path = new URL(header_url).pathname;
+    redirect(`/auth/login?redirect=${path}`);
   }
 
   const { data: event, error } = await getEventFromSlug(slug);

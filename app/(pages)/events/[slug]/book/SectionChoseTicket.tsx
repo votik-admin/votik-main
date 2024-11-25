@@ -9,7 +9,7 @@ import { ErrorMessage } from "@hookform/error-message";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormRegister } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 
 type ConfirmAccountDetailsForm = {
@@ -42,7 +42,7 @@ const SectionChoseTicket = ({
 
   const {
     handleSubmit,
-    register,
+    register: registerOld,
     formState: { errors },
   } = useForm<ConfirmAccountDetailsForm>({
     defaultValues: {
@@ -51,6 +51,14 @@ const SectionChoseTicket = ({
       email: user.email,
       phoneNumber: user.phone_number,
     },
+  });
+
+  const register: UseFormRegister<ConfirmAccountDetailsForm> = (
+    name,
+    options
+  ) => ({
+    ...registerOld(name, options),
+    required: !!options?.required,
   });
 
   const createOrderId = async () => {
@@ -157,6 +165,7 @@ const SectionChoseTicket = ({
                   {...register("firstName", {
                     required: "First name is required",
                   })}
+                  required
                 />
                 <ErrorMessage
                   render={(data) => (
@@ -193,6 +202,7 @@ const SectionChoseTicket = ({
               {...register("email", {
                 required: "Email is required",
               })}
+              required
             />
             <ErrorMessage
               render={(data) => (
@@ -210,6 +220,7 @@ const SectionChoseTicket = ({
               {...register("phoneNumber", {
                 required: "Phone number is required",
               })}
+              required
             />
             <ErrorMessage
               render={(data) => (

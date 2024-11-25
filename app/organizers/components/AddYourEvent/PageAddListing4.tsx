@@ -6,7 +6,7 @@ import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
 import CommonLayout from "./CommonLayout";
 import toast from "react-hot-toast";
 import supabase from "@app/lib/supabase";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormRegister } from "react-hook-form";
 import FormItem from "./FormItem";
 import { useParams, useRouter } from "next/navigation";
 import { ErrorMessage } from "@hookform/error-message";
@@ -37,14 +37,26 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event, revalidate }) => {
     revalidate();
   }, []);
 
-  const { register, setValue, formState, handleSubmit, watch } =
-    useForm<Page4Form>({
-      defaultValues: {
-        slug: event.slug || slugify(event.name || ""),
-        primary_img: event.primary_img || "",
-        secondary_imgs: event.secondary_imgs || [],
-      },
-    });
+  const {
+    register: registerOld,
+    setValue,
+    formState,
+    handleSubmit,
+    watch,
+  } = useForm<Page4Form>({
+    defaultValues: {
+      slug:
+        event.slug ||
+        slugify(event.name || "") + "-ef" + Date.now().toString().slice(-5),
+      primary_img: event.primary_img || "",
+      secondary_imgs: event.secondary_imgs || [],
+    },
+  });
+
+  const register: UseFormRegister<Page4Form> = (name, options) => ({
+    ...registerOld(name, options),
+    required: !!options?.required,
+  });
 
   const primaryImageUrl = watch("primary_img");
   const setPrimaryImageUrl = (url: string) => setValue("primary_img", url);
@@ -169,11 +181,11 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event, revalidate }) => {
         return;
       }
 
-      if (d.secondary_imgs.length === 0) {
-        toast.error("Please upload at least one image", { id: toastId });
-        setLoading(false);
-        return;
-      }
+      // if (d.secondary_imgs.length === 0) {
+      //   toast.error("Please upload at least one image", { id: toastId });
+      //   setLoading(false);
+      //   return;
+      // }
 
       const { data, error } = await supabase
         .from("events")
@@ -209,6 +221,7 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event, revalidate }) => {
             <input
               type="text"
               placeholder="Enter a slug for your event"
+              disabled
               {...register("slug", {
                 required: true,
                 validate: (value) => slugify(value) === value || "Invalid slug",
@@ -253,6 +266,7 @@ const PageAddListing4: FC<PageAddListing4Props> = ({ event, revalidate }) => {
                         type="file"
                         accept="image/*"
                         onChange={handlePrimaryImageUpload}
+                        required
                       />
                     </label>
                     <p className="pl-1">or drag and drop</p>

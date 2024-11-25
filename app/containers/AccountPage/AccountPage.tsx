@@ -11,24 +11,20 @@ import CommonLayout from "./CommonLayout";
 import { Database, Tables } from "@app/types/database.types";
 import supabase from "@app/lib/supabase";
 import toast, { Toaster } from "react-hot-toast";
-import { set, useForm } from "react-hook-form";
+import { set, useForm, UseFormRegister } from "react-hook-form";
 import { GENDER, STATES } from "@app/types/enums";
 import { SessionContext } from "@app/contexts/SessionContext";
 import { ErrorMessage } from "@hookform/error-message";
 import EmailUpdate from "@app/components/EmailUpdate/EmailUpdate";
 import PhoneUpdate from "@app/components/PhoneUpdate/PhoneUpdate";
 import { isValidSlug } from "@app/utils/slug";
+import sanitizePhone from "@app/utils/sanitizePhone";
+import { DatePicker } from "react-next-dates";
+import { enIN } from "date-fns/locale";
 
 export interface AccountPageProps {
   className?: string;
-}
-
-function isPhoneNumber(number: unknown): boolean {
-  if (typeof number !== "string") {
-    return false;
-  }
-  // Check if the phone number is valid: (+\d{1,3}\d{10})
-  return /^\+91\d{10}$/.test(number);
+  revalidate: () => void;
 }
 
 function isEmail(email: unknown): boolean {
@@ -41,19 +37,28 @@ function isEmail(email: unknown): boolean {
 
 type UserDetailsForm = Tables<"users">;
 
-const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
+const AccountPage: FC<AccountPageProps> = ({ className = "", revalidate }) => {
+  useEffect(() => {
+    revalidate();
+  }, []);
+
   const { user: u } = useContext(SessionContext);
 
   const user = u!;
   const [avatarUrl, setAvatarUrl] = useState<string | null>(user.avatar_url);
   const {
-    register,
+    register: registerOld,
     handleSubmit,
     watch,
     setValue,
     formState: { errors },
   } = useForm<UserDetailsForm>({
     defaultValues: user,
+  });
+
+  const register: UseFormRegister<UserDetailsForm> = (name, options) => ({
+    ...registerOld(name, options),
+    required: !!options?.required,
   });
 
   const updateEmail = async (email: string) => {
@@ -88,14 +93,14 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
     const { error } = await supabase
       .from("organizers")
       .update({
-        phone_number: phone,
+        phone_number: sanitizePhone(phone),
       })
       .eq("id", user.id);
 
     const { error: userError } = await supabase
       .from("users")
       .update({
-        phone_number: phone,
+        phone_number: sanitizePhone(phone),
       })
       .eq("id", user.id);
 
@@ -126,11 +131,33 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
       .from("users")
       .update({
         ...data,
+        phone_number: data.phone_number
+          ? sanitizePhone(data.phone_number)
+          : undefined,
       })
       .eq("id", user.id);
 
+    // Upsert the public profile
+    const { error: publicProfileError } = await supabase
+      .from("users_public")
+      .upsert(
+        {
+          id: user.id,
+          avatar_url: avatarUrl,
+          username: data.username,
+        },
+        {
+          onConflict: "id",
+        }
+      );
+
     if (error) {
       toast.error(error.message, { id: toastId });
+      return;
+    }
+
+    if (publicProfileError) {
+      toast.error(publicProfileError.message, { id: toastId });
       return;
     }
 
@@ -181,6 +208,19 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
       .update({ avatar_url: publicUrl })
       .eq("id", user.id);
 
+    // Upsert the public profile
+    const { error: publicProfileError } = await supabase
+      .from("users_public")
+      .upsert(
+        {
+          id: user.id,
+          avatar_url: publicUrl,
+        },
+        {
+          onConflict: "id",
+        }
+      );
+
     if (updateError) {
       // Delete the uploaded image
       await supabase.storage
@@ -190,6 +230,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
       toast.error(updateError.message, { id: uploaderToast });
       return;
     }
+
     setAvatarUrl(publicUrl);
     toast.success("Image uploaded successfully", { id: uploaderToast });
   };
@@ -300,7 +341,7 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                     required: "Username is required",
                     maxLength: { value: 20, message: "Username is too long" },
                     validate: (value) =>
-                      isValidSlug(value) || "Invalid username",
+                      (value && isValidSlug(value)) || "Invalid username",
                   })}
                 />
                 <ErrorMessage
@@ -322,13 +363,25 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
               {/* ---- */}
               <div>
                 <Label>Date of birth</Label>
-                <Input
+                {/* <Input
                   className="mt-1.5"
                   type="date"
                   {...register("birthday", {
                     required: "Date of birth is required",
                   })}
-                />
+                /> */}
+                <DatePicker
+                  date={
+                    watch("birthday") ? new Date(watch("birthday")!) : undefined
+                  }
+                  onChange={(date) => {
+                    setValue("birthday", date?.toISOString() ?? null);
+                  }}
+                  // Indian locale
+                  locale={enIN}
+                >
+                  {({ inputProps }) => <input {...inputProps} />}
+                </DatePicker>
                 <ErrorMessage
                   render={(data) => (
                     <p className="text-red-500 mt-2 text-sm">{data.message}</p>

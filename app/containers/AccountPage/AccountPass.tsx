@@ -5,7 +5,12 @@ import React from "react";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import Input from "@app/shared/Input/Input";
 import CommonLayout from "./CommonLayout";
-import { FieldErrors, useForm } from "react-hook-form";
+import {
+  FieldErrors,
+  RegisterOptions,
+  useForm,
+  UseFormRegister,
+} from "react-hook-form";
 import supabase from "@app/lib/supabase";
 import toast, { Toaster } from "react-hot-toast";
 import { ErrorMessage } from "@hookform/error-message";
@@ -40,14 +45,24 @@ const AccountPass = () => {
     setValue("confirmPassword", "");
   };
 
-  const { watch, handleSubmit, register, formState, setValue } =
-    useForm<PasswordForm>({
-      defaultValues: {
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      },
-    });
+  const {
+    watch,
+    handleSubmit,
+    register: registerOld,
+    formState,
+    setValue,
+  } = useForm<PasswordForm>({
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
+  });
+
+  const register: UseFormRegister<PasswordForm> = (name, options) => ({
+    ...registerOld(name, options),
+    required: !!options?.required,
+  });
 
   return (
     <div>

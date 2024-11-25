@@ -34,7 +34,7 @@ const MobileFooterSticky = ({
         <ModalReserveMobile
           tickets={tickets}
           event_id={event_id}
-          user={user!}
+          user={user}
           renderChildren={({ openModal }) => (
             <ButtonCustom
               onClick={async () => {
@@ -43,7 +43,9 @@ const MobileFooterSticky = ({
                   await getUserFromAuthTable();
                 const user = authData.user;
                 if (authError || !user) {
-                  router.push("/auth/login");
+                  // get the window path and encode it
+                  const path = encodeURIComponent(window.location.pathname);
+                  router.push(`/auth/login?redirect=${path}`);
                   return;
                 }
                 const { data, error } = await getUserFromUserTable(user!.id);

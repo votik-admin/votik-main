@@ -55,7 +55,7 @@ export default function AvatarDropdown({
               <Avatar
                 imgUrl={organizer.avatar_url ?? undefined}
                 sizeClass="w-8 h-8 sm:w-9 sm:h-9"
-                userName={organizer.name ?? "Hello World!"}
+                userName={organizer.name ?? ""}
               />
             </Popover.Button>
             <Transition

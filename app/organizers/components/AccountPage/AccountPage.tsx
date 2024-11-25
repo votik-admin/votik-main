@@ -7,10 +7,10 @@ import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import Input from "@app/shared/Input/Input";
 import Select from "@app/shared/Select/Select";
 import CommonLayout from "./CommonLayout";
-import { Tables } from "@app/types/database.types";
+import { Enums, Tables } from "@app/types/database.types";
 import supabase from "@app/lib/supabase";
 import toast, { Toaster } from "react-hot-toast";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormRegister } from "react-hook-form";
 import { GENDER, STATES } from "@app/types/enums";
 import { SessionContext } from "@app/contexts/SessionContext";
 import { OrganizerContext } from "@app/contexts/OrganizerContext";
@@ -19,25 +19,14 @@ import { isValidSlug } from "@app/utils/slug";
 import formatRemainingTime from "@app/utils/formatOtp";
 import PhoneUpdate from "@app/components/PhoneUpdate/PhoneUpdate";
 import EmailUpdate from "@app/components/EmailUpdate/EmailUpdate";
+import { BANK_ACC_TYPES } from "@app/types/hardcoded";
+import sanitizePhone from "@app/utils/sanitizePhone";
 
 export interface AccountPageProps {
   className?: string;
 }
 
-function isPhoneNumber(number: string): boolean {
-  // Check if the phone number is valid: (+\d{1,3}\d{10})
-  return /^\+91[0-9]{10}$/.test(number);
-}
-
 type OrganizerDetailsForm = Tables<"organizers">;
-
-function isEmail(email: unknown): boolean {
-  if (typeof email !== "string") {
-    return false;
-  }
-  // Check if the email is valid
-  return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
-}
 
 function isValidGSTIN(gstin: string): boolean {
   const gstinRegex = /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}$/;
@@ -113,14 +102,14 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
     const { error } = await supabase
       .from("organizers")
       .update({
-        phone_number: phone,
+        phone_number: sanitizePhone(phone),
       })
       .eq("id", organizer.id);
 
     const { error: userError } = await supabase
       .from("users")
       .update({
-        phone_number: phone,
+        phone_number: sanitizePhone(phone),
       })
       .eq("id", organizer.id);
 
@@ -135,10 +124,20 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
     toast.success("User updated successfully", { id: toastId });
   };
 
-  const { register, handleSubmit, watch, setValue, formState } =
-    useForm<OrganizerDetailsForm>({
-      defaultValues: organizer,
-    });
+  const {
+    register: registerOld,
+    handleSubmit,
+    watch,
+    setValue,
+    formState,
+  } = useForm<OrganizerDetailsForm>({
+    defaultValues: organizer,
+  });
+
+  const register: UseFormRegister<OrganizerDetailsForm> = (name, options) => ({
+    ...registerOld(name, options),
+    required: !!options?.required,
+  });
 
   const handleUserUpdate = async (data: Partial<OrganizerDetailsForm>) => {
     // handle user update
@@ -366,10 +365,10 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                   <Input
                     className="mt-1.5"
                     {...register("gstin_number", {
-                      validate: (value) =>
-                        (value !== null && isValidGSTIN(value)) ||
-                        "Invalid GSTIN",
-                      required: "GSTIN is required",
+                      validate: (value) => {
+                        if (value === "" || value === null) return true;
+                        return isValidGSTIN(value) || "Invalid GSTIN number";
+                      },
                     })}
                   />
                   <ErrorMessage
@@ -408,12 +407,24 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
               {/* Bank details */}
               <div>
                 <Label>Bank Account Type</Label>
-                <Input
+                <Select
                   className="mt-1.5"
-                  {...register("bank_acc_type", {
-                    required: "Bank Account Type is required",
-                  })}
-                />
+                  value={watch("bank_acc_type") ?? ""}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                    setValue(
+                      "bank_acc_type",
+                      e.target.value as Enums<"BankAccType">
+                    );
+                  }}
+                >
+                  {BANK_ACC_TYPES.map((item) => (
+                    <option key={item} value={item}>
+                      {item
+                        .toLocaleLowerCase()
+                        .replace(/^\w/, (c) => c.toUpperCase())}
+                    </option>
+                  ))}
+                </Select>
                 <ErrorMessage
                   render={(data) => (
                     <p className="text-red-500 mt-2 text-sm">{data.message}</p>
@@ -428,7 +439,10 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                   className="mt-1.5"
                   {...register("bank_acc_number", {
                     required: "Bank Account Number is required",
-                    pattern: /^\d{9,18}$/,
+                    pattern: {
+                      value: /^\d{9,18}$/,
+                      message: "Invalid Bank Account Number",
+                    },
                   })}
                 />
                 <ErrorMessage
@@ -445,7 +459,10 @@ const AccountPage: FC<AccountPageProps> = ({ className = "" }) => {
                   className="mt-1.5"
                   {...register("bank_acc_ifsc", {
                     required: "Bank IFSC is required",
-                    pattern: /^[A-Za-z]{4}\d{7}$/,
+                    pattern: {
+                      value: /^[A-Za-z]{4}\d{7}$/,
+                      message: "Invalid IFSC code",
+                    },
                   })}
                 />
                 <ErrorMessage

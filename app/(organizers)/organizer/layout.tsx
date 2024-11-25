@@ -94,23 +94,17 @@ export default async function RootLayout({
   const { session, organizer } = await getSessionAndOrganizer();
 
   return (
-    <html lang="en" className="dark">
-      <body className={`${bebasNeue.variable}`}>
-        <TooltipProvider>
-          <NextTopLoader
-            showSpinner={false}
-            color={"#c4fd07"}
-            // color={"#430D7F"}
-          />
-          <div className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
-            <SiteHeader session={session} organizer={organizer} />
-            {children}
-            <Footer />
-          </div>
-        </TooltipProvider>
-      </body>
-
-      <GoogleAnalytics gaId="G-R1RJRTNCKF" />
-    </html>
+    <TooltipProvider>
+      <NextTopLoader
+        showSpinner={false}
+        color={"#c4fd07"}
+        // color={"#430D7F"}
+      />
+      <div className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
+        <SiteHeader session={session} organizer={organizer} />
+        {children}
+        <Footer />
+      </div>
+    </TooltipProvider>
   );
 }

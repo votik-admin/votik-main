@@ -9,7 +9,7 @@ function usePagination<T>({
   page: number;
   pageSize: number;
 }) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [count, setCount] = useState(0);
   const [data, setData] = useState<T[]>([]);
@@ -23,7 +23,8 @@ function usePagination<T>({
     try {
       // Fetch paginated data
       const { data: pageData, error: dataError } = await query.range(
-        (page - 1) * pageSize,
+        // (page - 1) * pageSize,
+        0,
         page * pageSize - 1
       );
 
@@ -40,7 +41,7 @@ function usePagination<T>({
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [page]);
 
   return {
     page,

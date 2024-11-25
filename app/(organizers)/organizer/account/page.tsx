@@ -1,13 +1,19 @@
 import OrganizerProvider from "@app/contexts/OrganizerContext";
 import { getSessionAndOrganizer } from "@app/lib/auth";
 import AccountPage from "@app/organizers/components/AccountPage/AccountPage";
+import { sanitizeRedirect } from "@app/utils/sanitizeRedirectUrl";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function Page() {
   const { session, organizer, error } = await getSessionAndOrganizer();
 
   if (!session || !organizer || error) {
-    redirect("/auth/login");
+    const headersList = headers();
+    const header_url = headersList.get("x-url") || "";
+    const path = new URL(header_url).pathname;
+    if (error || !session) redirect(`/auth/login?redirect=${path}`);
+    if (!organizer) redirect(`/organizer/signup?redirect=${path}`);
   }
 
   return (

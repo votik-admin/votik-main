@@ -5,23 +5,23 @@ import React, { FC, useContext, useEffect, useState } from "react";
 import Select from "@app/shared/Select/Select";
 import CommonLayout from "./CommonLayout";
 import FormItem from "./FormItem";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormRegister } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import ButtonSecondary from "@app/shared/Button/ButtonSecondary";
 import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 import { notFound, useParams, useRouter } from "next/navigation";
 import supabase from "@app/lib/supabase";
 import { Tables } from "@app/types/database.types";
-import { OrganizerContext } from "@app/contexts/OrganizerContext";
 import toast from "react-hot-toast";
 
 export interface PageAddListing5Props {
-  event: Tables<"events">;
+  tickets: Tables<"tickets">[];
   revalidate: () => Promise<void>;
 }
 
 type Page5Form = {
   tickets: {
+    id: number | null;
     name: string;
     price: number;
     quantity: number;
@@ -29,7 +29,7 @@ type Page5Form = {
   }[];
 };
 
-const PageAddListing5: FC<PageAddListing5Props> = ({ event, revalidate }) => {
+const PageAddListing5: FC<PageAddListing5Props> = ({ tickets, revalidate }) => {
   const { eventId, id } = useParams();
   const router = useRouter();
 
@@ -44,23 +44,38 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event, revalidate }) => {
     revalidate();
   }, []);
 
+  if (tickets.length === 0) {
+    tickets = [
+      {
+        name: "General Admission",
+        price: 0,
+        initial_available_count: 0,
+        description: "General admission ticket",
+      },
+    ] as Tables<"tickets">[];
+  }
+
   const {
-    register,
+    register: registerOld,
     formState: { errors },
     watch,
     setValue,
     handleSubmit,
   } = useForm<Page5Form>({
     defaultValues: {
-      tickets: [
-        {
-          name: "General Admission",
-          price: 0,
-          quantity: 100,
-          description: "General admission ticket",
-        },
-      ],
+      tickets: tickets.map((ticket) => ({
+        name: ticket.name,
+        price: ticket.price,
+        quantity: ticket.initial_available_count,
+        description: ticket.description,
+        id: ticket.id ?? null,
+      })),
     },
+  });
+
+  const register: UseFormRegister<Page5Form> = (name, options) => ({
+    ...registerOld(name, options),
+    required: !!options?.required,
   });
 
   const onSubmit = async (d: Page5Form) => {
@@ -69,11 +84,64 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event, revalidate }) => {
       return;
     }
 
-    const ticketTypes = d.tickets;
+    // Update the old tickets and create new tickets
+    const oldTix = tickets
+      .filter((t) => t.id !== null)
+      .map((t) => ({
+        id: t.id,
+        name: t.name,
+        price: t.price,
+        quantity: t.initial_available_count,
+        description: t.description,
+      }));
+
+    for (const ticket of d.tickets) {
+      console.log("Ticket", ticket);
+      if (ticket.id !== null) {
+        const oldTicket = oldTix.find((t) => t.id === ticket.id);
+        if (
+          oldTicket?.name === ticket.name &&
+          oldTicket?.price === ticket.price &&
+          oldTicket?.quantity === ticket.quantity &&
+          oldTicket?.description === ticket.description
+        ) {
+          continue;
+        }
+        const toastId = toast.loading("Updating ticket " + ticket.name);
+        if ((oldTicket?.quantity ?? 0) > ticket.quantity) {
+          toast.error("Cannot decrease ticket quantity of " + ticket.name, {
+            id: toastId,
+          });
+          return;
+        }
+        const { data, error } = await supabase
+          .from("tickets")
+          .update({
+            name: ticket.name,
+            price: ticket.price,
+            initial_available_count: ticket.quantity,
+            description: ticket.description,
+          })
+          .eq("id", ticket.id);
+
+        if (error) {
+          console.error("Error updating ticket", error);
+          toast.error(`Error updating ticket: ${error.message}`, {
+            id: toastId,
+          });
+          return;
+        }
+        toast.success("Ticket updated successfully", { id: toastId });
+      }
+    }
+
+    const newTix = d.tickets.filter((t) => t.id === null);
 
     const toastId = toast.loading("Updating event...");
 
-    const tickets = ticketTypes.map((ticket) => ({
+    console.log("New tickets", newTix);
+
+    const newTickets = newTix.map((ticket) => ({
       event_id: eventId,
       name: ticket.name,
       price: ticket.price,
@@ -82,7 +150,7 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event, revalidate }) => {
       initial_available_count: ticket.quantity,
     }));
 
-    const { data, error } = await supabase.from("tickets").insert(tickets);
+    const { data, error } = await supabase.from("tickets").insert(newTickets);
 
     if (error) {
       console.error("Error creating tickets", error);
@@ -100,7 +168,7 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event, revalidate }) => {
         <h2 className="text-3xl font-bold mb-6">Tickets for the Event</h2>
         <div className="border-b-2 border-neutral-200 dark:border-neutral-700 mb-6"></div>
         <div className="space-y-8">
-          {watch("tickets").map((_, index) => (
+          {watch("tickets").map((ticket, index) => (
             <div
               key={index}
               className="p-6 rounded-md shadow-md dark:bg-slate-800 bg-slate-100"
@@ -197,18 +265,20 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event, revalidate }) => {
               </FormItem>
               <div className="flex justify-end mt-4">
                 <div className="flex justify-end">
-                  <button
-                    onClick={() => {
-                      const tickets = watch("tickets");
-                      const updatedTickets = tickets.filter(
-                        (_, ticketIndex) => ticketIndex !== index
-                      );
-                      setValue("tickets", updatedTickets);
-                    }}
-                    className="text-red-500 hover:underline"
-                  >
-                    Remove this ticket type
-                  </button>
+                  {ticket.id === null && (
+                    <button
+                      onClick={() => {
+                        const tickets = watch("tickets");
+                        const updatedTickets = tickets.filter(
+                          (_, ticketIndex) => ticketIndex !== index
+                        );
+                        setValue("tickets", updatedTickets);
+                      }}
+                      className="text-red-500 hover:underline"
+                    >
+                      Remove this ticket type
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -225,6 +295,7 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event, revalidate }) => {
                   price: 0,
                   quantity: 0,
                   description: "",
+                  id: null,
                 },
               ];
               setValue("tickets", newTickets);
@@ -238,7 +309,7 @@ const PageAddListing5: FC<PageAddListing5Props> = ({ event, revalidate }) => {
             Go back
           </ButtonSecondary>
           <ButtonPrimary onClick={handleSubmit(onSubmit)} loading={loading}>
-            Publish event
+            Continue
           </ButtonPrimary>
         </div>
       </>
