@@ -190,11 +190,15 @@ const ListingStayDetailPage = async ({
         )}
         {
           // Show join pre-chat button if user has booked a ticket
-          bookings.length > 0 && (
+          bookings.length > 0 ? (
             <div className="flex justify-center mt-8">
               <Link href={`/events/${event.slug}/join-chat`}>
                 <ButtonCustom>Join Pre-Chat</ButtonCustom>
               </Link>
+            </div>
+          ) : (
+            <div className="underline decoration-dashed underline-offset-4">
+              Book your ticket to join pre-event chat!
             </div>
           )
         }

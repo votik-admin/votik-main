@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import {
-  Column,
   ColumnDef,
   ColumnFiltersState,
   Row,
@@ -15,41 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  ArrowUpDown,
-  ChevronDown,
-  MoreHorizontal,
-  CircleX,
-  ArrowUp,
-  ArrowDown,
-  CircleCheck,
-} from "lucide-react";
-
-import { Button } from "@app/components/ui/button";
-import { Checkbox } from "@app/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@app/components/ui/dropdown-menu";
-import { Input } from "@app/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@app/components/ui/table";
-import { Tables } from "@app/types/database.types";
-import Link from "next/link";
-import { ENUM_MAP } from "@app/types/hardcoded";
-import BadgeDark from "@app/shared/Badge/BadgeDark";
-
+import { ChevronDown, Trash } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -62,255 +27,41 @@ import {
   AlertDialogTrigger,
 } from "@app/components/ui/alert-dialog";
 
-type EventWithTickets = Tables<"events"> & {
+import { Button } from "@app/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@app/components/ui/dropdown-menu";
+import { Input } from "@app/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@app/components/ui/table";
+import { Tables } from "@app/types/database.types";
+import { useSWRConfig } from "swr";
+import { deleteEvents, getAllEventsByOrganizer } from "@app/queries";
+import toast from "react-hot-toast";
+
+export type EventWithTickets = Tables<"events"> & {
   tickets: (Tables<"tickets"> | null)[];
 };
 
-const columns: ColumnDef<EventWithTickets>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "status",
-    accessorFn: (row) => {
-      if (!row.accepted) return "3_Pending";
-      return new Date(row.start_time as string) < new Date()
-        ? "2_Expired"
-        : "1_Live";
-    },
-    header: ({ column }: { column: Column<EventWithTickets, unknown> }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="space-x-2"
-        >
-          <span>Status</span>
-          {column.getIsSorted() ? (
-            column.getIsSorted() === "asc" ? (
-              <ArrowUp />
-            ) : (
-              <ArrowDown />
-            )
-          ) : (
-            <ArrowUpDown />
-          )}
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="ml-4">
-        {row.getValue("accepted") ? (
-          new Date(row.getValue("start_time")) < new Date() ? (
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-yellow-500 rounded-full shrink-0"></div>
-              <span>Expired</span>
-            </div>
-          ) : (
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full shrink-0"></div>
-              <span>Live</span>
-            </div>
-          )
-        ) : (
-          <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 bg-red-500 rounded-full shrink-0"></div>
-            <span>Pending</span>
-          </div>
-        )}
-      </div>
-    ),
-  },
-  ...[
-    { key: "accepted", value: "Accepted" },
-    { key: "id", value: "Id" },
-    { key: "slug", value: "Slug" },
-    { key: "name", value: "Name" },
-    { key: "city", value: "City" },
-    { key: "location", value: "Location" },
-    { key: "category", value: "Category" },
-    { key: "expected_footfall", value: "Footfall" },
-  ].map((col) => ({
-    accessorKey: col.key,
-    header: ({ column }: { column: Column<EventWithTickets, unknown> }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="space-x-2"
-        >
-          <span>{col.value}</span>
-          {column.getIsSorted() ? (
-            column.getIsSorted() === "asc" ? (
-              <ArrowUp />
-            ) : (
-              <ArrowDown />
-            )
-          ) : (
-            <ArrowUpDown />
-          )}
-        </Button>
-      );
-    },
-    cell: ({ row }: { row: Row<EventWithTickets> }) => (
-      <div>
-        {!!(col.key === "category" && row.getValue(col.key)) && (
-          <BadgeDark
-            name={ENUM_MAP[row.getValue(col.key) as keyof typeof ENUM_MAP].name}
-            color={
-              ENUM_MAP[row.getValue(col.key) as keyof typeof ENUM_MAP].color
-            }
-          />
-        )}
-        {!!(col.key === "accepted") && (
-          <div className="ml-4">
-            {row.getValue("accepted") ? (
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full shrink-0"></div>
-                <span>True</span>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-red-500 rounded-full shrink-0"></div>
-                <span>False</span>
-              </div>
-            )}
-          </div>
-        )}
-        {!!(col.key !== "category" && col.key !== "accepted") && (
-          <div>{row.getValue(col.key)}</div>
-        )}
-      </div>
-    ),
-  })),
-  ...[
-    { key: "created_at", value: "Created at" },
-    { key: "start_time", value: "Start time" },
-  ].map((col) => ({
-    accessorKey: col.key,
-    header: ({ column }: { column: Column<EventWithTickets, unknown> }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="space-x-2"
-        >
-          <span>{col.value}</span>
-          {column.getIsSorted() ? (
-            column.getIsSorted() === "asc" ? (
-              <ArrowUp />
-            ) : (
-              <ArrowDown />
-            )
-          ) : (
-            <ArrowUpDown />
-          )}
-        </Button>
-      );
-    },
-    cell: ({ row }: { row: Row<EventWithTickets> }) => (
-      <div>
-        {new Date(row.getValue(col.key)).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        })}
-      </div>
-    ),
-  })),
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const slug = row.getValue("slug");
-      const id = row.getValue("id");
-      const eventUrl = process.env.NEXT_PUBLIC_APP_URL! + "/events/" + slug;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {!!slug && (
-              <DropdownMenuItem>
-                <a href={eventUrl} target="_blank">
-                  Visit event page
-                </a>
-              </DropdownMenuItem>
-            )}
-            {!!slug && (
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(eventUrl)}
-              >
-                Copy event URL
-              </DropdownMenuItem>
-            )}
-            <DropdownMenuSeparator />
-            {!!row.getValue("accepted") && (
-              <Link href={`/organizer/dashboard/${slug}`}>
-                <DropdownMenuItem>View analytics</DropdownMenuItem>
-              </Link>
-            )}
-            <Link href={`/organizer/event/${id}/edit/1`}>
-              <DropdownMenuItem>Edit event</DropdownMenuItem>
-            </Link>
-            {/* <DropdownMenuItem>Edit event</DropdownMenuItem> */}
-
-            {/* Delete event */}
-            <DropdownMenuItem>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="outline">Delete event</Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      your account and remove your data from our servers.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction>Continue</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
-
-const DataTable = ({ data }: { data: EventWithTickets[] }) => {
+const DataTable = ({
+  data,
+  columns,
+  handleDeleteSelected,
+}: {
+  data: EventWithTickets[];
+  columns: ColumnDef<EventWithTickets>[];
+  handleDeleteSelected: (rows: Row<EventWithTickets>[]) => void;
+}) => {
+  const { mutate } = useSWRConfig();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -452,6 +203,48 @@ const DataTable = ({ data }: { data: EventWithTickets[] }) => {
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
         <div className="space-x-2">
+          <div
+            className={`inline transition-opacity ${
+              table.getFilteredSelectedRowModel().rows.length
+                ? "opacity-100"
+                : "opacity-0"
+            }`}
+          >
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="sm">
+                  <Trash className="md:mr-2 h-4 w-4" />
+                  <span className="hidden md:inline">
+                    Delete selected Events
+                  </span>
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete{" "}
+                    <span className="font-bold">
+                      {table.getFilteredSelectedRowModel().rows.length}
+                    </span>{" "}
+                    selected event(s) from our servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() =>
+                      handleDeleteSelected(
+                        table.getFilteredSelectedRowModel().rows
+                      )
+                    }
+                  >
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
           <Button
             variant="outline"
             size="sm"

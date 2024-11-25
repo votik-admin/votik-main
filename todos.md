@@ -29,3 +29,7 @@
 15. Scan add RLS policy
 16. Organiser, Venue, Artist profile page
 <!-- 28. The date and time selector -->
+
+# No. 1 security concerns no one should fix
+
+https://www.notion.so/TODO-128b934e5bae8078ab10c78f832d2bd3

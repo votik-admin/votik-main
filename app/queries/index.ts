@@ -1,5 +1,5 @@
 import supabase from "@app/lib/supabase";
-import { Database, Tables } from "@app/types/database.types";
+import { Database, Tables, TablesInsert } from "@app/types/database.types";
 
 const getAllEvents = () =>
   supabase
@@ -7,12 +7,17 @@ const getAllEvents = () =>
     .select("*, tickets(price)")
     .order("created_at", { ascending: false });
 
-const getEventsByOrganizer = (organizerId: string) =>
-  supabase
-    .from("events")
-    .select("*, tickets(price)")
-    .eq("organizer_id", organizerId)
-    .order("created_at", { ascending: false });
+const createEvent = (values: TablesInsert<"events">) =>
+  supabase.from("events").insert(values).select();
+
+const addTickets = (values: TablesInsert<"tickets">[]) =>
+  supabase.from("tickets").insert(values).select();
+
+const deleteEvent = (id: string) =>
+  supabase.from("events").delete().eq("id", id);
+
+const deleteEvents = (ids: string[]) =>
+  supabase.from("events").delete().in("id", ids);
 
 const getAllVenues = () =>
   supabase.from("venues").select("*").order("created_at", { ascending: false });
@@ -63,7 +68,8 @@ const getAllEventsByOrganizer = (organizer_id: string) =>
   supabase
     .from("events")
     .select("*, tickets(*)")
-    .eq("organizer_id", organizer_id);
+    .eq("organizer_id", organizer_id)
+    .order("created_at", { ascending: false });
 
 export {
   getAllEvents,
@@ -79,4 +85,10 @@ export {
   // Organiser
   getAllEventsByOrganizer,
   getBouncersForEvent,
+
+  // POST
+  createEvent,
+  addTickets,
+  deleteEvent,
+  deleteEvents,
 };

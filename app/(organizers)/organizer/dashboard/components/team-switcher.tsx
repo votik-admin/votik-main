@@ -55,6 +55,7 @@ interface TeamSwitcherProps extends PopoverTriggerProps {
       (Tables<"events"> & { tickets: (Tables<"tickets"> | null)[] }) | undefined
     >
   >;
+  slug?: string;
 }
 
 export default function TeamSwitcher({
@@ -62,6 +63,7 @@ export default function TeamSwitcher({
   events,
   selectedTeam,
   setSelectedTeam,
+  slug,
 }: TeamSwitcherProps) {
   const router = useRouter();
 
@@ -109,6 +111,13 @@ export default function TeamSwitcher({
                   <CommandItem
                     key={event.id}
                     onSelect={() => {
+                      // https://stackoverflow.com/questions/824349/how-do-i-modify-the-url-without-reloading-the-page/3354511#3354511
+                      // 🎊🎊🎉🎉🎉🪅🪅🪅🪅🪅
+                      window.history.pushState(
+                        {},
+                        "",
+                        `/organizer/dashboard/${event.slug}`
+                      );
                       setSelectedTeam(event);
                       setOpen(false);
                     }}

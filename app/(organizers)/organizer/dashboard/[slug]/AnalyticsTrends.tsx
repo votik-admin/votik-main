@@ -568,7 +568,13 @@ const AnalyticsTrends = ({ slug }: { slug: string }) => {
                 />
                 <PolarAngleAxis
                   type="number"
-                  // domain={[0, activeUsers]}
+                  domain={[
+                    0,
+                    dataUsersByDeviceCategory?.data?.rows?.reduce(
+                      (acc, data) => acc + Number(data.metricValues?.[0].value),
+                      0
+                    ) || 0,
+                  ]}
                   dataKey="value"
                   tick={false}
                 />

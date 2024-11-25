@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Bebas_Neue } from "next/font/google";
 
 import "react-dates/lib/css/_datepicker.css";
 import "rc-slider/assets/index.css";
@@ -14,14 +13,6 @@ import Footer from "../shared/Footer/Footer";
 import { Database } from "../types/database.types";
 import { getSessionAndUser } from "../lib/auth";
 import NextTopLoader from "nextjs-toploader";
-
-import { GoogleAnalytics } from "@next/third-parties/google";
-
-const bebasNeue = Bebas_Neue({
-  subsets: ["latin"],
-  variable: "--font-bebas-neue",
-  weight: "400",
-});
 
 export const metadata: Metadata = {
   title: {
@@ -93,17 +84,19 @@ export default async function RootLayout({
   const { session, user } = await getSessionAndUser();
 
   return (
-    <>
+    <div>
       <NextTopLoader
         showSpinner={false}
         color={"#c4fd07"}
         // color={"#430D7F"}
       />
-      <div className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
+      <div
+        className={`bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200`}
+      >
         <SiteHeader session={session} user={user} />
         {children}
         <Footer />
       </div>
-    </>
+    </div>
   );
 }

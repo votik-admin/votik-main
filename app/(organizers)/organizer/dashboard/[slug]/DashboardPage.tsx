@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Button } from "@app/components/ui/button";
 import {
@@ -43,16 +43,6 @@ export default function DashboardPage({
     Tables<"events"> & { tickets: (Tables<"tickets"> | null)[] }
   >();
 
-  useEffect(() => {
-    if (slug) {
-      setSelectedTeam(
-        eventsData
-          ?.filter((event) => event.accepted)
-          .find((event) => event.slug === slug)
-      );
-    }
-  }, [slug]);
-
   const {
     data: eventsData,
     error: errorData,
@@ -70,11 +60,7 @@ export default function DashboardPage({
     {
       onSuccess: (events) => {
         if (slug) {
-          setSelectedTeam(
-            events
-              .filter((event) => event.accepted)
-              .find((event) => event.slug === slug)
-          );
+          setSelectedTeam(events.find((event) => event.slug === slug));
         } else if (!selectedTeam) {
           // start with the first accepted event
           setSelectedTeam(events.filter((event) => event.accepted)[0]);
@@ -96,6 +82,13 @@ export default function DashboardPage({
     if (error) throw error.message;
     return data;
   });
+
+  useEffect(() => {
+    console.log({ slug, eventsData });
+    if (slug) {
+      setSelectedTeam(eventsData?.find((event) => event.slug === slug));
+    }
+  }, [slug, eventsData]);
 
   // metric 1
   const totalRevenue = bookingsData
@@ -167,9 +160,10 @@ export default function DashboardPage({
                   isLoadingEvents={isLoadingEvents}
                   selectedTeam={selectedTeam}
                   setSelectedTeam={setSelectedTeam}
+                  slug={slug}
                 />
                 {/* <CalendarDateRangePicker /> */}
-                {/* <Button>Download</Button> */}
+                <Button>Download</Button>
               </div>
             </div>
 

@@ -266,7 +266,6 @@ const SectionChoseTicket = ({
                 desc=""
                 availableCount={ticket.current_available_count}
               />
-
               <p className="text-neutral-500 dark:text-neutral-400 border-t dark:border-neutral-700 mt-4 pt-4">
                 {ticket.description}
               </p>
