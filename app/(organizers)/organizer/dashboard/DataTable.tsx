@@ -172,8 +172,8 @@ const columns: ColumnDef<EventWithTickets>[] = [
       );
     },
     cell: ({ row }: { row: Row<EventWithTickets> }) => (
-      <>
-        {col.key === "category" && row.getValue(col.key) && (
+      <div>
+        {!!(col.key === "category" && row.getValue(col.key)) && (
           <BadgeDark
             name={ENUM_MAP[row.getValue(col.key) as keyof typeof ENUM_MAP].name}
             color={
@@ -181,7 +181,7 @@ const columns: ColumnDef<EventWithTickets>[] = [
             }
           />
         )}
-        {col.key === "accepted" && (
+        {!!(col.key === "accepted") && (
           <div className="ml-4">
             {row.getValue("accepted") ? (
               <div className="flex items-center space-x-2">
@@ -196,10 +196,10 @@ const columns: ColumnDef<EventWithTickets>[] = [
             )}
           </div>
         )}
-        {col.key !== "category" && col.key !== "accepted" && (
+        {!!(col.key !== "category" && col.key !== "accepted") && (
           <div>{row.getValue(col.key)}</div>
         )}
-      </>
+      </div>
     ),
   })),
   ...[
