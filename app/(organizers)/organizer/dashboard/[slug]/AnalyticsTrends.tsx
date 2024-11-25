@@ -40,13 +40,8 @@ import {
   ChartLegendContent,
 } from "@app/components/ui/chart";
 
-import { Separator } from "@app/components/ui/separator";
 import useSWR from "swr";
 import Spinner from "@app/components/Spinner/Spinner";
-import getTimeFromCurrentDate, {
-  formatTimeLabel,
-} from "@app/utils/getTimeFromCurrentDate";
-import formatTime from "@app/utils/formatTime";
 import { capitalize } from "@app/utils/capitalize";
 
 export type AnalyticsResponse = {
@@ -54,70 +49,6 @@ export type AnalyticsResponse = {
   error: string | null;
   message: string | null;
 };
-
-const metrics = {
-  activeUsers: {
-    name: "Active Users",
-    description: "Number of active users",
-  },
-  sessions: {
-    name: "Sessions",
-    description: "Number of sessions",
-  },
-  screenPageViews: {
-    name: "Views",
-    description: "Number of views",
-  },
-  screenPageViewsPerUser: {
-    name: "Views Per User",
-    description: "Average Views per User",
-    formatter: (value: string) => Number(value).toFixed(2),
-  },
-  engagedSessions: {
-    name: "Engaged Sessions",
-    description:
-      "The number of sessions that lasted longer than 10 seconds, or had a key event, or had 2 or more screen views",
-  },
-  bounceRate: {
-    name: "Bounce Rate",
-    description: "The percentage of sessions that were not engaged",
-    formatter: (value: string) => `${Math.round(Number(value) * 100)}%`,
-  },
-  eventCount: {
-    name: "Event Count",
-    description:
-      "Number of events (click, first_visit, form_start, form_submit, page_view, scroll, session_start, user_engagement)",
-  },
-  dauPerMau: {
-    name: "DAU per MAU",
-    description:
-      "The rolling percent of 30-day active users who are also 1-day active users",
-  },
-  dauPerWau: {
-    name: "DAU per WAU",
-    description:
-      "The rolling percent of 7-day active users who are also 1-day active users",
-  },
-  sessionsPerUser: {
-    name: "Sessions per User",
-    description: "The average number of sessions per user",
-    formatter: (value: string) => Number(value).toFixed(2),
-  },
-  averageSessionDuration: {
-    name: "Average Session Duration",
-    description: "The average duration of users sessions",
-    formatter: (value: string) => formatTime(Number(value)),
-  },
-  userEngagementDuration: {
-    name: "User Engagement Duration",
-    description:
-      "The total amount of time your event was in the foreground of users` devices.",
-    formatter: (value: string) => formatTime(Number(value)),
-  },
-} as Record<
-  string,
-  { name: string; description: string; formatter?: (value: string) => string }
->;
 
 const AnalyticsTrends = ({ slug }: { slug: string }) => {
   const dateRanges = [{ startDate: "2024-03-31", endDate: "today" }];
