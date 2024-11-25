@@ -16,8 +16,8 @@
     "@heroicons/react": "^2.1.5",
     "@hookform/error-message": "^2.0.1",
     "@next/third-parties": "^15.0.1",
-    "@radix-ui/react-alert-dialog": "^1.1.2",
     "@portabletext/editor": "^1.5.5",
+    "@radix-ui/react-alert-dialog": "^1.1.2",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-checkbox": "^1.1.2",
     "@radix-ui/react-collapsible": "^1.1.1",
@@ -82,6 +82,7 @@
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "twilio": "^5.3.5",
+    "xlsx": "^0.18.5",
     "yarn": "^1.22.22"
   },
   "devDependencies": {

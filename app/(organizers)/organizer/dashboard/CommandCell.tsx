@@ -280,7 +280,7 @@ export default function CommandCell({
         <DialogHeader>
           <DialogTitle>Duplicate event "{row.getValue("name")}"?</DialogTitle>
           <DialogDescription>
-            You will be redirected to the event edit page.
+            Event will be duplicated with tickets.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

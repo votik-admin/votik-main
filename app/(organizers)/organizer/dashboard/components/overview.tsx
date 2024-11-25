@@ -90,8 +90,6 @@ export function Overview({
     populateChartData("greaterThanOrEqualToAMonth");
   }
 
-  console.log({ chartData });
-
   return (
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={chartData}>

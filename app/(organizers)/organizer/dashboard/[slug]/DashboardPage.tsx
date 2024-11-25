@@ -31,6 +31,7 @@ import { Tables } from "@app/types/database.types";
 import convertNumbThousand from "@app/utils/convertNumbThousand";
 import AnalyticsTrends from "./AnalyticsTrends";
 import Spinner from "@app/components/Spinner/Spinner";
+import { exportBookingsToExcel } from "@app/utils/exportBookings";
 
 export default function DashboardPage({
   organizer,
@@ -84,7 +85,6 @@ export default function DashboardPage({
   });
 
   useEffect(() => {
-    console.log({ slug, eventsData });
     if (slug) {
       setSelectedTeam(eventsData?.find((event) => event.slug === slug));
     }
@@ -133,8 +133,6 @@ export default function DashboardPage({
         : 0;
   }
 
-  console.log({ bookingsData, bookingError });
-
   if (isLoadingBookings || isLoadingEvents) {
     return (
       <div className="flex py-24 items-center justify-center">
@@ -163,7 +161,17 @@ export default function DashboardPage({
                   slug={slug}
                 />
                 {/* <CalendarDateRangePicker /> */}
-                <Button>Download</Button>
+                <Button
+                  onClick={() =>
+                    exportBookingsToExcel(
+                      bookingsData?.filter(
+                        (booking) => booking.event_id === selectedTeam?.id
+                      )
+                    )
+                  }
+                >
+                  Download
+                </Button>
               </div>
             </div>
 
