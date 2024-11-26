@@ -50,6 +50,8 @@ const widgetMenus: WidgetFooterMenu[] = [
     menus: [
       { href: "/tnc", label: "Terms & Conditions" },
       { href: "/privacy", label: "Privacy Policy" },
+      { href: "/about-us", label: "About Us" },
+      { href: "/contact-us", label: "Contact Us" },
     ],
   },
 ];

@@ -1,10 +1,6 @@
 import { Tables } from "@app/types/database.types";
 import * as XLSX from "xlsx";
 
-/**
- * Converts an array of booking objects to a CSV file and triggers a download
- * @param bookings Array of booking objects to export
- */
 function exportBookingsToCSV(
   bookings: (Tables<"ticket_bookings"> & {
     events: Tables<"events"> | null;
@@ -74,6 +70,7 @@ function exportBookingsToCSV(
   // Clean up the URL object
   URL.revokeObjectURL(link.href);
 }
+
 function exportBookingsToExcel(
   bookings: (Tables<"ticket_bookings"> & {
     events: Tables<"events"> | null;

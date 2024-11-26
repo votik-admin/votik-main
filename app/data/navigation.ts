@@ -258,4 +258,14 @@ export const NAVIGATION_DEMO: NavItemType[] = [
     href: "/privacy",
     name: "Privacy Policy",
   },
+  {
+    id: ncNanoId(),
+    href: "/about-us",
+    name: "About Us",
+  },
+  {
+    id: ncNanoId(),
+    href: "/contact-us",
+    name: "Contact Us",
+  },
 ];

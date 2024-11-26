@@ -140,20 +140,8 @@ const ListingStayDetailPage = async ({
           <ReadMoreParagraph>{event.description}</ReadMoreParagraph>
         </div>
 
-        <div className="hidden lg:flex justify-between items-center border-t dark:border-neutral-700 sm:pt-4 xl:pt-8 sm:-mx-4 sm:px-4 xl:-mx-8 xl:px-8">
-          <h2 className="text-2xl font-semibold">
-            ₹{" "}
-            {convertNumbThousand(
-              event.tickets.sort((a, b) => a.price - b.price)[0]?.price
-            )}{" "}
-            Onwards
-          </h2>
-          <Link href={`/events/${event.slug}/book`}>
-            <ButtonCustom>BOOK NOW</ButtonCustom>
-          </Link>
-        </div>
         {bookings.length > 0 && (
-          <div className="space-y-4 border-t dark:border-neutral-700 pt-4">
+          <div className="space-y-4 dark:border-neutral-700 pt-4">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-semibold">Your Bookings</h2>
               <Link href="/user/account/bookings">
@@ -202,6 +190,19 @@ const ListingStayDetailPage = async ({
             </div>
           )
         }
+
+        <div className="hidden lg:flex justify-between items-center border-t dark:border-neutral-700 sm:pt-4 xl:pt-8 sm:-mx-4 sm:px-4 xl:-mx-8 xl:px-8">
+          <h2 className="text-2xl font-semibold">
+            ₹{" "}
+            {convertNumbThousand(
+              event.tickets.sort((a, b) => a.price - b.price)[0]?.price
+            )}{" "}
+            Onwards
+          </h2>
+          <Link href={`/events/${event.slug}/book`}>
+            <ButtonCustom>BOOK NOW</ButtonCustom>
+          </Link>
+        </div>
       </div>
     );
   };
