@@ -2,14 +2,10 @@ import React, { FC } from "react";
 import { Metadata } from "next";
 import ContactUsPage from "./ContactUsPage";
 
-export interface PageContactProps {
-  className?: string;
-}
-
-const PageContact: FC<PageContactProps> = ({ className = "" }) => {
+const PageContact = () => {
   return (
     <div
-      className={`nc-ContactUsPage overflow-hidden ${className}`}
+      className={`nc-ContactUsPage overflow-hidden`}
       data-nc-id="ContactUsPage"
     >
       <div className="mb-24 lg:mb-32">
