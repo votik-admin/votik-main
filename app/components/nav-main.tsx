@@ -40,8 +40,8 @@ export function NavMain({
         {/* non-nested items */}
         {items
           .filter((item) => !item.items)
-          .map((item) => (
-            <Link href={item.url}>
+          .map((item, key) => (
+            <Link href={item.url} key={key}>
               <SidebarMenuButton tooltip={item.title}>
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
