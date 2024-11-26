@@ -45,8 +45,6 @@ import {
 } from "@app/components/ui/table";
 import { Tables } from "@app/types/database.types";
 import { useSWRConfig } from "swr";
-import { deleteEvents, getAllEventsByOrganizer } from "@app/queries";
-import toast from "react-hot-toast";
 
 export type EventWithTickets = Tables<"events"> & {
   tickets: (Tables<"tickets"> | null)[];

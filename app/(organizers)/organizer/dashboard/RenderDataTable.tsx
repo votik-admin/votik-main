@@ -5,12 +5,12 @@ import supabase from "@app/lib/supabase";
 import { Tables } from "@app/types/database.types";
 import React from "react";
 import useSWR, { mutate } from "swr";
-import DataTable, { EventWithTickets } from "../DataTable";
+import DataTable, { EventWithTickets } from "./DataTable";
 import { Checkbox } from "@app/components/ui/checkbox";
 
 import { ENUM_MAP } from "@app/types/hardcoded";
 import BadgeDark from "@app/shared/Badge/BadgeDark";
-import CommandCell from "../CommandCell";
+import CommandCell from "./CommandCell";
 import { Column, ColumnDef, Row } from "@tanstack/react-table";
 
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";

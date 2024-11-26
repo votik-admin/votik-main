@@ -6,12 +6,17 @@ import {
   BookOpen,
   Bot,
   Command,
+  FilePlus2,
   Frame,
   GalleryVerticalEnd,
   Map,
   PieChart,
+  Plus,
+  PlusCircle,
+  PlusSquare,
   Settings2,
   SquareTerminal,
+  Table,
 } from "lucide-react";
 
 import { NavMain } from "@app/components/nav-main";
@@ -41,46 +46,14 @@ const data = {
   ],
   navMain: [
     {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
+      title: "Dashboard",
+      url: "/organizer/dashboard",
+      icon: Table,
     },
     {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
+      title: "Create event",
+      url: "/organizer/add-event",
+      icon: PlusSquare,
     },
     {
       title: "Settings",
@@ -89,19 +62,11 @@ const data = {
       items: [
         {
           title: "General",
-          url: "#",
+          url: "/organizer/account",
         },
         {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
+          title: "Credentials",
+          url: "/organizer/account/password",
         },
       ],
     },
@@ -133,7 +98,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       {/* <SidebarFooter>
         <NavUser user={data.user} />

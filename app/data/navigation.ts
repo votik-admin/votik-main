@@ -241,11 +241,6 @@ export const NAVIGATION_DEMO: NavItemType[] = [
         href: "/organizer/signup",
         name: "Signup as an Organiser",
       },
-      {
-        id: ncNanoId(),
-        href: "/organizer/scan",
-        name: "Scan Ticket",
-      },
     ],
   },
   {

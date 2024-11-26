@@ -6,6 +6,9 @@ import {
   Edit2,
   Eye,
   MoreHorizontal,
+  QrCode,
+  Scan,
+  ScanQrCode,
   Trash,
   TrendingUp,
 } from "lucide-react";
@@ -100,7 +103,6 @@ export default function CommandCell({
             toast.error(addTicketsError.message);
             throw addTicketsError;
           }
-          console.log({ createdEventFromServer, addTicketsData });
 
           toast.success("Event created");
 
@@ -213,20 +215,9 @@ export default function CommandCell({
                   <Link href={`/organizer/event/${id}/edit/1`}>
                     <CommandItem>
                       <Edit2 className="h-5 w-5" />
-                      Edit event
+                      Edit
                     </CommandItem>
                   </Link>
-                  <DialogTrigger asChild>
-                    <CommandItem
-                      onSelect={() => {
-                        setOpen(false);
-                        setShowDeleteEventDialog(true);
-                      }}
-                    >
-                      <Trash className="h-5 w-5" />
-                      Delete Event
-                    </CommandItem>
-                  </DialogTrigger>
                   <DialogTrigger asChild>
                     <CommandItem
                       onSelect={() => {
@@ -235,10 +226,35 @@ export default function CommandCell({
                       }}
                     >
                       <CopyPlus className="h-5 w-5" />
-                      Duplicate Event
+                      Duplicate
+                    </CommandItem>
+                  </DialogTrigger>
+                  <DialogTrigger asChild>
+                    <CommandItem
+                      onSelect={() => {
+                        setOpen(false);
+                        setShowDeleteEventDialog(true);
+                      }}
+                    >
+                      <Trash className="h-5 w-5" />
+                      Delete
                     </CommandItem>
                   </DialogTrigger>
                 </CommandGroup>
+
+                {!!slug && (
+                  <>
+                    <CommandSeparator />
+                    <CommandGroup>
+                      <Link href={`/scan/${slug}`}>
+                        <CommandItem>
+                          <QrCode className="h-5 w-5" />
+                          Scan Ticket
+                        </CommandItem>
+                      </Link>
+                    </CommandGroup>
+                  </>
+                )}
               </CommandList>
             </Command>
           </PopoverContent>

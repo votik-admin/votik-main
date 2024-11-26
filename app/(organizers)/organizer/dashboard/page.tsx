@@ -2,7 +2,7 @@ import { getSessionAndOrganizer } from "@app/lib/auth";
 import { redirect } from "next/navigation";
 import React from "react";
 import DataTable from "./DataTable";
-import RenderDataTable from "./components/RenderDataTable";
+import RenderDataTable from "./RenderDataTable";
 import { headers } from "next/headers";
 
 const HomePage = async () => {

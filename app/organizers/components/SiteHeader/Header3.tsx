@@ -130,7 +130,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
   return (
     <>
       <div
-        className={`nc-Header nc-Header-3 fixed z-40 top-0 inset-0 bg-black/30 dark:bg-black/50 transition-opacity will-change-[opacity] ${
+        className={`nc-Header nc-Header-3 fixed z-40 top-0 inset-0 bg-black/30 dark:bg-black/50 !dark:bg-emerald-500 transition-opacity will-change-[opacity] ${
           showHeroSearch ? "visible" : "invisible opacity-0 pointer-events-none"
         }`}
       ></div>

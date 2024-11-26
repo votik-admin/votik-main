@@ -19,7 +19,6 @@ const analyticsDataClient = new BetaAnalyticsDataClient({ credentials });
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    console.log(body);
     const { dateRanges, dimensions, metrics, eventSlug } = body;
 
     const [response] = await analyticsDataClient.runReport({

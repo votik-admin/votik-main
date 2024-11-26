@@ -90,8 +90,6 @@ const ListingStayDetailPage = async ({
       .eq("user_id", user.id)
       .eq("event_id", event.id);
 
-    console.log({ tickets, ticketsError });
-
     if (tickets && tickets.length > 0) {
       bookings = tickets;
     }
