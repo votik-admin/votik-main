@@ -135,10 +135,7 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
         }`}
       ></div>
       {showHeroSearch && <div id="nc-Header-3-anchor"></div>}
-      <header
-        ref={headerInnerRef}
-        className={`sticky top-0 z-[100] ${className}`}
-      >
+      <header ref={headerInnerRef} className={`sticky top-0 z-50 ${className}`}>
         <div
           className={`bg-white dark:bg-black absolute h-full inset-x-0 top-0 transition-transform will-change-[transform,opacity]
           ${showHeroSearch ? "duration-75" : ""} 
