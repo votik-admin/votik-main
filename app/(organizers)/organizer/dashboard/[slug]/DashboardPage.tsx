@@ -54,7 +54,8 @@ export default function DashboardPage({
       const { data, error } = await supabase
         .from("events")
         .select("*, tickets(*)")
-        .eq("organizer_id", organizer.id);
+        .eq("organizer_id", organizer.id)
+        .order("created_at", { ascending: false });
       if (error) throw error.message;
       return data;
     },

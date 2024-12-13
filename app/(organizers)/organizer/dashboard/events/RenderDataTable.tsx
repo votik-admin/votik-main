@@ -13,11 +13,18 @@ import BadgeDark from "@app/shared/Badge/BadgeDark";
 import CommandCell from "./CommandCell";
 import { Column, ColumnDef, Row } from "@tanstack/react-table";
 
-import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import {
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  TrendingUp,
+  QrCode,
+} from "lucide-react";
 
 import { Button } from "@app/components/ui/button";
 import { deleteEvents, getAllEventsByOrganizer } from "@app/queries";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 const RenderDataTable = ({
   organizer,
@@ -216,6 +223,42 @@ const RenderDataTable = ({
         </div>
       ),
     })),
+    {
+      id: "analytics",
+      enableHiding: false,
+      cell: ({ row }) =>
+        row.getValue("accepted") ? (
+          <Link href={`/organizer/dashboard/${row.getValue("slug")}`}>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <TrendingUp className="h-5 w-5" />
+              <span className="sr-only">View Analytics</span>
+            </Button>
+          </Link>
+        ) : (
+          <Button variant="ghost" className="h-8 w-8 p-0" disabled>
+            <TrendingUp className="h-5 w-5" />
+            <span className="sr-only">View Analytics</span>
+          </Button>
+        ),
+    },
+    {
+      id: "scan",
+      enableHiding: false,
+      cell: ({ row }) =>
+        row.getValue("slug") ? (
+          <Link href={`/scan/${row.getValue("slug")}`}>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <QrCode className="h-5 w-5" />
+              <span className="sr-only">Scan Ticket</span>
+            </Button>
+          </Link>
+        ) : (
+          <Button variant="ghost" className="h-8 w-8 p-0" disabled>
+            <QrCode className="h-5 w-5" />
+            <span className="sr-only">Scan Ticket</span>
+          </Button>
+        ),
+    },
     {
       id: "actions",
       enableHiding: false,

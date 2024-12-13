@@ -32,11 +32,6 @@ import {
 } from "@app/components/ui/sidebar";
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   teams: [
     {
       name: "Dashboard",
@@ -49,6 +44,11 @@ const data = {
       title: "Dashboard",
       url: "/organizer/dashboard",
       icon: Table,
+    },
+    {
+      title: "Manage Events",
+      url: "/organizer/dashboard/events",
+      icon: BookOpen,
     },
     {
       title: "Create event",
@@ -69,23 +69,6 @@ const data = {
           url: "/organizer/account/password",
         },
       ],
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
     },
   ],
 };

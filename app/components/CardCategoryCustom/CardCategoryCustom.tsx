@@ -13,12 +13,14 @@ export interface CardCategoryCustomProps {
     tickets: { price: number }[];
   };
   preview?: boolean;
+  cta?: boolean;
 }
 
 const CardCategoryCustom: FC<CardCategoryCustomProps> = ({
   className = "",
   taxonomy,
   preview,
+  cta = true,
 }) => {
   const { id, slug, name, city, location, start_time, primary_img, tickets } =
     taxonomy;
@@ -59,20 +61,22 @@ const CardCategoryCustom: FC<CardCategoryCustomProps> = ({
             {location}
           </span>
         </div>
-        <div className="mt-4 flex place-items-end items-center justify-between">
-          <h2
-            className={`text-sm sm:text-sm text-neutral-900 font-semibold truncate line-clamp-2 text-wrap`}
-          >
-            Rs.{" "}
-            {convertNumbThousand(
-              tickets.sort((a, b) => a.price - b.price)[0]?.price
-            )}{" "}
-            Onwards
-          </h2>
-          <Link href={href}>
-            <ButtonCustom>BOOK NOW</ButtonCustom>
-          </Link>
-        </div>
+        {cta && (
+          <div className="mt-4 flex place-items-end items-center justify-between">
+            <h2
+              className={`text-sm sm:text-sm text-neutral-900 font-semibold truncate line-clamp-2 text-wrap`}
+            >
+              Rs.{" "}
+              {convertNumbThousand(
+                tickets.sort((a, b) => a.price - b.price)[0]?.price
+              )}{" "}
+              Onwards
+            </h2>
+            <Link href={href}>
+              <ButtonCustom>BOOK NOW</ButtonCustom>
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

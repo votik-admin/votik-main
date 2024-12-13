@@ -1,8 +1,9 @@
 import { getSessionAndOrganizer } from "@app/lib/auth";
 import { redirect } from "next/navigation";
 import React from "react";
+import DataTable from "./DataTable";
+import RenderDataTable from "./RenderDataTable";
 import { headers } from "next/headers";
-import DashboardPageAccumulated from "./DashboardPageAccumulated";
 
 const HomePage = async () => {
   const { session, organizer, error } = await getSessionAndOrganizer();
@@ -17,7 +18,7 @@ const HomePage = async () => {
 
   return (
     <div className="container">
-      <DashboardPageAccumulated organizer={organizer} />
+      <RenderDataTable organizer={organizer} />
     </div>
   );
 };
