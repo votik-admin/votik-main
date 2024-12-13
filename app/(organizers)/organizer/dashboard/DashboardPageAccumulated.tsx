@@ -272,22 +272,42 @@ export default function DashboardPageAccumulated({
                       </CardContent>
                       <CardFooter>
                         <div className="flex w-full space-x-4">
-                          <Link
-                            href={`/organizer/dashboard/${eventsData[0].slug}`}
-                            className="w-full"
-                          >
-                            <Button variant="outline" className="w-full">
+                          {eventsData[0].accepted ? (
+                            <Link
+                              href={`/organizer/dashboard/${eventsData[0].slug}`}
+                              className="w-full"
+                            >
+                              <Button variant="outline" className="w-full">
+                                Go to Event Analytics
+                              </Button>
+                            </Link>
+                          ) : (
+                            <Button
+                              variant="outline"
+                              className="w-full"
+                              disabled
+                            >
                               Go to Event Analytics
                             </Button>
-                          </Link>
-                          <Link
-                            href={`/events/${eventsData[0].slug}/join-chat`}
-                            className="w-full"
-                          >
-                            <Button variant="default" className="w-full">
+                          )}
+                          {eventsData[0].slug ? (
+                            <Link
+                              href={`/events/${eventsData[0].slug}/join-chat`}
+                              className="w-full"
+                            >
+                              <Button variant="default" className="w-full">
+                                See Chatroom
+                              </Button>
+                            </Link>
+                          ) : (
+                            <Button
+                              variant="default"
+                              className="w-full"
+                              disabled
+                            >
                               See Chatroom
                             </Button>
-                          </Link>
+                          )}
                         </div>
                       </CardFooter>
                     </Card>

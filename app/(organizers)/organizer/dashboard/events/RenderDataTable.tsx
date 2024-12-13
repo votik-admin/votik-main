@@ -19,6 +19,7 @@ import {
   ArrowDown,
   TrendingUp,
   QrCode,
+  MessageSquareText,
 } from "lucide-react";
 
 import { Button } from "@app/components/ui/button";
@@ -238,6 +239,24 @@ const RenderDataTable = ({
           <Button variant="ghost" className="h-8 w-8 p-0" disabled>
             <TrendingUp className="h-5 w-5" />
             <span className="sr-only">View Analytics</span>
+          </Button>
+        ),
+    },
+    {
+      id: "chat",
+      enableHiding: false,
+      cell: ({ row }) =>
+        row.getValue("slug") ? (
+          <Link href={`/events/${row.getValue("slug")}/join-chat`}>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <MessageSquareText className="h-5 w-5" />
+              <span className="sr-only">Join Chatroom</span>
+            </Button>
+          </Link>
+        ) : (
+          <Button variant="ghost" className="h-8 w-8 p-0" disabled>
+            <MessageSquareText className="h-5 w-5" />
+            <span className="sr-only">Join Chatroom</span>
           </Button>
         ),
     },

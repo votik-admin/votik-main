@@ -11,6 +11,7 @@ import {
   ScanQrCode,
   Trash,
   TrendingUp,
+  MessageSquareText,
 } from "lucide-react";
 import {
   Popover,
@@ -179,26 +180,6 @@ export default function CommandCell({
             <Command>
               <CommandList>
                 <CommandGroup>
-                  {!!slug && (
-                    <a href={eventUrl} target="_blank">
-                      <CommandItem onSelect={() => setOpen(false)}>
-                        <Eye className="h-5 w-5" />
-                        Visit event page
-                      </CommandItem>
-                    </a>
-                  )}
-                  {!!slug && (
-                    <CommandItem
-                      onSelect={() => {
-                        navigator.clipboard.writeText(eventUrl);
-                        setOpen(false);
-                      }}
-                    >
-                      <Copy className="h-5 w-5" />
-                      Copy event URL
-                    </CommandItem>
-                  )}
-
                   {!!row.getValue("accepted") && (
                     <Link href={`/organizer/dashboard/${slug}`}>
                       <CommandItem>
@@ -207,6 +188,21 @@ export default function CommandCell({
                       </CommandItem>
                     </Link>
                   )}
+
+                  {!!row.getValue("slug") && (
+                    <Link href={`/events/${slug}/join-chat`}>
+                      <CommandItem>
+                        <MessageSquareText className="h-5 w-5" />
+                        Join Chatroom
+                      </CommandItem>
+                    </Link>
+                  )}
+                  <Link href={`/scan/${slug}`}>
+                    <CommandItem>
+                      <QrCode className="h-5 w-5" />
+                      Scan Ticket
+                    </CommandItem>
+                  </Link>
                 </CommandGroup>
 
                 <CommandSeparator />
@@ -246,12 +242,25 @@ export default function CommandCell({
                   <>
                     <CommandSeparator />
                     <CommandGroup>
-                      <Link href={`/scan/${slug}`}>
-                        <CommandItem>
-                          <QrCode className="h-5 w-5" />
-                          Scan Ticket
+                      {!!slug && (
+                        <a href={eventUrl} target="_blank">
+                          <CommandItem onSelect={() => setOpen(false)}>
+                            <Eye className="h-5 w-5" />
+                            Visit event page
+                          </CommandItem>
+                        </a>
+                      )}
+                      {!!slug && (
+                        <CommandItem
+                          onSelect={() => {
+                            navigator.clipboard.writeText(eventUrl);
+                            setOpen(false);
+                          }}
+                        >
+                          <Copy className="h-5 w-5" />
+                          Copy event URL
                         </CommandItem>
-                      </Link>
+                      )}
                     </CommandGroup>
                   </>
                 )}
