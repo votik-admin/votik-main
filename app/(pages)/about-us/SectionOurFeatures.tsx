@@ -2,6 +2,8 @@ import React, { FC } from "react";
 import NcImage from "@app/shared/NcImage/NcImage";
 import Badge from "@app/shared/Badge/Badge";
 import { TwMainColor } from "@app/data/types";
+import { Button } from "@app/components/ui/button";
+import ButtonPrimary from "@app/shared/Button/ButtonPrimary";
 
 export interface SectionOurFeaturesProps {
   className?: string;
@@ -19,6 +21,10 @@ export interface SectionOurFeaturesProps {
     }[];
   };
   type?: "type1" | "type2";
+  button?: {
+    text: string;
+    href: string;
+  };
 }
 
 const SectionOurFeatures: FC<SectionOurFeaturesProps> = ({
@@ -26,6 +32,7 @@ const SectionOurFeatures: FC<SectionOurFeaturesProps> = ({
   img,
   data,
   type = "type1",
+  button,
 }) => {
   return (
     <div
@@ -60,6 +67,11 @@ const SectionOurFeatures: FC<SectionOurFeaturesProps> = ({
             </li>
           ))}
         </ul>
+        {!!button && (
+          <ButtonPrimary href={button.href} className="mt-8">
+            {button.text}
+          </ButtonPrimary>
+        )}
       </div>
     </div>
   );

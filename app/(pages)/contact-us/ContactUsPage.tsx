@@ -23,10 +23,12 @@ const info = [
   {
     title: "💌 EMAIL",
     desc: "mmpl@votik.app",
+    url: "mailto:mmpl@votik.app",
   },
   {
     title: "☎ PHONE",
     desc: "+91-9606472890",
+    url: "tel:+91-9606472890",
   },
 ];
 
@@ -43,7 +45,7 @@ const ContactUsPage: FC<ContactUsPageProps> = ({ className = "" }) => {
               {item.title}
             </h3>
             <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
-              {item.desc}
+              <a href={item.url}>{item.desc}</a>
             </span>
           </div>
         ))}
@@ -67,6 +69,7 @@ const ContactUsPage: FC<ContactUsPageProps> = ({ className = "" }) => {
             <label className="block">
               <Label>Full name</Label>
               <Input
+                required
                 name="full_name"
                 placeholder="John Doe"
                 type="text"
@@ -76,6 +79,7 @@ const ContactUsPage: FC<ContactUsPageProps> = ({ className = "" }) => {
             <label className="block">
               <Label>Email address</Label>
               <Input
+                required
                 name="email"
                 type="email"
                 placeholder="example@example.com"
@@ -84,7 +88,7 @@ const ContactUsPage: FC<ContactUsPageProps> = ({ className = "" }) => {
             </label>
             <label className="block">
               <Label>Message</Label>
-              <Textarea name="message" className="mt-1" rows={6} />
+              <Textarea required name="message" className="mt-1" rows={6} />
             </label>
             <div>
               <ButtonPrimary type="submit">Send Message</ButtonPrimary>

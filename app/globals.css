@@ -118,6 +118,11 @@ label:has(+ input:required):after {
   color: red;
 }
 
+label:has(+ textarea:required):after {
+  content: " *";
+  color: red;
+}
+
 .triangle-container {
   position: relative;
   width: 300px; /* Adjust width */

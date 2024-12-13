@@ -1,15 +1,10 @@
 import mainImg from "@app/images/aboutUs/about-us.png";
 import leftPng from "@app/images/aboutUs/left.jpg";
-import rightPng from "@app/images/aboutUs/right.jpg";
+import rightPng from "@app/images/aboutUs/right.png";
 
-import React, { FC } from "react";
-import SectionFounder from "./SectionFounder";
-import SectionStatistic from "./SectionStatistic";
-import SectionSubscribe2 from "@app/components/SectionSubscribe2/SectionSubscribe2";
+import React from "react";
 import BgGlassmorphism from "@app/components/BgGlassmorphism/BgGlassmorphism";
-import BackgroundSection from "@app/components/BackgroundSection/BackgroundSection";
 import SectionHero from "./SectionHero";
-import SectionClientSay from "@app/components/SectionClientSay/SectionClientSay";
 import SectionOurFeatures from "./SectionOurFeatures";
 import { Metadata } from "next";
 import ContactUsPage from "../contact-us/ContactUsPage";
@@ -75,6 +70,10 @@ const PageAbout = () => {
           }}
         />
         <SectionOurFeatures
+          button={{
+            text: "Become a partner",
+            href: "/organizer/signup",
+          }}
           type="type2"
           img={rightPng.src}
           data={{
@@ -83,7 +82,7 @@ const PageAbout = () => {
             features: [
               {
                 badge: {
-                  text: "Other buyers",
+                  text: "Togetherness",
                   color: "green",
                 },
                 title:
@@ -92,7 +91,7 @@ const PageAbout = () => {
               },
               {
                 badge: {
-                  text: "Sellers and Renters",
+                  text: "Empower Organizers",
                   color: "pink",
                 },
                 title:
@@ -101,7 +100,7 @@ const PageAbout = () => {
               },
               {
                 badge: {
-                  text: "Sellers and Renters ",
+                  text: "Community Building",
                   color: "blue",
                 },
                 title:
